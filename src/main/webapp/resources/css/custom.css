@@ -1,0 +1,230 @@
+body {
+	background: #323A45;
+}
+
+label {
+	margin-top: 5px;
+}
+mark {
+    background: #1999cc !important;
+    color: black;
+}
+.main {
+	background: white;
+	padding-bottom: 40px;
+	color: #323A45 !important;
+}
+
+.loading-block {
+	text-align: center;
+	padding: 100px 0;
+}
+
+.error-page {
+	padding: 50px 0;
+}
+
+.page-header {
+	margin-top: 20px;
+}
+
+.panel-default>.panel-heading {
+	color: #323A45;
+	background-color: #edf6f7;
+}
+
+.panel-heading.lead {
+	margin-bottom: 0;
+}
+
+.form-control, .btn, .alert, .panel, .modal-content, .input-group-addon,
+	.pagination, .pagination>li:first-child>a, .pagination>li:first-child>span,
+	.pagination>li:last-child>a, .pagination>li:last-child>span, .panel-heading {
+	border-radius: 0;
+}
+
+.table-pagination .results-info {
+	line-height: 5em;
+}
+
+.form-control+.alert, .input-group+.alert {
+	border-radius: 0;
+	margin-bottom: 0;
+	padding: 5px 15px;
+}
+
+.field-error {
+	border: 1px solid #ebccd1 !important;
+	border-bottom-width: 0 !important;
+}
+
+.form-control.field-error:focus {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px
+		rgba(169, 68, 66, .6);
+}
+
+.nav-table {
+	cursor: pointer;
+}
+
+.table>thead>tr {
+	background-color: #323A45;
+	color: #f5f5f0;
+}
+
+.bootstrap-select .btn-default:hover, .bootstrap-select .btn-default:focus
+	{
+	background-color: white;
+}
+
+/* HEADER (inizio) */
+.navbar {
+	margin-bottom: 0px;
+}
+
+.navbar-brand {
+	padding: 3px 8px;
+}
+
+.navbar-default {
+	background-color: #323A45;
+	border-color: #cdd2d8;
+}
+
+.navbar-default .navbar-nav>li>a {
+	color: #f5f5f0;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover,
+	.navbar-default .navbar-nav>.open>a:focus {
+	color: #323A45;
+	background-color: #edf6f7;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus,
+	.navbar-default .navbar-nav>.active>a:hover {
+	color: #323A45;
+	background-color: #edf6f7;
+}
+
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover
+	{
+	color: #323A45;
+	background-color: #edf6f7;
+}
+
+.navbar-default .dropdown-menu {
+	padding: 0;
+	margin-top: 5px;
+	border-radius: 0;
+}
+
+.navbar-default .dropdown-menu>.active>a, .navbar-default .dropdown-menu>.active>a:hover,
+	.navbar-default .dropdown-menu>.active>a:focus {
+	background-color: #edf6f7;
+	color: #323A45;
+}
+
+.navbar-default .dropdown-menu>li>a:hover, .navbar-default .dropdown-menu>li>a:focus
+	{
+	background-color: #edf6f7;
+}
+
+.static-anchor {
+	cursor: default;
+}
+
+.navbar-default .navbar-toggle {
+	border-color: transparent;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+.navbar-toggle {
+	color: #f5f5f0; margin-top : 0px;
+	margin-bottom: 0px;
+	border-radius: 0;
+	margin-top: 0px;
+}
+
+.navbar-toggle:hover, .navbar-toggle.focus {
+	color: #323A45;
+}
+
+.navbar-toggle+.navbar-toggle {
+	margin-right: 0px;
+}
+
+@media ( min-width : 768px) {
+	.navbar-default .dropdown-menu>li>a {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	.navbar-nav>li>a.has-fa {
+		padding-top: 10px;
+		padding-bottom: 11px;
+	}
+	.navbar-default .dropdown-menu>li>a {
+		border-bottom: 1px solid #ccc;
+	}
+}
+
+@media ( max-width : 768px) {
+	.navbar-toggle-hide {
+		visibility: hidden !important;
+		display: none !important;
+	}
+	.navbar-nav a.has-fa {
+		padding-top: 10px;
+		padding-bottom: 11px;
+	}
+	
+	.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+		color: #f5f5f0;
+		background-color: transparent;
+	}
+	
+	.navbar-default .navbar-nav .open .dropdown-menu>li>a:focus,
+	.navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
+		background-color: #edf6f7;
+	}
+}
+/* HEADER (fine) */
+
+/* FOOTER (inizio) */
+.footer {
+	color: #f5f5f0;
+	padding: 20px 0 40px 0;
+}
+
+.footer a {
+	color: #f5f5f0;
+}
+
+.footer a:hover {
+	color: #ccc;
+}
+
+@media ( min-width : 768px) {
+	.ft-text-right {
+		text-align: right;
+	}
+	.ft-text-left {
+		text-align: left;
+	}
+}
+
+@media ( max-width : 768px) {
+	.ft-text-right {
+		text-align: center;
+	}
+	.ft-text-left>p {
+		text-align: center;
+	}
+}
+/* FOOTER (fine) */
+@-moz-document url-prefix () {
+	fieldset {
+		display: table-cell;
+	}
+}
