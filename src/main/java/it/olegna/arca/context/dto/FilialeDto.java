@@ -1,17 +1,23 @@
 package it.olegna.arca.context.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 
 public class FilialeDto implements Serializable
 {
 
 	private static final long serialVersionUID = -3846226846964324382L;
 	private String nomeFiliale;
-	private double re;
-	private double auto;
-	private double totaleReAuto;
-	private Date dataDati;
+	private List<DatiFilialeDto> datiFiliale;
+	
+	public List<DatiFilialeDto> getDatiFiliale()
+	{
+		return datiFiliale;
+	}
+	public void setDatiFiliale(List<DatiFilialeDto> datiFiliale)
+	{
+		this.datiFiliale = datiFiliale;
+	}
 	public String getNomeFiliale()
 	{
 		return nomeFiliale;
@@ -20,41 +26,10 @@ public class FilialeDto implements Serializable
 	{
 		this.nomeFiliale = nomeFiliale;
 	}
-	public double getRe()
-	{
-		return re;
-	}
-	public void setRe(double re)
-	{
-		this.re = re;
-	}
-	public double getAuto()
-	{
-		return auto;
-	}
-	public void setAuto(double auto)
-	{
-		this.auto = auto;
-	}
-	public double getTotaleReAuto()
-	{
-		return totaleReAuto;
-	}
-	public void setTotaleReAuto(double totaleReAuto)
-	{
-		this.totaleReAuto = totaleReAuto;
-	}
-	public Date getDataDati()
-	{
-		return dataDati;
-	}
-	public void setDataDati(Date dataDati)
-	{
-		this.dataDati = dataDati;
-	}
 	@Override
 	public String toString()
 	{
-		return "FilialeDto [nomeFiliale=" + nomeFiliale + ", re=" + re + ", auto=" + auto + ", totaleReAuto=" + totaleReAuto + ", dataDati=" + dataDati + "]";
+		return "FilialeDto [nomeFiliale=" + nomeFiliale + ", datiFiliale=" + datiFiliale + "]";
 	}
+	
 }

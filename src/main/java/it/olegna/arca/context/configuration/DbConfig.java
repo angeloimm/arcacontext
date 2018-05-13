@@ -69,7 +69,7 @@ public class DbConfig
 	public LocalSessionFactoryBean sessionFactory()
 	{
 		LocalSessionFactoryBean lsfb = new LocalSessionFactoryBean();
-		lsfb.setPackagesToScan(new String[]{"it.regioneveneto.sanita.graduatoriaMedici.models"});
+		lsfb.setPackagesToScan(new String[]{"it.olegna.arca.context.models"});
 		lsfb.setDataSource(this.hikariDataSource());
 		lsfb.setHibernateProperties(hibProps());
 		return lsfb;
