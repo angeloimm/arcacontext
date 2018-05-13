@@ -1,0 +1,109 @@
+package it.olegna.arca.context.models;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicUpdate;
+@DynamicUpdate
+@Cache( region = "it.olegna.arca.context.models.DatiFiliale", 
+		usage = CacheConcurrencyStrategy.READ_WRITE)
+@Entity
+@Table(name = "FILIALE", indexes = { @Index(name = "DATA_DATI_IDX", 
+											columnList = "DATA_DATI") })
+public class DatiFiliale extends AbstractModel
+{
+
+	private static final long serialVersionUID = -8863663013694386520L;
+	private double re;
+	private double auto;
+	private Date dataDati;
+	private Filiale filiale;
+	
+	@ManyToOne(targetEntity=Filiale.class)
+	public Filiale getFiliale()
+	{
+		return filiale;
+	}
+	public void setFiliale(Filiale filiale)
+	{
+		this.filiale = filiale;
+	}
+	@Column(name="RE", nullable=false)
+	public double getRe()
+	{
+		return re;
+	}
+	public void setRe(double re)
+	{
+		this.re = re;
+	}
+	@Column(name="AUTO", nullable=false)
+	public double getAuto()
+	{
+		return auto;
+	}
+	public void setAuto(double auto)
+	{
+		this.auto = auto;
+	}
+	@Column(name="DATA_DATI", nullable=false)
+	@Temporal(TemporalType.DATE)
+	public Date getDataDati()
+	{
+		return dataDati;
+	}
+	public void setDataDati(Date dataDati)
+	{
+		this.dataDati = dataDati;
+	}
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = super.hashCode();
+		long temp;
+		temp = Double.doubleToLongBits(auto);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((dataDati == null) ? 0 : dataDati.hashCode());
+		temp = Double.doubleToLongBits(re);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DatiFiliale other = (DatiFiliale) obj;
+		if (Double.doubleToLongBits(auto) != Double.doubleToLongBits(other.auto))
+			return false;
+		if (dataDati == null)
+		{
+			if (other.dataDati != null)
+				return false;
+		}
+		else if (!dataDati.equals(other.dataDati))
+			return false;
+		if (Double.doubleToLongBits(re) != Double.doubleToLongBits(other.re))
+			return false;
+		return true;
+	}
+	@Override
+	public String toString()
+	{
+		return "DatiFiliale [re=" + re + ", auto=" + auto + ", dataDati=" + dataDati + ", getId()=" + getId() + ", getCreatoDa()=" + getCreatoDa() + ", getModificatoDa()=" + getModificatoDa() + ", getDataCreazione()=" + getDataCreazione() + ", getDataModifica()=" + getDataModifica() + "]";
+	}	
+}
