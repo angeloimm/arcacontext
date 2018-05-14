@@ -69,6 +69,7 @@ public class CacheConfiguration extends CachingConfigurerSupport
 		for (BeanDefinition bd : scanner.findCandidateComponents("it.olegna.arca.context.models"))
 		{
 			String className = bd.getBeanClassName();
+			caches.put(className, cacheConfiguration);
 		}
 		//Creo la cache di hibernate org.hibernate.cache.internal.StandardQueryCache
 		caches.put("org.hibernate.cache.internal.StandardQueryCache", cacheConfiguration);

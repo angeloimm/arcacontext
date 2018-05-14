@@ -7,3 +7,7 @@
 \.project
 
 esempioFile/
+
+catalina\.home_IS_UNDEFINED/
+
+db/

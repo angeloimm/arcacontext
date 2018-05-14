@@ -1,4 +1,4 @@
-package it.olegna.arca.context.configuration;
+package it.olegna.arca.context.test;
 
 import java.sql.SQLException;
 import java.util.Properties;
@@ -10,23 +10,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import it.olegna.arca.context.configuration.CacheConfiguration;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackages = { "it.olegna.arca.context" })
+@ComponentScan(	basePackages = { "it.olegna.arca.context" } , 
+				excludeFilters = {	@ComponentScan.Filter(type=FilterType.ANNOTATION, classes=Controller.class),
+									@ComponentScan.Filter(type=FilterType.ANNOTATION, classes=Configuration.class)
+	 							 }
+)
 @Import(CacheConfiguration.class)
-public class DbConfig
+public class TestDbConfig
 {
 	@Autowired
 	private Environment env;
@@ -46,23 +53,24 @@ public class DbConfig
 		props.put("hibernate.javax.cache.provider", "org.ehcache.jsr107.EhcacheCachingProvider");
 		return props;
 	}
-	@Bean(name="hikariDs", destroyMethod = "close")
+	@Bean(name="hikariDs")
 	public DataSource hikariDataSource(){
-	    HikariConfig hikariConfig = new HikariConfig();
-	    hikariConfig.setDriverClassName(env.getProperty("arca.context.db.driverClassName"));
-	    hikariConfig.setJdbcUrl(env.getProperty("arca.context.db.jdbcUrl"));
-	    hikariConfig.setUsername(env.getProperty("arca.context.db.username"));
-	    hikariConfig.setPassword(env.getProperty("arca.context.db.password"));
-	    hikariConfig.setMaximumPoolSize(new Integer(env.getProperty("arca.context.db.maxPoolSize")));
-	    hikariConfig.setConnectionTestQuery(env.getProperty("arca.context.db.validationQuery"));
-	    hikariConfig.setPoolName("springHikariCP");
-	    hikariConfig.setIdleTimeout(new Integer(env.getProperty("arca.context.db.maxIdleTime")));
-	    hikariConfig.addDataSourceProperty("dataSource.cachePrepStmts", "true");
-	    hikariConfig.addDataSourceProperty("dataSource.prepStmtCacheSize", "250");
-	    hikariConfig.addDataSourceProperty("dataSource.prepStmtCacheSqlLimit", "2048");
-	    hikariConfig.addDataSourceProperty("dataSource.useServerPrepStmts", "true");
-	    HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-	    return dataSource;
+//	    HikariConfig hikariConfig = new HikariConfig();
+//	    hikariConfig.setDriverClassName(env.getProperty("arca.context.db.driverClassName"));
+//	    hikariConfig.setJdbcUrl(env.getProperty("arca.context.db.jdbcUrl"));
+//	    hikariConfig.setUsername(env.getProperty("arca.context.db.username"));
+//	    hikariConfig.setPassword(env.getProperty("arca.context.db.password"));
+//	    hikariConfig.setMaximumPoolSize(new Integer(env.getProperty("arca.context.db.maxPoolSize")));
+//	    hikariConfig.setConnectionTestQuery(env.getProperty("arca.context.db.validationQuery"));
+//	    hikariConfig.setPoolName("springHikariCP");
+//	    hikariConfig.setIdleTimeout(new Integer(env.getProperty("arca.context.db.maxIdleTime")));
+//	    hikariConfig.addDataSourceProperty("dataSource.cachePrepStmts", "true");
+//	    hikariConfig.addDataSourceProperty("dataSource.prepStmtCacheSize", "250");
+//	    hikariConfig.addDataSourceProperty("dataSource.prepStmtCacheSqlLimit", "2048");
+//	    hikariConfig.addDataSourceProperty("dataSource.useServerPrepStmts", "true");
+//	    HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+//	    dataSource.setPoolName("ArcaContext Pool");
+	    return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
 	}
 
 	@Bean
