@@ -36,7 +36,7 @@
 	</appender>	
 	<logger	name="it.olegna.arca" level="TRACE">
 	</logger>
-	<logger	name="org.springframework.security" level="TRACE">
+	<logger	name="org.springframework.security" level="INFO">
 	</logger>			
 	<!-- Fine appender asincroni -->
 	<root level="INFO">

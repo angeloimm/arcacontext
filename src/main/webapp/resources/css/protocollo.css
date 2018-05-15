@@ -1,0 +1,9 @@
+.preHeader {background-color: #fff;color: #333;padding: 0 10px;border-top: 2px solid #337ab7;}
+.preHeader .navbar-top-links li a {padding: 7px;min-height: auto;margin-left: 10px;}
+.preHeader p {margin:0;vertical-align:middle;display:inline-block;line-height: 32px;}
+.dropZoneInfo {border: 2px dotted #337ab7;}
+
+#dropzone {background: palegreen;text-align: center;font-weight: bold;}
+#dropzone.in {width: 600px;height: 200px;line-height: 200px;font-size: larger;}
+#dropzone.hover {background: lawngreen;}
+#dropzone.fade {-webkit-transition: all 0.3s ease-out;-moz-transition: all 0.3s ease-out;-ms-transition: all 0.3s ease-out;-o-transition: all 0.3s ease-out;transition: all 0.3s ease-out;opacity: 1;}
