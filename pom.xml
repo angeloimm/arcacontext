@@ -59,6 +59,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+    		<artifactId>commons-math3</artifactId>
+			<version>${commons.math.version}</version>
+		</dependency>	
+		<dependency>
 			<groupId>com.fasterxml</groupId>
 			<artifactId>classmate</artifactId>
 			<version>${com.classmate.version}</version>

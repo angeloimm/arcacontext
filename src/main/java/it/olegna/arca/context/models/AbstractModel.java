@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -19,9 +20,9 @@ public abstract class AbstractModel implements Serializable
 	private Date dataCreazione;
 	private Date dataModifica;
 	@Id
-	@GeneratedValue(generator = "uuid")
+	@GeneratedValue(generator = "uuid", strategy=GenerationType.IDENTITY)
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
-	@Column(name = "id", unique = true)
+	@Column(name = "ID", unique = true)
 	public String getId()
 	{
 		return id;

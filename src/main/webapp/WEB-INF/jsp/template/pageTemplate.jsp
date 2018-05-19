@@ -28,14 +28,7 @@
 	<link href='<spring:url value="/adminWebTheme/vendor/font-awesome/css/font-awesome.min.css" />'	rel="stylesheet" type="text/css">
 	<!-- Custom CSS -->
 	<link href='<spring:url value="/resources/css/protocollo.css" />' rel="stylesheet" type="text/css">
-		<!-- File Upload  -->
-	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-	<link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload.css"/>'>
-	<link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload-ui.css"/>'>
-
-	<!-- CSS adjustments for browsers with JavaScript disabled -->
-	<noscript><link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload-noscript.css"/>'>
-	<noscript><link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload-ui-noscript.css"/>'></noscript>
+	
 	<!-- Bootstrap datetime picker -->
 	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
 	<link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>'>
@@ -73,30 +66,7 @@
 	<!-- Complexify JS -->
 	<script	src='<spring:url value="/adminWebTheme/vendor/jquery-complexify/jquery.complexify.min.js" />'></script>
 	<script	src='<spring:url value="/adminWebTheme/vendor/jquery-complexify/jquery.complexify.banlist.js" />'></script>
-	<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/load-image.all.min.js"/>'></script>
 
-<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/canvas-to-blob.min.js"/>'></script>
-
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery-ui.min.js"/>'></script>
-
-	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.iframe-transport.js"/>'></script>
-<!-- The basic File Upload plugin -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload.js"/>'></script>
-<!-- The File Upload processing plugin -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-process.js"/>'></script>
-<!-- The File Upload image preview & resize plugin -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-image.js"/>'></script>
-<!-- The File Upload audio preview plugin -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-audio.js"/>'></script>
-<!-- The File Upload video preview plugin -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-video.js"/>'></script>
-<!-- The File Upload validation plugin -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-validate.js"/>'></script>
-<!-- The File Upload user interface plugin -->
-<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-ui.js"/>'></script>
 <!-- Bootstrap datetime picker -->
 <script src='<spring:url value="/adminWebTheme/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"/>'></script>
 <!-- Mark JS -->
@@ -117,7 +87,7 @@ $(document).ajaxSend(function(e, xhr, options) {
 $(document).ready(function(){
 	
 	var pathname = window.location.pathname;
-	if( pathname.indexOf('registriProtocollo') > -1 )
+	if( pathname.indexOf('elencoFiliali') > -1 )
 	{
 		$("#liRiversamentoManualeProtocollo").removeClass("active");
 		$("#liRegistroProtocollo").addClass("active");
@@ -172,8 +142,8 @@ function estendiSessione()
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->    
 </head>
-<spring:url value="/pages/protected/adminHome" var="riversamentiManualiUrl"/>
-<spring:url value="/pages/protected/registriProtocollo" var="registriProtocolloUrl"/>
+<spring:url value="/pages/protected/adminHome" var="homePageUrl"/>
+<spring:url value="/pages/protected/elencoFiliali" var="elencoFilialiUrl"/>
 <spring:url value="/resources/img/logo.png" var="logoUrl"/>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -211,8 +181,8 @@ function estendiSessione()
 		<nav class="navbar navbar-default">
 		  <div class="container-fluid">
 		    <ul class="nav navbar-nav">
-		      <li id="liRiversamentoManualeProtocollo"><a href="${riversamentiManualiUrl}"> <spring:message code="area.vasta.protocollo.web.msgs.riversamenti.manuali.page.name"/> </a></li>
-		      <li id="liRegistroProtocollo"><a href="${registriProtocolloUrl}"><spring:message code="area.vasta.protocollo.web.msgs.registri.protocollo.page.name"/></a></li>
+		      <li id="liRiversamentoManualeProtocollo"><a href="${homePageUrl}"> <spring:message code="area.vasta.protocollo.web.msgs.riversamenti.manuali.page.name"/> </a></li>
+		      <li id="liRegistroProtocollo"><a href="${elencoFilialiUrl}"><spring:message code="area.vasta.protocollo.web.msgs.registri.protocollo.page.name"/></a></li>
 		    </ul>
 		  </div>
 		</nav>

@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.formula.udf.UDFFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,11 +19,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.olegna.arca.context.dto.FileUploadResponseDto;
 import it.olegna.arca.context.dto.UploadedFileDto;
+import it.olegna.arca.context.models.Filiale;
+import it.olegna.arca.context.service.DataReader;
+import it.olegna.arca.context.service.FilialeManagerSvc;
 
 @RestController
 @RequestMapping("/rest")
 public class UploadFileController {
 	private static final Logger logger = LoggerFactory.getLogger(UploadFileController.class.getName());
+	@Autowired
+	private DataReader reader;
+	@Autowired
+	private FilialeManagerSvc filialeSvc;
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.POST }, value = { "/protected/uploadRiversamenti" })
 	public ResponseEntity<FileUploadResponseDto> uploadRiversamentoManuale(	
@@ -37,7 +45,13 @@ public class UploadFileController {
 			logger.debug("Nome file uploadato: "+fileName);
 		}
 		try {
-			//TODO: Leggere e creare i protocolli TUTTO IN UNA SOLA TRANSAZIONE e.g. riveramentiManualiSvc.salvaRiveramentiManuali(protocolliManuali);
+			List<Filiale> filiali = reader.dataReader(mpf.getInputStream());
+			if( logger.isDebugEnabled() )
+			{
+			
+				logger.debug("Ottenute {} filiali", filiali.size());
+			}
+			filialeSvc.salvaAggiornaFilialeAndDati(filiali);
 			UploadedFileDto ufd = new UploadedFileDto();
 			ufd.setId(UUID.randomUUID().toString());
 			ufd.setName(fileName);

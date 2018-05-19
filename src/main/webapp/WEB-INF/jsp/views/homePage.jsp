@@ -9,21 +9,38 @@
 	<tiles:putAttribute name="head">
 		<spring:url value="/resources/images/busy.gif" var="urlBusyImg" />
 		<title><spring:message code="area.vasta.protocollo.web.msgs.home.page.title" /></title>
-		<!-- DataTables CSS -->
-		<link
-			href="<spring:url value="/adminWebTheme/vendor/datatables-plugins/dataTables.bootstrap.css" />"
-			rel="stylesheet">
-		<!-- DataTables Responsive CSS -->
-		<link
-			href="<spring:url value="/adminWebTheme/vendor/datatables-responsive/dataTables.responsive.css" />"
-			rel="stylesheet">
-		<!-- DataTables JavaScript -->
-		<script
-			src="<spring:url value="/adminWebTheme/vendor/datatables/js/jquery.dataTables.min.js" />"></script>
-		<script
-			src="<spring:url value="/adminWebTheme/vendor/datatables-plugins/dataTables.bootstrap.min.js" />"></script>
-		<script
-			src="<spring:url value="/adminWebTheme/vendor/datatables-responsive/dataTables.responsive.js" />"></script>
+			<!-- File Upload  -->
+	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+	<link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload.css"/>'>
+	<link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload-ui.css"/>'>
+
+	<!-- CSS adjustments for browsers with JavaScript disabled -->
+	<noscript><link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload-noscript.css"/>'>
+	<noscript><link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload-ui-noscript.css"/>'></noscript>
+	<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/load-image.all.min.js"/>'></script>
+
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/canvas-to-blob.min.js"/>'></script>
+
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery-ui.min.js"/>'></script>
+
+	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.iframe-transport.js"/>'></script>
+<!-- The basic File Upload plugin -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload.js"/>'></script>
+<!-- The File Upload processing plugin -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-process.js"/>'></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-image.js"/>'></script>
+<!-- The File Upload audio preview plugin -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-audio.js"/>'></script>
+<!-- The File Upload video preview plugin -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-video.js"/>'></script>
+<!-- The File Upload validation plugin -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-validate.js"/>'></script>
+<!-- The File Upload user interface plugin -->
+<script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-ui.js"/>'></script>	
 		<script type="text/x-handlebars-template" id="templateErroreUploadFile">
 		<div class="alert alert-danger">
   			<spring:message code="area.vasta.protocollo.web.msgs.upload.error.msg" />

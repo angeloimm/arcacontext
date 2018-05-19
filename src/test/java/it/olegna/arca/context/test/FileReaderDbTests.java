@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.service.DataReader;
+import it.olegna.arca.context.service.FilialeManagerSvc;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={TestDbConfig.class})
@@ -25,6 +26,8 @@ public class FileReaderDbTests
 	private static final Logger logger = LoggerFactory.getLogger(FileReaderDbTests.class.getName());
 	@Autowired
 	private DataReader reader;
+	@Autowired
+	private FilialeManagerSvc filialeSvc;
 	@Test
 	public void readFile()
 	{
@@ -32,6 +35,8 @@ public class FileReaderDbTests
 		{
 			Resource fileRes = new FileSystemResource(new File("esempioFile/DATI RE.xlsx"));
 			List<Filiale> filiali = reader.dataReader(fileRes.getInputStream());
+			logger.info("Ottenute {} filiali", filiali.size());
+			filialeSvc.salvaAggiornaFilialeAndDati(filiali);
 		}
 		catch (Exception e)
 		{

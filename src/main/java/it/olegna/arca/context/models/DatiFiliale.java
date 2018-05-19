@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Cache( region = "it.olegna.arca.context.models.DatiFiliale", 
 		usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
-@Table(name = "FILIALE", indexes = { @Index(name = "DATA_DATI_IDX", 
+@Table(name = "DATI_FILIALE", indexes = { @Index(name = "DATA_DATI_IDX", 
 											columnList = "DATA_DATI") })
 public class DatiFiliale extends AbstractModel
 {
@@ -25,10 +26,12 @@ public class DatiFiliale extends AbstractModel
 	private static final long serialVersionUID = -8863663013694386520L;
 	private double re;
 	private double auto;
+	private double totale;
 	private Date dataDati;
 	private Filiale filiale;
 	
 	@ManyToOne(targetEntity=Filiale.class)
+	@JoinColumn(name="id_filiale", nullable=false)
 	public Filiale getFiliale()
 	{
 		return filiale;
@@ -37,7 +40,7 @@ public class DatiFiliale extends AbstractModel
 	{
 		this.filiale = filiale;
 	}
-	@Column(name="RE", nullable=false)
+	@Column(name="RE_FILIALE", nullable=false)
 	public double getRe()
 	{
 		return re;
@@ -46,7 +49,7 @@ public class DatiFiliale extends AbstractModel
 	{
 		this.re = re;
 	}
-	@Column(name="AUTO", nullable=false)
+	@Column(name="AUTO_FILIALE", nullable=false)
 	public double getAuto()
 	{
 		return auto;
@@ -54,6 +57,15 @@ public class DatiFiliale extends AbstractModel
 	public void setAuto(double auto)
 	{
 		this.auto = auto;
+	}
+	@Column(name="TOTALE_FILIALE", nullable=false)
+	public double getTotale()
+	{
+		return totale;
+	}
+	public void setTotale(double totale)
+	{
+		this.totale = totale;
 	}
 	@Column(name="DATA_DATI", nullable=false)
 	@Temporal(TemporalType.DATE)

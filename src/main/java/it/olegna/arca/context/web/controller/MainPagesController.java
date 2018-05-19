@@ -30,6 +30,7 @@ public class MainPagesController {
 	private HttpSession sessione;
 	@Value("${arca.context.max.file.dimension}")
 	private long dimensioneFile;
+
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.GET }, value="/protected/adminHome")
 	public String homePage(Model model)
@@ -57,6 +58,32 @@ public class MainPagesController {
 			return "views/genericError";
 		}
 	}
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(method = { RequestMethod.GET }, value="/protected/elencoFiliali")
+	public String elencoFiliali(Model model)
+	{
+		try
+		{
+			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
+			{
+				
+				User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				SimpleUtenteLoggato sul = new SimpleUtenteLoggato();
+				sul.setCognome("Di Palma ("+user.getUsername()+")");
+				sul.setNome("Salvatore");
+				model.addAttribute("utenteLoggato", sul);
+			}
+			model.addAttribute("dimensioneFileFormattata", FileUtils.byteCountToDisplaySize(dimensioneFile));
+			long durataSessioneSecondi = sessione.getMaxInactiveInterval(); 
+			model.addAttribute("durataSessione", durataSessioneSecondi);
+			return "views/elencoFiliali";
+		}
+		catch (Exception e) 
+		{
+			logger.error("Errore nel rendering della Home Page",e);
+			return "views/genericError";
+		}
+	}	
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.GET }, value="/protected/registriProtocollo")
 	public String registriProtocollo(Model model)

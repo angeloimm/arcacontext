@@ -10,6 +10,8 @@ public class DatiFilialeDto implements Serializable
 	private double re;
 	private double auto;
 	private double totaleReAuto;
+	private long dataDatiLong;
+	private String nomeFiliale;
 	private Date dataDati;
 	
 	public double getRe()
@@ -44,9 +46,26 @@ public class DatiFilialeDto implements Serializable
 	{
 		this.dataDati = dataDati;
 	}
+	
+	public long getDataDatiLong()
+	{
+		return dataDati.getTime();
+	}
+	public void setDataDatiLong(long dataDatiLong)
+	{
+		this.dataDatiLong = dataDatiLong;
+	}
+	public String getNomeFiliale()
+	{
+		return nomeFiliale;
+	}
+	public void setNomeFiliale(String nomeFiliale)
+	{
+		this.nomeFiliale = nomeFiliale;
+	}
 	@Override
 	public String toString()
 	{
-		return "DatiFilialeDto [re=" + re + ", auto=" + auto + ", totaleReAuto=" + totaleReAuto + ", dataDati=" + dataDati + "]";
+		return "DatiFilialeDto [re=" + re + ", auto=" + auto + ", totaleReAuto=" + totaleReAuto + ", dataDatiLong=" + dataDatiLong + ", nomeFiliale=" + nomeFiliale + ", dataDati=" + dataDati + "]";
 	}
 }
