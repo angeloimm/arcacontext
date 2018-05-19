@@ -1,5 +1,6 @@
 package it.olegna.arca.context.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -15,6 +16,6 @@ public interface FilialeManagerSvc
 	List<FilialeDto> ricercaFiliali(DetachedCriteria dc) throws ArcaContextDbException;
 	DataTableResponse<FilialeDto> ricercaElencoFiliali(int start, int end) throws ArcaContextDbException;
 	Filiale ricercaFilialeByName(String name) throws ArcaContextDbException;
-	void salvaAggiornaFilialeAndDati( List<Filiale> filiali ) throws ArcaContextDbException;
+	void salvaAggiornaFilialeAndDati( List<Filiale> filiali, Date dataDati ) throws ArcaContextDbException;
 	
 }

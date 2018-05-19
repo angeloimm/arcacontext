@@ -1,0 +1,14 @@
+[
+  {
+    "nome": "Salvatore",
+    "cognome": "Di Palma",
+    "username": "s.dipalma",
+    "password": "s.dipalma",
+    "ruoli": [
+      "ADMIN",
+      "SUPER_ADMIN",
+      "USER"
+    ],
+    "mail": "Salvatore.DiPalma@arcavita.it"
+  }
+]

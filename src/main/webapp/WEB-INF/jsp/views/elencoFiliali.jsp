@@ -32,11 +32,16 @@
 			src="<spring:url value="/adminWebTheme/vendor/datatables-plugins/dataTables.bootstrap.min.js" />"></script>
 		<script
 			src="<spring:url value="/adminWebTheme/vendor/datatables-responsive/dataTables.responsive.js" />"></script>
-	<script type="text/x-handlebars-template" id="templateAndamentoFiliale">
+	<script type="text/x-handlebars-template" id="templateAzioniFiliale">
     	<div class="nowrap"> 
-      		<button class="dettagliCandidato dettaglio btn btn-primary btn-xs" type="button" data-toggle="tooltip" title='Visualizza andamento dati filiale'> 
+      		<button class="dettagliFiliale dettaglio btn btn-primary btn-xs" type="button" data-toggle="tooltip" title='Visualizza informazioni dati filiale'> 
         		<i class="fa fa-info-circle" aria-hidden="true"></i> 
-      		</button>  
+      		</button>
+			{{!--
+				<button class="cancellazioneFiliale dettaglio btn btn-danger btn-xs" type="button" data-toggle="tooltip" title="Cancella filiale">
+					<i class="fa fa-trash-o" aria-hidden="true"></i>
+				</button>
+			--}}
 		</div>
 	</script>
 	<script type="text/x-handlebars-template" id="templateSceltaFiliale">
@@ -46,16 +51,93 @@
             	<label for="someSwitchOptionPrimary{{id}}" class="label-primary"></label>
         	</div> 
 		</div>
+	</script>
+	<script type="text/x-handlebars-template" id="templateDettagliFiliale">
+    	<div class="alert alert-info">
+			Dati filiale <strong>{{nomeFiliale}}</strong>
+		</div>					
+		<table	class="datatables-table table table-striped table-bordered table-hover" id="tabellaDatiFiliali" cellspacing="0"  style="width: 100%;">
+			<thead>
+				<tr>
+					<th>Data</th>
+					<th>RE €</th>
+					<th>AUTO €</th>
+					<th>TOTALE (re+auto) €</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</script>
+	<script type="text/x-handlebars-template" id="templateCancellazioneFiliale">
+    	<div class="alert alert-danger">
+			<strong>Attenzione!</strong> Confermi di voler cancellare i dati della filiale <strong>{{nomeFiliale}}</strong>?
+			<br/>
+			L'operazione &egrave; irreversibile.
+		</div>
+		<div class="nowrap"> 
+      		<button class="dettaglio btn btn-danger" type="button"> 0
+        		<i class="fa fa-trash-o" aria-hidden="true"></i>Cancella filiale 
+      		</button>
+			<button class="dettaglio btn btn-default" type="button"> 
+        		<i class="fa fa-times-circle-o" aria-hidden="true"></i>Annulla 
+      		</button>  
+		</div>		
+	</script>
+	<script type="text/x-handlebars-template" id="templateCreazioneCampionato">
+    	<div class="alert alert-info">
+			 Seleziona la data di inizio e la data di fine del campionato
+		</div>
+		<div class="container">
+			<div class="col-md-4">
+				<div class="form-group"> 
+					<label for="dal">Dal</label>
+        			<div class='input-group date' id='dataFrom'>
+            			<input type='text' id="dal" class="form-control" />
+                		<span class="input-group-addon">
+                			<span class="glyphicon glyphicon-calendar"></span>
+                		</span>
+        			</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group"> 
+        			<label for="al">Al</label>
+					<div class='input-group date' id='dataTo'>
+            			<input type='text' id="al" class="form-control" />
+                		<span class="input-group-addon">
+                			<span class="glyphicon glyphicon-calendar"></span>
+                		</span>
+        			</div>
+				</div>
+			</div>
+		</div>		
+		<div class="nowrap"> 
+      		<button class="dettaglio btn btn-primary" id="creaCampionatoBtn" type="button">
+        		Crea campionato 
+      		</button>
+			<button class="dettaglio btn btn-default" id="chiudiCreazioneCampionatoBtn" type="button"> 
+        		Annulla 
+      		</button>  
+		</div>		
 	</script>	
 		<script type="text/javascript" charset="UTF-8">
+		var svuotaGrafico = false;
 		var idFilialiSelezionati = [];
-		var templateAndamentoFiliale = Handlebars.compile($("#templateAndamentoFiliale").html());
+		var templateAzioniFiliale = Handlebars.compile($("#templateAzioniFiliale").html());
 		var templateSceltaFiliale = Handlebars.compile($("#templateSceltaFiliale").html());
+		var templateDettagliFiliale = Handlebars.compile($("#templateDettagliFiliale").html());
+		var templateCancellazioneFiliale = Handlebars.compile($("#templateCancellazioneFiliale").html());
+		var templateCreazioneCampionato = Handlebars.compile($("#templateCreazioneCampionato").html());
 		var tabellaFiliali = null;
 		
 			$(document).ready( function(){
 				$("#sezioneGraficoAndamento").hide();
 				$("#visualizzaAndamenti").prop("disabled",true);
+				$("#creazioneCampionato").click( function(evt){
+					evt.preventDefault();
+					creazioneCampionato();
+				} );
 				$('[data-toggle="tooltip"]').tooltip();
 				tabellaFiliali = $("#tabellaFiliali")
 				.DataTable(
@@ -105,16 +187,16 @@
 									{
 										"render" : 	function(data, type, row) 
 													{
-														return templateAndamentoFiliale(row);
+														return templateAzioniFiliale(row);
 													},
 										"sortable" : false,
 										"targets" : 2
 									}
 							]
 						});
- 					$('#tabellaFiliali tbody').on(
+				$('#tabellaFiliali tbody').on(
 						'click',
-						'td button.dettagliCandidato',
+						'td button.cancellazioneFiliale',
 						function(evt) {
 							evt.preventDefault();									
 							var tr = $(this).closest('tr');
@@ -124,12 +206,43 @@
 								var row = tabellaFiliali.row(tr);
 							}
 							var dati = row.data();
-							var idCandidato = dati.id;
+							var idFiliale = dati.id;
 							
 							BootstrapDialog.show({
-					            title: 'Andamento filiale',
+					            title: 'Cancellazione filiale',
 					            message: function(dialog) {							            	
-					                var $message = templateDettaglioCandidato(row.data());
+					                var $message = templateCancellazioneFiliale(row.data());
+					                return $message;
+					            },
+					            size: 'size-wide',
+					            type: BootstrapDialog.TYPE_DANGER,
+					            closable: true, 
+					            draggable: false,
+					            nl2br:false,
+					            onshown: function(dialogRef){
+					            	recuperaDatiFiliale(idFiliale);
+					            }
+							});
+					            	
+						});				
+ 					$('#tabellaFiliali tbody').on(
+						'click',
+						'td button.dettagliFiliale',
+						function(evt) {
+							evt.preventDefault();									
+							var tr = $(this).closest('tr');
+							var row = tabellaFiliali.row(tr);
+							if(row.data() == undefined){
+								var tr = $(this).closest('tr').prev('.parent');
+								var row = tabellaFiliali.row(tr);
+							}
+							var dati = row.data();
+							var idFiliale = dati.id;
+							
+							BootstrapDialog.show({
+					            title: 'Dati filiale',
+					            message: function(dialog) {							            	
+					                var $message = templateDettagliFiliale(row.data());
 					                return $message;
 					            },
 					            size: 'size-wide',
@@ -138,7 +251,7 @@
 					            draggable: false,
 					            nl2br:false,
 					            onshown: function(dialogRef){
-					            	
+					            	recuperaDatiFiliale(idFiliale);
 					            }
 							});
 					            	
@@ -148,9 +261,127 @@
  						visualizzaAndamenti(idFilialiSelezionati);
  					});
          	});	
+			function creazioneCampionato()
+			{
+				BootstrapDialog.show({
+		            title: 'Creazione campionato filiali',
+		            message: function(dialog) {							            	
+		                var $message = templateCreazioneCampionato();
+		                return $message;
+		            },
+		            size: 'size-wide',
+		            type: BootstrapDialog.TYPE_INFO,
+		            closable: true, 
+		            draggable: false,
+		            nl2br:false,
+		            onshown: function(dialogRef){
+		            	 $('#dataFrom').datetimepicker({
+		                     locale: 'it',
+		                     minDate: new Date(),
+		                     keepInvalid: true,
+		                     format:'L'
+		                 });
+		            	 $('#dataTo').datetimepicker({
+		                     locale: 'it',
+		                     useCurrent: false,
+		                     keepInvalid: true,
+		                     format:'L'
+		                 });	
+		            	 $("#dataFrom").on("dp.change", function (e) {
+		                     $('#dataTo').data("DateTimePicker").minDate(e.date);
+		                 });
+		            	 $("#chiudiCreazioneCampionatoBtn").click(function(evt){
+		            		 evt.preventDefault();
+		            		 dialogRef.close();
+		            	 });
+		            	 $("#creaCampionatoBtn").click(function(evt){
+		            		 evt.preventDefault();
+		            		 console.log("Creazione campionato");
+		            	 });
+		            }
+				});
+			}
+			function recuperaDatiFiliale(idFiliale)
+			{
+				$("#tabellaDatiFiliali")
+				.DataTable(
+						{
+							"processing" : true,
+							"serverSide" : true,
+							"searching" : false,
+							"responsive" : true,
+							"pagingType": "full_numbers",
+							"ordering":false,
+							"mark"      : true,
+							"language" : {
+								"url" : '<spring:url value="/adminWebTheme/vendor/datatables/i18n/Italian.lang"/>'
+							},
+							"drawCallback": function( settings ) {
+								$('[data-toggle="tooltip"]').tooltip();
+							},									
+							"ajax" : {
+								"url" : '<spring:url value="/rest/protected/dettagliFiliale.json" />',
+								"dataSrc" : "payload",
+								"data":{
+									
+									"idFiliale":idFiliale
+								}
+							},
+							"deferRender" : true,
+							"columnDefs" : 
+							[
+								{
+									"render" : 	function(data, type, row) 
+												{
+													if (row.dataDatiLong && row.dataDatiLong !== 0) 
+													{
+														return new moment(row.dataDatiLong).format('DD/MM/YYYY');
+													}
+													return "-";
+												},
+									"name" : "dataDatiLong",
+									"sortable" : false,
+									"targets" : 0
+								},			
+								{
+									"render" : 	function(data, type, row) 
+												{
+													
+													return row.re;
+												},
+									"sortable" : false,
+									"name":"re",
+									"targets" : 1
+								},
+								{
+									"render" : 	function(data, type, row) 
+												{
+												
+													return row.auto;
+												},
+									"sortable" : false,
+									"name":"auto",
+									"targets" : 2
+								},
+								{
+									"render" : 	function(data, type, row) 
+												{
+								
+													return row.totaleReAuto;
+												},
+									"sortable" : false,
+									"name":"totaleReAuto",
+									"targets" : 3
+								}								
+							]
+						});
+			}
 			function visualizzaAndamenti(idFiliali)
 			{
-				$("#graficoAndamentoFiliale").empty();
+				if( svuotaGrafico === true )
+		    	{
+		    		$("#graficoAndamentoFiliale").empty();
+		    	}
 				var filiali = new Object();
 				filiali.idFiliali = idFiliali;
 				$.ajax({
@@ -160,7 +391,7 @@
 					type : 'POST',
 					data: JSON.stringify(filiali),
 				    beforeSend : function(){
-				    	 $.blockUI({ message: '<p><img src="${urlBusyImg}" />Giusto un momento sto recuperando le informazioni....</p>' });				    	 	
+				    	$.blockUI({ message: '<p><img src="${urlBusyImg}" />Giusto un momento sto recuperando le informazioni....</p>' });				    	 	
 				    },
 				    complete   : function(){
 					    
@@ -178,7 +409,7 @@
 				    		Morris.Line({
 				    			  element: 'graficoAndamentoFiliale',
 				    			  data: dati,
-				    			  /* events: etichette, */
+				    			  ymin:0,
 				    			  xkey: 'dataDati',
 				    			  ykeys: yKeys,
 				    			  labels: yKeys,
@@ -192,12 +423,12 @@
 				    				  return moment(d).format('DD/MM/YYYY');
 				    			  },
 				    			  yLabelFormat: function(y){
-				    				  return y;
+				    				  return y.toFixed(2);
 				    				  //return new moment(d).format('dd/mm/yy');
 				    			  },
-				    			  resize:false
+				    			  resize:true
 				    			});
-				    		
+				    		svuotaGrafico = true;
 				    	}
 				    },
 				    error : function(data) {
@@ -252,14 +483,19 @@
 							<tbody>
 							</tbody>
 						</table>
-						<button id="visualizzaAndamenti" class="btn btn-primary">
-							<strong>Visualizza andamenti</strong>
-						</button>
+						<div class="nowrap">
+							<button id="visualizzaAndamenti" class="btn btn-primary">
+								<strong>Visualizza andamenti</strong>
+							</button>
+							<button id="creazioneCampionato" class="btn btn-primary">
+								<strong>Crea campionato</strong>
+							</button>
+						</div>
 					</div>
 					<div class="col-lg-12" id="sezioneGraficoAndamento">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> Grafico andamento filiale basato sul totale RE AUTO
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Grafico andamento filiali basato sul totale RE AUTO
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

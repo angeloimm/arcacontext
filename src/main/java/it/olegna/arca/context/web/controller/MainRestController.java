@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.olegna.arca.context.dto.BaseResponse;
 import it.olegna.arca.context.dto.DataTableResponse;
+import it.olegna.arca.context.dto.DatiFilialeDto;
 import it.olegna.arca.context.dto.FilialeDto;
 import it.olegna.arca.context.dto.MorrisDataDto;
 import it.olegna.arca.context.dto.VisualizzaAndamentoRequestDto;
@@ -130,5 +132,38 @@ public class MainRestController {
 			result.setEsitoOperazione(status.value());
 		}
 		return new ResponseEntity<BaseResponse<MorrisDataDto>>(result, status);
+	}
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(method = { RequestMethod.GET}, value = { "/protected/dettagliFiliale" })
+	public ResponseEntity<DataTableResponse<DatiFilialeDto>> recuperaDatiFiliale()
+	{
+		DataTableResponse<DatiFilialeDto> result = null;
+		HttpStatus status = null;
+		
+		try
+		{
+			String idFiliale = req.getParameter("idFiliale");
+			if( !StringUtils.hasText(idFiliale) )
+			{
+				throw new IllegalArgumentException("Passato un idFiliale nullo o vuoto");
+			}
+
+			Long draw = new Long(req.getParameter("draw"));
+			Integer offset = new Integer(req.getParameter("start"));
+			Integer length = new Integer(req.getParameter("length"));
+			result = this.datiFilialeSvc.ricercaDatiFilialiDto(idFiliale, offset, length);
+			result.setDraw(draw);
+			status = HttpStatus.OK;
+		}
+		catch (Exception e)
+		{
+			result = new DataTableResponse<>();
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			String message = "Errore nella chiamata ajax per l'elenco dei dispositivi attivi; " + e.getMessage();
+			logger.error(message, e);
+			result.setDescrizioneOperazione(message);
+			result.setEsitoOperazione(status.value());
+		}
+		return new ResponseEntity<DataTableResponse<DatiFilialeDto>>(result, status);
 	}	
 }

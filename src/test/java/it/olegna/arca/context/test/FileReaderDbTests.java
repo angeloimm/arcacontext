@@ -1,7 +1,6 @@
 package it.olegna.arca.context.test;
 
 import java.io.File;
-import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +13,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.service.DataReader;
 import it.olegna.arca.context.service.FilialeManagerSvc;
+import it.olegna.arca.context.web.dto.DatiFilialiContainer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={TestDbConfig.class})
@@ -34,9 +33,9 @@ public class FileReaderDbTests
 		try
 		{
 			Resource fileRes = new FileSystemResource(new File("esempioFile/DATI RE.xlsx"));
-			List<Filiale> filiali = reader.dataReader(fileRes.getInputStream());
-			logger.info("Ottenute {} filiali", filiali.size());
-			filialeSvc.salvaAggiornaFilialeAndDati(filiali);
+			DatiFilialiContainer res = reader.dataReader(fileRes.getInputStream());
+			
+			filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), res.getDataRiferimento());
 		}
 		catch (Exception e)
 		{

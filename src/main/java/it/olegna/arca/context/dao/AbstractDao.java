@@ -3,7 +3,10 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -21,7 +24,22 @@ public abstract class AbstractDao<PK extends Serializable, T>
 	{
 		this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 	}
-
+	public List<T> findAll()
+	{
+		CriteriaBuilder cb = createCriteriaBuilder();
+		CriteriaQuery<T> rootQery = cb.createQuery(persistentClass);
+		Root<T> rootEntry = rootQery.from(persistentClass);
+		CriteriaQuery<T> all = rootQery.select(rootEntry);
+		TypedQuery<T> allQuery = getSession().createQuery(all);
+		return allQuery.getResultList();
+	}
+	public Long count()
+	{
+		CriteriaBuilder qb = createCriteriaBuilder();
+		CriteriaQuery<Long> cq = qb.createQuery(Long.class);
+		cq.select(qb.count(cq.from(persistentClass)));
+		return getSession().createQuery(cq).getSingleResult();
+	}
 	@Autowired
 	private SessionFactory sessionFactory;
 

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,13 +26,15 @@ import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.service.DataReader;
 import it.olegna.arca.context.util.TimeUtil;
+import it.olegna.arca.context.web.dto.DatiFilialiContainer;
 @Service
 public class DataReaderImpl implements DataReader
 {
 	private static final Logger logger = LoggerFactory.getLogger(DataReaderImpl.class.getName());
 	@Override
-	public List<Filiale> dataReader(InputStream is) throws ArcaContextDataReaderException
+	public DatiFilialiContainer dataReader(InputStream is) throws ArcaContextDataReaderException
 	{
+		DatiFilialiContainer result = new DatiFilialiContainer();
 		Workbook workbook = null;
 		String nomeUtente = "sistema";
 		if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
@@ -49,6 +50,7 @@ public class DataReaderImpl implements DataReader
 			String rigaDataDati = sheetRe.getRow(3).getCell(0).getStringCellValue();
 			String dataData = (rigaDataDati.split(":")[1]).trim();
 			Date dataDati = TimeUtil.toDateTime(dataData, "dd/MM/yyyy").toDate();
+			result.setDataRiferimento(dataDati);
 			int inizio = 9;
 			int fine = 106;
 			for( int i = inizio; i < fine; i++ )
@@ -106,7 +108,8 @@ public class DataReaderImpl implements DataReader
 					logger.warn("NOME FILIALE {} NON CONTENUTO NELLO SHEET RE", nomeFiliale);
 				}
 			}
-			return new ArrayList<Filiale>(elencoFiliali.values());
+			result.setDatiFiliale(new ArrayList<Filiale>(elencoFiliali.values()));
+			return result;
 		}
 		catch (Exception e)
 		{

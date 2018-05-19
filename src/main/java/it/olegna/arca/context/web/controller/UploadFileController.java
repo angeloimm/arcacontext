@@ -3,8 +3,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.poi.ss.formula.udf.UDFFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import it.olegna.arca.context.dto.UploadedFileDto;
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.service.DataReader;
 import it.olegna.arca.context.service.FilialeManagerSvc;
+import it.olegna.arca.context.web.dto.DatiFilialiContainer;
 
 @RestController
 @RequestMapping("/rest")
@@ -45,13 +44,8 @@ public class UploadFileController {
 			logger.debug("Nome file uploadato: "+fileName);
 		}
 		try {
-			List<Filiale> filiali = reader.dataReader(mpf.getInputStream());
-			if( logger.isDebugEnabled() )
-			{
-			
-				logger.debug("Ottenute {} filiali", filiali.size());
-			}
-			filialeSvc.salvaAggiornaFilialeAndDati(filiali);
+			DatiFilialiContainer res = reader.dataReader(mpf.getInputStream());
+			filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), res.getDataRiferimento());
 			UploadedFileDto ufd = new UploadedFileDto();
 			ufd.setId(UUID.randomUUID().toString());
 			ufd.setName(fileName);

@@ -1,5 +1,6 @@
 package it.olegna.arca.context.service.impl;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,7 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.transform.Transformers;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import it.olegna.arca.context.exception.ArcaContextDbException;
 import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.service.FilialeManagerSvc;
+import it.olegna.arca.context.util.TimeUtil;
 @Service
 public class FilialeMangerSvcImpl implements FilialeManagerSvc
 {
@@ -33,7 +36,7 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 	@Autowired
 	private FilialeDao filialeDao;
 	@Autowired
-	private DatiFilialeDao datiFilialeDao;
+	private DatiFilialeDao<DatiFiliale> datiFilialeDao;
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = false) 
 	public void salvaAggiornaFiliale(Filiale filiale) throws ArcaContextDbException
@@ -101,10 +104,21 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 	}
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = false) 
-	public void salvaAggiornaFilialeAndDati(List<Filiale> filiali) throws ArcaContextDbException
+	public void salvaAggiornaFilialeAndDati(List<Filiale> filiali, Date dataDati) throws ArcaContextDbException
 	{
 		try
 		{
+			//Controllo se esistono dati per quella data. Se cosi' li cancello
+			if( datiFilialeDao.datiEsistentiByDate(dataDati) )
+			{
+				
+				int datiCancellati = datiFilialeDao.deleteByDate(dataDati);
+				if( logger.isWarnEnabled() )
+				{
+					logger.warn("PER LA DATA {} ERANO GIA' PRESENTI DEI DATI. CANCELLATI {} DATI", TimeUtil.formatDateTime(new DateTime(dataDati.getTime()), "dd/MM/yyyy"), datiCancellati);
+				}
+			}
+
 			for (Filiale filiale : filiali)
 			{
 				Filiale f = getByName(filiale.getNomeFiliale()); 
@@ -138,7 +152,7 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 		}
 
 	}
-
+	
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true) 
 	public DataTableResponse<FilialeDto> ricercaElencoFiliali(int start, int end) throws ArcaContextDbException
