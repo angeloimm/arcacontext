@@ -70,19 +70,32 @@ public class MainRestController {
 	@RequestMapping(method = { RequestMethod.GET}, value = { "/protected/elencoFiliali" })
 	public ResponseEntity<DataTableResponse<FilialeDto>> elencoFiliali()
 	{
-		DataTableResponse<FilialeDto> result = new DataTableResponse<FilialeDto>();
+		DataTableResponse<FilialeDto> result = null;
 		HttpStatus status = null;
 		try
 		{
-			
+
 			Long draw = new Long(req.getParameter("draw"));
 			Integer offset = new Integer(req.getParameter("start"));
 			Integer length = new Integer(req.getParameter("length"));
 			result = this.filialeSvc.ricercaElencoFiliali(offset, length);
-			result.setNumeroOggettiRestituiti(length);
-			result.setRecordsFiltered(result.getRecordsTotal());
-			status = HttpStatus.OK;
-			result.setDraw(draw);
+			if(result != null)
+			{
+				result.setNumeroOggettiRestituiti(length);
+				result.setRecordsFiltered(result.getRecordsTotal());
+				status = HttpStatus.OK;
+				result.setDraw(draw);
+			}
+			else
+			{
+				result = new DataTableResponse<>();
+				result.setDescrizioneOperazione("Nessuna filiale trovata");
+				result.setNumeroOggettiRestituiti(0);
+				result.setRecordsFiltered(0l);
+				status = HttpStatus.OK;
+				result.setDraw(draw);
+				result.setPayload(Collections.emptyList());
+			}
 		}
 		catch (Exception e)
 		{
@@ -103,7 +116,7 @@ public class MainRestController {
 		HttpStatus status = null;
 		try
 		{
-			
+
 			DetachedCriteria dc = DetachedCriteria.forClass(DatiFiliale.class);
 			dc.createAlias("filiale", "filiale");
 			dc.add(Property.forName("filiale.id").in(request.getIdFiliali()));
@@ -139,7 +152,7 @@ public class MainRestController {
 	{
 		DataTableResponse<DatiFilialeDto> result = null;
 		HttpStatus status = null;
-		
+
 		try
 		{
 			String idFiliale = req.getParameter("idFiliale");

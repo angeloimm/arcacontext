@@ -14,4 +14,5 @@ public interface DatiFilialeSvc
 	List<DatiFilialeDto> ricercaDatiFiliali(DetachedCriteria dc) throws ArcaContextDbException;
 	List<MorrisDataDto> ricercaMorrisDatiFiliali(DetachedCriteria dc) throws ArcaContextDbException;
 	DataTableResponse<DatiFilialeDto> ricercaDatiFilialiDto(String idFiliale, int start, int end) throws ArcaContextDbException;
+	Long contaDatiFiliale() throws ArcaContextDbException;
 }

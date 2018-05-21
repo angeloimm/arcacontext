@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.olegna.arca.context.dto.FileUploadResponseDto;
 import it.olegna.arca.context.dto.UploadedFileDto;
-import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.service.DataReader;
 import it.olegna.arca.context.service.FilialeManagerSvc;
 import it.olegna.arca.context.web.dto.DatiFilialiContainer;
@@ -31,9 +30,9 @@ public class UploadFileController {
 	@Autowired
 	private FilialeManagerSvc filialeSvc;
 	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(method = { RequestMethod.POST }, value = { "/protected/uploadRiversamenti" })
+	@RequestMapping(method = { RequestMethod.POST }, value = { "/protected/uploadedDatiFiliali" })
 	public ResponseEntity<FileUploadResponseDto> uploadRiversamentoManuale(	
-																			@RequestParam(required = true, value = "uploadedRiversamenti") MultipartFile mpf
+																			@RequestParam(required = true, value = "uploadedDatiFiliali") MultipartFile mpf
 																		   )
 
 	{

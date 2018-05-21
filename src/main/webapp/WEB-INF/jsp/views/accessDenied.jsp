@@ -7,14 +7,14 @@
 <tiles:insertDefinition name="loginPageTemplate">
 	<tiles:putAttribute name="head">
 		<title><spring:message
-				code="area.vasta.protocollo.web.msgs.access.denied.page.title" /></title>
+				code="arca.context.web.msgs.access.denied.page.title" /></title>
 	</tiles:putAttribute>
 	<tiles:putAttribute name="body">
 		<div class="container">
 			<div class="login-panel panel panel-danger">
 				<div class="panel-body">
 					<div class="alert alert-danger">
-						<strong><spring:message	code="area.vasta.protocollo.web.msgs.access.denied.page.msg" /></strong>
+						<strong><spring:message	code="arca.context.web.msgs.access.denied.page.msg" /></strong>
 					</div>
 				</div>
 			</div>

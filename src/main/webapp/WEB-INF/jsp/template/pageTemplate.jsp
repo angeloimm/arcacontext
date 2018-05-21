@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="it">
@@ -77,7 +78,7 @@
 <script src='<spring:url value="/adminWebTheme/vendor/fullcalendar/js/fullcalendar.min.js"/>'></script>
 <script src='<spring:url value="/adminWebTheme/vendor/fullcalendar/locale/it.js"/>'></script>
 <script src='<spring:url value="/adminWebTheme/vendor/jquery-idleTimeout-plus/js/jquery-idleTimeout-plus.min.js"/>'></script>
-<spring:message code="area.vasta.protocollo.web.msgs.session.dialog.title" var="sessioneQuasiScadutaMsg"/>
+<spring:message code="arca.context.web.msgs.session.dialog.title" var="sessioneQuasiScadutaMsg"/>
 <script type="text/javascript" charset="UTF-8">
 var csfrToken = $("meta[name='_csrf']").attr("content");
 var csfrHeader = $("meta[name='_csrf_header']").attr("content");
@@ -156,7 +157,7 @@ function estendiSessione()
 	<div id="wrapper">
 		<div class="preHeader container-fluid text-right">
 			<c:if test="${not empty utenteLoggato }">
-				<p><spring:message code="area.vasta.protocollo.web.msgs.welcome.msg" /> ${utenteLoggato.nome} ${utenteLoggato.cognome}</p> 
+				<p><spring:message code="arca.context.web.msgs.welcome.msg" arguments="${utenteLoggato.nome}, ${utenteLoggato.cognome}"/></p> 
 				<ul class="nav navbar-top-links navbar-right pull-right">
 					<li class="dropdown">
 						<a class="dropdown-toggle"	data-toggle="dropdown" href="#"> 
@@ -168,7 +169,7 @@ function estendiSessione()
 							<li>
 								<a href="<spring:url value="/pages/logout?logout" />">
 									<i class="fa fa-sign-out fa-fw"></i>
-									<spring:message code="area.vasta.protocollo.web.msgs.user.profile.logout" />
+									<spring:message code="arca.context.web.msgs.user.profile.logout" />
 								</a>
 							</li>
 						</ul> <!-- /.dropdown-user --></li>
@@ -181,8 +182,12 @@ function estendiSessione()
 		<nav class="navbar navbar-default">
 		  <div class="container-fluid">
 		    <ul class="nav navbar-nav">
-		      <li id="liRiversamentoManualeProtocollo"><a href="${homePageUrl}"> <spring:message code="area.vasta.protocollo.web.msgs.riversamenti.manuali.page.name"/> </a></li>
-		      <li id="liRegistroProtocollo"><a href="${elencoFilialiUrl}"><spring:message code="area.vasta.protocollo.web.msgs.registri.protocollo.page.name"/></a></li>
+			    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')">
+			      <li id="liRiversamentoManualeProtocollo"><a href="${homePageUrl}"> <spring:message code="arca.context.web.msgs.carica.dati.filiale.page.name"/> </a></li>
+			    </security:authorize>
+		      <li id="liRegistroProtocollo"><a href="${elencoFilialiUrl}"><spring:message code="arca.context.web.msgs.elenco.filiali.page.name"/></a></li>
+		      <li id="liRegistroProtocollo"><a href="#"><spring:message code="arca.context.web.msgs.calendari.scontri.page.name"/></a></li>
+		      <li id="liRegistroProtocollo"><a href="#"><spring:message code="arca.context.web.msgs.classifiche.page.name"/></a></li>
 		    </ul>
 		  </div>
 		</nav>
@@ -200,7 +205,7 @@ function estendiSessione()
 	        <div class="modal-content">
 	            <div class="modal-header"><h4 class="modal-title">${sessioneQuasiScadutaMsg}</h4></div>
 	            <div class="modal-body">
-	                <p><spring:message code="area.vasta.protocollo.web.msgs.session.dialog.body"/></p>
+	                <p><spring:message code="arca.context.web.msgs.session.dialog.body"/></p>
 	                <div class="progress">
 	                    <div id="jitp-warn-bar" class="progress-bar progress-bar-striped active" role="progressbar" style="min-width: 15px; width: 100%;">
 	                        <span class="jitp-countdown-holder"></span>
@@ -208,8 +213,8 @@ function estendiSessione()
 	                </div>
 	            </div>
 	            <div class="modal-footer">
-	                <button id="jitp-warn-logout" type="button" class="btn btn-default"><spring:message code="area.vasta.protocollo.web.msgs.user.profile.logout" /></button>
-	                <button id="jitp-warn-alive" type="button" class="btn btn-primary"><spring:message code="area.vasta.protocollo.web.msgs.session.dialog.extend"/></button>
+	                <button id="jitp-warn-logout" type="button" class="btn btn-default"><spring:message code="arca.context.web.msgs.user.profile.logout" /></button>
+	                <button id="jitp-warn-alive" type="button" class="btn btn-primary"><spring:message code="arca.context.web.msgs.session.dialog.extend"/></button>
 	            </div>
 	        </div>
 	    </div>

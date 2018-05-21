@@ -4,11 +4,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<spring:message code="area.vasta.protocollo.web.msgs.upload.add" var="msgAggiungi"/>
+	<spring:message code="arca.context.web.msgs.upload.add" var="msgAggiungi"/>
 <tiles:insertDefinition name="defaultTemplate">
 	<tiles:putAttribute name="head">
 		<spring:url value="/resources/images/busy.gif" var="urlBusyImg" />
-		<title><spring:message code="area.vasta.protocollo.web.msgs.home.page.title" /></title>
+		<title><spring:message code="arca.context.web.msgs.home.page.title" /></title>
 			<!-- File Upload  -->
 	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
 	<link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fileUpload/css/jquery.fileupload.css"/>'>
@@ -43,7 +43,7 @@
 <script src='<spring:url value="/adminWebTheme/vendor/fileUpload/jquery.fileupload-ui.js"/>'></script>	
 		<script type="text/x-handlebars-template" id="templateErroreUploadFile">
 		<div class="alert alert-danger">
-  			<spring:message code="area.vasta.protocollo.web.msgs.upload.error.msg" />
+  			<spring:message code="arca.context.web.msgs.upload.error.msg" />
 				<ul class="list-group">
 					{{#each this}}
 						<li class="list-group-item">
@@ -64,13 +64,13 @@
 				<div class="row">
   					<div class="col-xs-7">
 						<div class="alert alert-info">
-							<strong><i class="fa fa-file" aria-hidden="true"></i></strong> <i>{{file.name}}</i> <spring:message code="area.vasta.protocollo.web.msgs.upload.success" />
+							<strong><i class="fa fa-file" aria-hidden="true"></i></strong> <i>{{file.name}}</i> <spring:message code="arca.context.web.msgs.upload.success" />
 						</div>
   					</div>
   					<div class="col-xs-5">
     					<button class="btn btn-danger delete" >
                     		<i class="glyphicon glyphicon-trash"></i>
-                    		<span><spring:message code="area.vasta.protocollo.web.msgs.upload.delete" /></span>
+                    		<span><spring:message code="arca.context.web.msgs.upload.delete" /></span>
                 		</button>
   					</div>
 				</div>
@@ -90,11 +90,11 @@
 					<div class="col-xs-6 posizColSup">
                 		<button type="submit" class="btn btn-primary start">
                     		<i class="glyphicon glyphicon-upload"></i>
-                    		<span><spring:message code="area.vasta.protocollo.web.msgs.upload.start" /></span>
+                    		<span><spring:message code="arca.context.web.msgs.upload.start" /></span>
                 		</button>
                 		<button class="btn btn-warning cancel">
                     		<i class="glyphicon glyphicon-ban-circle"></i>
-	                    	<span><spring:message code="area.vasta.protocollo.web.msgs.upload.cancel" /></span>
+	                    	<span><spring:message code="arca.context.web.msgs.upload.cancel" /></span>
     	            	</button>    
 					</div>
 				</div>
@@ -114,7 +114,7 @@
 			$(document).ready( function(){
 				 $('#fileupload').fileupload({ 
               		autoUpload:false,
-				        url: '<spring:url value="/rest/protected/uploadRiversamenti.json" />',
+				        url: '<spring:url value="/rest/protected/uploadedDatiFiliali.json" />',
 				        dropZone: $('#dropzone'),
 				        filesContainer: $('#elencoFile'),
 						uploadTemplateId: null,
@@ -174,28 +174,28 @@
 	            	$("#elencoErroriUploadFile").empty();
 	            	$("#infoDropZone").hide();
                  	var uploadErrors = [];
-                 	var acceptFileTypes = /.\/(spread)$/i;
-                 	var uploadedRiversamentis = data.originalFiles;
-                 	$.each(uploadedRiversamentis, function( index, riversamento ) {
-/*                      	var anError = new Object();
+                 	var acceptFileTypes = /\.(xls|xlsx|ods)$/i;
+                 	var uploadedDatiFilialis = data.originalFiles;
+                 	$.each(uploadedDatiFilialis, function( index, datiFiliale ) {
+                      	var anError = new Object();
                      	var errorPresent = false;
                      	var errori = [];
-                     	if(riversamento['type'].length && !acceptFileTypes.test(riversamento['type'])) 
+                     	if(datiFiliale['name'].length && !acceptFileTypes.test(datiFiliale['name'])) 
 	                    {
 		                    	errorPresent = true;
-		                    	errori.push('<spring:message code="area.vasta.protocollo.web.msgs.upload.upload.error.extension" />');
+		                    	errori.push('<spring:message code="arca.context.web.msgs.upload.upload.error.extension" />');
                      	}
-                     	if(riversamento['size'] && (riversamento['size'] > ${dimensioneFile})) 
+                     	if(datiFiliale['size'] && (datiFiliale['size'] > ${dimensioneFile})) 
 	                    	{
                      		errorPresent = true;
-                     		errori.push('<spring:message code="area.vasta.protocollo.web.msgs.upload.upload.error.dimension" arguments="${dimensioneFileFormattata}" />');
+                     		errori.push('<spring:message code="arca.context.web.msgs.upload.upload.error.dimension" arguments="${dimensioneFileFormattata}" />');
                      	} 
                      	if(errorPresent === true)
 	                    {
-                     		anError.fileName = riversamento['name'];
+                     		anError.fileName = datiFiliale['name'];
                      		anError.errori = errori;
                      		uploadErrors.push(anError);
-		                } */
+		                }
                  	});
                  	if(uploadErrors.length > 0) 
                  	{
@@ -219,7 +219,10 @@
 					<div class="panel-body">
 						<form id="fileupload" role="form">
 							<div class="alert alert-info">
-								<spring:message	code="area.vasta.protocollo.web.msgs.upload.info" arguments="${msgAggiungi}, ${dimensioneFileFormattata}" />
+								<spring:message	code="arca.context.web.msgs.upload.info" arguments="${msgAggiungi}, ${dimensioneFileFormattata}" />
+							</div>
+							<div class="alert alert-warning">
+								<spring:message	code="arca.context.web.msgs.upload.info.warn" />
 							</div>
 							<div class="row fileupload-buttonbar">
 								<div class="col-md-12">
@@ -228,24 +231,24 @@
 										<span>
 											${msgAggiungi}
 										</span>
-										<input type="file" name="uploadedRiversamenti">
+										<input type="file" name="uploadedDatiFiliali" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 									</span>
 									<button type="submit" id="caricaTutti"	class="btn btn-primary start disabled">
 										<i class="glyphicon glyphicon-upload"></i> 
 										<span>
-											<spring:message code="area.vasta.protocollo.web.msgs.upload.start" />
+											<spring:message code="arca.context.web.msgs.upload.start" />
 										</span>
 									</button>
 									<button type="reset" id="cancellaTutti"	class="btn btn-warning cancel disabled">
 										<i class="glyphicon glyphicon-ban-circle"></i> 
 										<span>
-											<spring:message code="area.vasta.protocollo.web.msgs.upload.cancel" />
+											<spring:message code="arca.context.web.msgs.upload.cancel" />
 										</span>
 									</button>
 									<button type="button" class="btn btn-danger delete disabled" id="eliminaTutti">
 										<i class="glyphicon glyphicon-trash"></i> 
 										<span>
-											<spring:message code="area.vasta.protocollo.web.msgs.upload.delete" />
+											<spring:message code="arca.context.web.msgs.upload.delete" />
 										</span>
 									</button>
 									<!-- The global file processing state -->
@@ -262,7 +265,7 @@
 								</div>
 							</div>
 							<div id="elencoFile" role="presentation" class="table table-striped files dropZoneInfo_">
-								<div id="dropzone" class="fade well"><spring:message code="area.vasta.protocollo.web.msgs.upload.drop.zone.info"/></div>
+								<div id="dropzone" class="fade well"><spring:message code="arca.context.web.msgs.upload.drop.zone.info"/></div>
 							</div>
 							<div id="elencoErroriUploadFile"></div>
 						</form>

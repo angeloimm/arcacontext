@@ -2,9 +2,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<spring:message code="area.vasta.protocollo.web.msgs.upload.add" var="msgAggiungi"/>
+	<spring:message code="arca.context.web.msgs.upload.add" var="msgAggiungi"/>
 <tiles:insertDefinition name="defaultTemplate">
 	<tiles:putAttribute name="head">
 	<style>
@@ -34,11 +35,11 @@
 			src="<spring:url value="/adminWebTheme/vendor/datatables-responsive/dataTables.responsive.js" />"></script>
 	<script type="text/x-handlebars-template" id="templateAzioniFiliale">
     	<div class="nowrap"> 
-      		<button class="dettagliFiliale dettaglio btn btn-primary btn-xs" type="button" data-toggle="tooltip" title='Visualizza informazioni dati filiale'> 
+      		<button class="dettagliFiliale dettaglio btn btn-primary btn-xs" type="button" data-toggle="tooltip" title='<spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.title" />'> 
         		<i class="fa fa-info-circle" aria-hidden="true"></i> 
       		</button>
 			{{!--
-				<button class="cancellazioneFiliale dettaglio btn btn-danger btn-xs" type="button" data-toggle="tooltip" title="Cancella filiale">
+				<button class="cancellazioneFiliale dettaglio btn btn-danger btn-xs" type="button" data-toggle="tooltip" title="<spring:message code="arca.context.web.msgs.cancella.filiale.title" />">
 					<i class="fa fa-trash-o" aria-hidden="true"></i>
 				</button>
 			--}}
@@ -59,10 +60,10 @@
 		<table	class="datatables-table table table-striped table-bordered table-hover" id="tabellaDatiFiliali" cellspacing="0"  style="width: 100%;">
 			<thead>
 				<tr>
-					<th>Data</th>
-					<th>RE €</th>
-					<th>AUTO €</th>
-					<th>TOTALE (re+auto) €</th>
+					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.data" /></th>
+					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.re" /></th>
+					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.auto" /></th>
+					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.totale" /></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -71,27 +72,25 @@
 	</script>
 	<script type="text/x-handlebars-template" id="templateCancellazioneFiliale">
     	<div class="alert alert-danger">
-			<strong>Attenzione!</strong> Confermi di voler cancellare i dati della filiale <strong>{{nomeFiliale}}</strong>?
-			<br/>
-			L'operazione &egrave; irreversibile.
+			<spring:message code="arca.context.web.msgs.cancellazione.filiale.panel.title" />
 		</div>
 		<div class="nowrap"> 
       		<button class="dettaglio btn btn-danger" type="button"> 0
-        		<i class="fa fa-trash-o" aria-hidden="true"></i>Cancella filiale 
+        		<i class="fa fa-trash-o" aria-hidden="true"></i><spring:message code="arca.context.web.msgs.cancellazione.filiale.btn.msg" /> 
       		</button>
 			<button class="dettaglio btn btn-default" type="button"> 
-        		<i class="fa fa-times-circle-o" aria-hidden="true"></i>Annulla 
+        		<i class="fa fa-times-circle-o" aria-hidden="true"></i><spring:message code="arca.context.web.msgs.annulla.cancellazione.filiale.btn.msg" /> 
       		</button>  
 		</div>		
 	</script>
 	<script type="text/x-handlebars-template" id="templateCreazioneCampionato">
     	<div class="alert alert-info">
-			 Seleziona la data di inizio e la data di fine del campionato
+			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.title.msg" />
 		</div>
 		<div class="container">
 			<div class="col-md-4">
 				<div class="form-group"> 
-					<label for="dal">Dal</label>
+					<label for="dal"><spring:message code="arca.context.web.msgs.creazione.campionato.from" /></label>
         			<div class='input-group date' id='dataFrom'>
             			<input type='text' id="dal" class="form-control" />
                 		<span class="input-group-addon">
@@ -102,7 +101,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="form-group"> 
-        			<label for="al">Al</label>
+        			<label for="al"><spring:message code="arca.context.web.msgs.creazione.campionato.to" /></label>
 					<div class='input-group date' id='dataTo'>
             			<input type='text' id="al" class="form-control" />
                 		<span class="input-group-addon">
@@ -111,15 +110,17 @@
         			</div>
 				</div>
 			</div>
-		</div>		
-		<div class="nowrap"> 
-      		<button class="dettaglio btn btn-primary" id="creaCampionatoBtn" type="button">
-        		Crea campionato 
-      		</button>
-			<button class="dettaglio btn btn-default" id="chiudiCreazioneCampionatoBtn" type="button"> 
-        		Annulla 
-      		</button>  
-		</div>		
+		</div>	
+		<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')">	
+			<div class="nowrap"> 
+      			<button class="dettaglio btn btn-primary" id="creaCampionatoBtn" type="button">
+        			<spring:message code="arca.context.web.msgs.creazione.campionato.btn.msg" /> 
+      			</button>
+				<button class="dettaglio btn btn-default" id="chiudiCreazioneCampionatoBtn" type="button"> 
+					<spring:message code="arca.context.web.msgs.annulla.cancellazione.filiale.btn.msg" /> 
+      			</button>
+			</div>		
+		</security:authorize>
 	</script>	
 		<script type="text/javascript" charset="UTF-8">
 		var svuotaGrafico = false;
@@ -130,7 +131,7 @@
 		var templateCancellazioneFiliale = Handlebars.compile($("#templateCancellazioneFiliale").html());
 		var templateCreazioneCampionato = Handlebars.compile($("#templateCreazioneCampionato").html());
 		var tabellaFiliali = null;
-		
+		var creazioneCampionato = ${creazioneCampionato};
 			$(document).ready( function(){
 				$("#sezioneGraficoAndamento").hide();
 				$("#visualizzaAndamenti").prop("disabled",true);
@@ -138,6 +139,10 @@
 					evt.preventDefault();
 					creazioneCampionato();
 				} );
+				if( creazioneCampionato === false )
+				{
+					$("#creazioneCampionato").hide();
+				}
 				$('[data-toggle="tooltip"]').tooltip();
 				tabellaFiliali = $("#tabellaFiliali")
 				.DataTable(
@@ -391,7 +396,7 @@
 					type : 'POST',
 					data: JSON.stringify(filiali),
 				    beforeSend : function(){
-				    	$.blockUI({ message: '<p><img src="${urlBusyImg}" />Giusto un momento sto recuperando le informazioni....</p>' });				    	 	
+				    	$.blockUI({ message: '<spring:message code="arca.context.web.msgs.rest.wait.msg" arguments="${urlBusyImg}" />' });				    	 	
 				    },
 				    complete   : function(){
 					    
@@ -470,14 +475,14 @@
 					<!-- /.panel-heading -->
 					<div class="panel-body">
 						<div class="alert alert-info">
-							Seleziona le filiali di cui vuoi vedere gli andamenti e clicca sul pulsante visualizza andamenti
+							<spring:message code="arca.context.web.msgs.elenco.filiali.info.msg"/>
 						</div>					
 						<table	class="datatables-table table table-striped table-bordered table-hover" id="tabellaFiliali" cellspacing="0"  style="width: 100%;">
 							<thead>
 								<tr>
-									<th title="Seleziona filiale di cui visualizzare l'andamento" alt="Seleziona filiale di cui visualizzare l'andamento">Seleziona Filiali</th>
-									<th>Nome filiale</th>
-									<th>Azioni</th>
+									<th title="<spring:message code="arca.context.web.msgs.seleziona.filiale.title.msg"/>" alt="<spring:message code="arca.context.web.msgs.seleziona.filiale.title.msg"/>"><spring:message code="arca.context.web.msgs.seleziona.filiale.msg"/></th>
+									<th><spring:message code="arca.context.web.msgs.seleziona.filiale.nome"/></th>
+									<th><spring:message code="arca.context.web.msgs.seleziona.filiale.azioni"/></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -485,17 +490,19 @@
 						</table>
 						<div class="nowrap">
 							<button id="visualizzaAndamenti" class="btn btn-primary">
-								<strong>Visualizza andamenti</strong>
+								<strong><spring:message code="arca.context.web.msgs.visualizza.andamenti.filiale.button"/></strong>
 							</button>
-							<button id="creazioneCampionato" class="btn btn-primary">
-								<strong>Crea campionato</strong>
-							</button>
+							<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')">
+								<button id="creazioneCampionato" class="btn btn-primary">
+									<strong><spring:message code="arca.context.web.msgs.crea.campionato.button"/></strong>
+								</button>
+							</security:authorize>
 						</div>
 					</div>
 					<div class="col-lg-12" id="sezioneGraficoAndamento">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> Grafico andamento filiali basato sul totale RE AUTO
+                            <i class="fa fa-bar-chart-o fa-fw"></i><spring:message code="arca.context.web.msgs.titolo.sezione.grafico.andamenti"/>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

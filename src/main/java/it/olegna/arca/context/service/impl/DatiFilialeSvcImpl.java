@@ -99,5 +99,20 @@ public class DatiFilialeSvcImpl implements DatiFilialeSvc
 		result.setNumeroOggettiRestituiti(datiFiliale.size());
 		result.setNumeroOggettiTotali(oggettiTotali);
 		return result;
+	}
+	@Override
+	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true)
+	public Long contaDatiFiliale() throws ArcaContextDbException
+	{
+		try
+		{
+			return datiFilialeMorrisDataDao.count();
+		}
+		catch (Exception e)
+		{
+			String message = "Errore nel conteggio dati filiale";
+			logger.error(message, e);
+			throw new ArcaContextDbException(message, e);
+		}
 	}	
 }

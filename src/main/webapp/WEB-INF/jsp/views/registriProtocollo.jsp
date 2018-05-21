@@ -4,11 +4,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<spring:message code="area.vasta.protocollo.web.msgs.upload.add" var="msgAggiungi"/>
+	<spring:message code="arca.context.web.msgs.upload.add" var="msgAggiungi"/>
 <tiles:insertDefinition name="defaultTemplate">
 	<tiles:putAttribute name="head">
 		<spring:url value="/resources/images/busy.gif" var="urlBusyImg" />
-		<title><spring:message code="area.vasta.protocollo.web.msgs.home.page.title" /></title>
+		<title><spring:message code="arca.context.web.msgs.home.page.title" /></title>
 		<!-- DataTables CSS -->
 		<link
 			href="<spring:url value="/adminWebTheme/vendor/datatables-plugins/dataTables.bootstrap.css" />"
