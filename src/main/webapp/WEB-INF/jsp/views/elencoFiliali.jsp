@@ -85,7 +85,8 @@
 	</script>
 	<script type="text/x-handlebars-template" id="templateCreazioneCampionato">
     	<div class="alert alert-info">
-			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.title.msg" />
+			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.title.msg" /> <br/>
+			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.info" arguments="${produzioneMinima}, ${numeroFilialiCampionato}" /> <br/>
 		</div>
 		<div class="container">
 			<div class="col-md-4">
@@ -111,10 +112,35 @@
 				</div>
 			</div>
 		</div>	
+		<div class="container">
+			<div class="col-md-4">
+				<div class="form-group"> 
+					<label for="produzioneMinima"><spring:message code="arca.context.web.msgs.creazione.campionato.produzione.minima" /></label>
+        			<div class='input-group date' id='dataFrom'>
+            			<input type='number' id="produzioneMinima" value="${produzioneMinima}" class="form-control" />
+                		<span class="input-group-addon">
+                			<span class="fa fa-euro"></span>
+                		</span>
+        			</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group"> 
+        			<label for="numeroSquadre"><spring:message code="arca.context.web.msgs.creazione.campionato.numero.squadre" /></label>
+					<div class='input-group date' id='dataTo'>
+            			<input type='number' id="numeroSquadre" value="${numeroFilialiCampionato}" class="form-control" />
+                		<span class="input-group-addon">
+                			<span class="fa fa-flag-checkered"></span>
+                		</span>
+        			</div>
+				</div>
+			</div>
+		</div>
+	</div>
 		<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')">	
 			<div class="nowrap"> 
       			<button class="dettaglio btn btn-primary" id="creaCampionatoBtn" type="button">
-        			<spring:message code="arca.context.web.msgs.creazione.campionato.btn.msg" /> 
+        			<span class="bootstrap-dialog-button-icon glyphicon glyphicon-send" id="spinner"></span><spring:message code="arca.context.web.msgs.creazione.campionato.btn.msg" /> 
       			</button>
 				<button class="dettaglio btn btn-default" id="chiudiCreazioneCampionatoBtn" type="button"> 
 					<spring:message code="arca.context.web.msgs.annulla.cancellazione.filiale.btn.msg" /> 
@@ -124,6 +150,8 @@
 	</script>	
 		<script type="text/javascript" charset="UTF-8">
 		var svuotaGrafico = false;
+		var dataFineMs = 0;
+		var dataInizioMs = 0;
 		var idFilialiSelezionati = [];
 		var templateAzioniFiliale = Handlebars.compile($("#templateAzioniFiliale").html());
 		var templateSceltaFiliale = Handlebars.compile($("#templateSceltaFiliale").html());
@@ -137,11 +165,11 @@
 				$("#visualizzaAndamenti").prop("disabled",true);
 				$("#creazioneCampionato").click( function(evt){
 					evt.preventDefault();
-					creazioneCampionato();
+					creazioneCampionatoFunction();
 				} );
 				if( creazioneCampionato === false )
 				{
-					$("#creazioneCampionato").hide();
+					$("#creazioneCampionato").prop("disabled",true);
 				}
 				$('[data-toggle="tooltip"]').tooltip();
 				tabellaFiliali = $("#tabellaFiliali")
@@ -266,46 +294,7 @@
  						visualizzaAndamenti(idFilialiSelezionati);
  					});
          	});	
-			function creazioneCampionato()
-			{
-				BootstrapDialog.show({
-		            title: 'Creazione campionato filiali',
-		            message: function(dialog) {							            	
-		                var $message = templateCreazioneCampionato();
-		                return $message;
-		            },
-		            size: 'size-wide',
-		            type: BootstrapDialog.TYPE_INFO,
-		            closable: true, 
-		            draggable: false,
-		            nl2br:false,
-		            onshown: function(dialogRef){
-		            	 $('#dataFrom').datetimepicker({
-		                     locale: 'it',
-		                     minDate: new Date(),
-		                     keepInvalid: true,
-		                     format:'L'
-		                 });
-		            	 $('#dataTo').datetimepicker({
-		                     locale: 'it',
-		                     useCurrent: false,
-		                     keepInvalid: true,
-		                     format:'L'
-		                 });	
-		            	 $("#dataFrom").on("dp.change", function (e) {
-		                     $('#dataTo').data("DateTimePicker").minDate(e.date);
-		                 });
-		            	 $("#chiudiCreazioneCampionatoBtn").click(function(evt){
-		            		 evt.preventDefault();
-		            		 dialogRef.close();
-		            	 });
-		            	 $("#creaCampionatoBtn").click(function(evt){
-		            		 evt.preventDefault();
-		            		 console.log("Creazione campionato");
-		            	 });
-		            }
-				});
-			}
+			
 			function recuperaDatiFiliale(idFiliale)
 			{
 				$("#tabellaDatiFiliali")
@@ -464,7 +453,83 @@
 				    }
 				});
 			}
-			
+			function creazioneCampionatoFunction()
+			{
+				BootstrapDialog.show({
+		            title: 'Creazione campionato filiali',
+		            message: function(dialog) {							            	
+		                var $message = templateCreazioneCampionato();
+		                return $message;
+		            },
+		            size: 'size-wide',
+		            type: BootstrapDialog.TYPE_INFO,
+		            closable: true, 
+		            draggable: false,
+		            nl2br:false,
+		            onshown: function(dialogRef){
+		            	 $('#dataFrom').datetimepicker({
+		                     locale: 'it',
+		                     minDate: new Date(),
+		                     keepInvalid: true,
+		                     format:'L'
+		                 });
+		            	 $('#dataTo').datetimepicker({
+		                     locale: 'it',
+		                     useCurrent: false,
+		                     keepInvalid: true,
+		                     format:'L'
+		                 });
+		            	 $("#dataFrom").on("dp.change", function (e) {
+		            		 var data = e.date;
+		                     $('#dataTo').data("DateTimePicker").minDate(data);
+		                 });
+		            	 $("#chiudiCreazioneCampionatoBtn").click(function(evt){
+		            		 evt.preventDefault();
+		            		 dialogRef.close();
+		            	 });
+		            	 $("#creaCampionatoBtn").click(function(evt){
+		            		 evt.preventDefault();
+		            		 creaNuovoCampionato();
+		            	 });
+		            }
+				});
+			}
+			function creaNuovoCampionato()
+			{
+				var datiCampionato = new Object();
+				datiCampionato.dataInizio =  $('#dataFrom').data('DateTimePicker').date().valueOf();
+				datiCampionato.dataFine = $('#dataTo').data('DateTimePicker').date().valueOf();
+				datiCampionato.produzioneMinima = $("#produzioneMinima").val();
+				datiCampionato.numeroSquadre = $("#numeroSquadre").val();
+				$.ajax({
+					url : '<spring:url value="/rest/protected/creazioneCampionato.json"/>',
+					dataType : 'json',
+					contentType : 'application/json; charset=UTF-8',
+					type : 'POST',
+					data: JSON.stringify(datiCampionato),
+				    beforeSend : function(){
+				    	$("#spinner").toggleClass("bootstrap-dialog-button-icon glyphicon glyphicon-asterisk icon-spin");
+				    	$("#spinner").toggleClass("bootstrap-dialog-button-icon glyphicon glyphicon-send");
+				    	$("#creaCampionatoBtn").prop("disabled",true);
+				    },
+				    complete   : function(){
+					    
+				    	$("#spinner").toggleClass("bootstrap-dialog-button-icon glyphicon glyphicon-asterisk icon-spin");
+				    	$("#spinner").toggleClass("bootstrap-dialog-button-icon glyphicon glyphicon-send");
+				    	$("#creaCampionatoBtn").prop("disabled",false);
+				    },
+				    success : function(data) {
+				    	//Controllo se ci sono risultati
+				    	if( data.esitoOperazione === 200 && data.numeroOggettiRestituiti > 0 )
+				    	{
+				    		$("#creaCampionatoBtn").prop("disabled",false);
+				    	}
+				    },
+				    error : function(data) {
+				    	
+				    }
+				});
+			}
 		</script>
 	</tiles:putAttribute>
 	<tiles:putAttribute name="body">

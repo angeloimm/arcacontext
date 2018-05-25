@@ -32,7 +32,8 @@ public class MainPagesController {
 	private HttpSession sessione;
 	@Value("${arca.context.max.file.dimension}")
 	private long dimensioneFile;
-
+	@Value("${arca.context.produzione.minima}")
+	private long produzioneMinima;
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
 	@RequestMapping(method = { RequestMethod.GET }, value="/protected/adminHome")
 	public String homePage(Model model)
@@ -75,6 +76,8 @@ public class MainPagesController {
 			long datiFiliale = this.datiFilialeSvc.contaDatiFiliale();
 			boolean creazioneCampionato = datiFiliale > 0;
 			model.addAttribute("creazioneCampionato", creazioneCampionato);
+			model.addAttribute("produzioneMinima", produzioneMinima);
+			model.addAttribute("numeroFilialiCampionato", 22);
 			return "views/elencoFiliali";
 		}
 		catch (Exception e) 

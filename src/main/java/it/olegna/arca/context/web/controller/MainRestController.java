@@ -31,6 +31,7 @@ import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.FilialeManagerSvc;
 import it.olegna.arca.context.util.MorrisDataTransformer;
+import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 
 @RestController
 @RequestMapping("/rest")
@@ -108,6 +109,37 @@ public class MainRestController {
 		return new ResponseEntity<DataTableResponse<FilialeDto>>(result, status);
 
 	}
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(method = { RequestMethod.POST}, value = { "/protected/creazioneCampionato" })
+	public ResponseEntity<BaseResponse<String>> creazioneCampionato(@RequestBody CreazioneCampionatoDto creaCampionatoRequest)
+	{
+		BaseResponse<String> result = new BaseResponse<String>();
+		HttpStatus status = null;
+		try
+		{
+			if( logger.isDebugEnabled() )
+			{
+				logger.debug("CREAZIONE CAMPIONATO PER RICHIESA [{}] ", creaCampionatoRequest);
+			}
+			result = new BaseResponse<String>();
+			status = HttpStatus.OK;
+			result.setDescrizioneOperazione("Creazione campionato avvenuta con successo");
+			result.setEsitoOperazione(status.value());
+			result.setNumeroOggettiRestituiti(1);
+			result.setNumeroOggettiTotali(1);
+			result.setPayload(Collections.singletonList("OK"));
+		}
+		catch (Exception e)
+		{
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			String message = "Errore nella chiamata ajax per la creazione del campionato; " + e.getMessage();
+			logger.error(message, e);
+			result.setDescrizioneOperazione(message);
+			result.setEsitoOperazione(status.value());
+		}
+		return new ResponseEntity<BaseResponse<String>>(result, status);
+
+	}	
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.POST}, value = { "/protected/visualizzaAndamenti" })
 	public ResponseEntity<BaseResponse<MorrisDataDto>> visualizzaAndamenti(@RequestBody VisualizzaAndamentoRequestDto request)
