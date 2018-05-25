@@ -114,4 +114,19 @@ public abstract class AbstractDao<PK extends Serializable, T>
 	{
 		return getSession().getCriteriaBuilder();
 	}
+	public void persist(List<T> entities)
+	{
+		Session sessione = getSession();
+		int i = 0;
+		for (T t : entities)
+		{
+			sessione.persist(t);
+			i++;
+			if( i%25 == 0 )
+			{
+				sessione.flush();
+				sessione.clear();
+			}
+		}
+	}
 }

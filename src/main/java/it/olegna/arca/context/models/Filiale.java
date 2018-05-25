@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,6 +25,16 @@ public class Filiale extends AbstractModel
 	private static final long serialVersionUID = 5888875786395363908L;
 	private String nomeFiliale;
 	private Set<DatiFiliale> datiFiliale;
+	private Set<CampionatoFiliale> campionati;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.filiale")
+	public Set<CampionatoFiliale> getCampionati()
+	{
+		return campionati;
+	}
+	public void setCampionati(Set<CampionatoFiliale> campionati)
+	{
+		this.campionati = campionati;
+	}
 	@Column(name="NOME_FILIALE", nullable=false)
 	public String getNomeFiliale()
 	{

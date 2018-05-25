@@ -12,6 +12,7 @@ import org.hibernate.criterion.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,9 @@ import it.olegna.arca.context.dto.DatiFilialeDto;
 import it.olegna.arca.context.dto.FilialeDto;
 import it.olegna.arca.context.dto.MorrisDataDto;
 import it.olegna.arca.context.dto.VisualizzaAndamentoRequestDto;
+import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.DatiFiliale;
+import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.FilialeManagerSvc;
 import it.olegna.arca.context.util.MorrisDataTransformer;
@@ -41,6 +44,8 @@ public class MainRestController {
 	private FilialeManagerSvc filialeSvc;
 	@Autowired
 	private DatiFilialeSvc datiFilialeSvc;
+	@Autowired
+	private CampionatoSvc<Campionato> campionatoService;
 	@Autowired
 	private HttpServletRequest req;
 	@PreAuthorize("isAuthenticated()")
@@ -121,6 +126,7 @@ public class MainRestController {
 			{
 				logger.debug("CREAZIONE CAMPIONATO PER RICHIESA [{}] ", creaCampionatoRequest);
 			}
+			this.campionatoService.creaCampionato(creaCampionatoRequest);
 			result = new BaseResponse<String>();
 			status = HttpStatus.OK;
 			result.setDescrizioneOperazione("Creazione campionato avvenuta con successo");
