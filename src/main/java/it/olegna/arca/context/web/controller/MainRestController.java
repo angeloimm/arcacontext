@@ -12,7 +12,6 @@ import org.hibernate.criterion.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +32,7 @@ import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.FilialeManagerSvc;
-import it.olegna.arca.context.util.MorrisDataTransformer;
+import it.olegna.arca.context.transformers.MorrisDataTransformer;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 
 @RestController

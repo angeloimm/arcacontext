@@ -12,6 +12,11 @@ import it.olegna.arca.context.models.UserProfile;
 @Repository 
 public class UserProfileDao<T> extends AbstractDao<String, UserProfile>
 {
+	@Override
+	protected Class<UserProfile> getPersistentClass()
+	{
+		return UserProfile.class;
+	}
 	public UserProfile findByType(String type)
 	{
 		CriteriaBuilder cb = createCriteriaBuilder();

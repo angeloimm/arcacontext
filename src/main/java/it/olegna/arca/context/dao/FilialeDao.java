@@ -12,6 +12,11 @@ import it.olegna.arca.context.models.Filiale;
 @Repository 
 public class FilialeDao extends AbstractDao<String, Filiale>
 {
+	@Override
+	protected Class<Filiale> getPersistentClass()
+	{
+		return Filiale.class;
+	}
 	@SuppressWarnings("unchecked")
 	public List<FilialeDto> findByDtoDetacheCriteria( DetachedCriteria dc, int offset, int maxRecordNum )
 	{

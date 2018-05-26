@@ -7,4 +7,10 @@ import it.olegna.arca.context.models.Campionato;
 public class CampionatoDao<T> extends AbstractDao<String, Campionato>
 {
 
+	@Override
+	protected Class<Campionato> getPersistentClass()
+	{
+		return Campionato.class;
+	}
+
 }

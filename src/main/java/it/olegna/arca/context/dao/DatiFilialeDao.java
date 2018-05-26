@@ -16,6 +16,11 @@ import it.olegna.arca.context.models.DatiFiliale;
 @Repository 
 public class DatiFilialeDao<T> extends AbstractDao<String, DatiFiliale>
 {
+	@Override
+	protected Class<DatiFiliale> getPersistentClass()
+	{
+		return DatiFiliale.class;
+	}
 	public boolean datiEsistentiByDate(Date data)
 	{
 		DetachedCriteria dc = DetachedCriteria.forClass(DatiFiliale.class);

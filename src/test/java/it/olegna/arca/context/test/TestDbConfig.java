@@ -23,15 +23,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import it.olegna.arca.context.configuration.CacheConfiguration;
 
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(	basePackages = { "it.olegna.arca.context" } , 
-				excludeFilters = {	@ComponentScan.Filter(type=FilterType.ANNOTATION, classes=Controller.class),
-									@ComponentScan.Filter(type=FilterType.ANNOTATION, classes=Configuration.class)
-	 							 }
-)
+excludeFilters = {	@ComponentScan.Filter(type=FilterType.ANNOTATION, classes=Controller.class),
+		@ComponentScan.Filter(type=FilterType.ANNOTATION, classes=Configuration.class)
+}
+		)
 @Import(CacheConfiguration.class)
 public class TestDbConfig
 {
@@ -40,7 +42,7 @@ public class TestDbConfig
 	private Properties hibProps()
 	{
 		Properties props = new Properties();
-		
+
 		props.put(org.hibernate.cfg.Environment.DIALECT, env.getProperty("arca.context.hibernate.dialect"));
 		props.put(org.hibernate.cfg.Environment.SHOW_SQL, new Boolean(env.getProperty("arca.context.hibernate.show.sql")));
 		props.put(org.hibernate.cfg.Environment.GENERATE_STATISTICS, new Boolean(env.getProperty("arca.context.hibernate.generate.statistics")));
@@ -55,22 +57,22 @@ public class TestDbConfig
 	}
 	@Bean(name="hikariDs")
 	public DataSource hikariDataSource(){
-//	    HikariConfig hikariConfig = new HikariConfig();
-//	    hikariConfig.setDriverClassName(env.getProperty("arca.context.db.driverClassName"));
-//	    hikariConfig.setJdbcUrl(env.getProperty("arca.context.db.jdbcUrl"));
-//	    hikariConfig.setUsername(env.getProperty("arca.context.db.username"));
-//	    hikariConfig.setPassword(env.getProperty("arca.context.db.password"));
-//	    hikariConfig.setMaximumPoolSize(new Integer(env.getProperty("arca.context.db.maxPoolSize")));
-//	    hikariConfig.setConnectionTestQuery(env.getProperty("arca.context.db.validationQuery"));
-//	    hikariConfig.setPoolName("springHikariCP");
-//	    hikariConfig.setIdleTimeout(new Integer(env.getProperty("arca.context.db.maxIdleTime")));
-//	    hikariConfig.addDataSourceProperty("dataSource.cachePrepStmts", "true");
-//	    hikariConfig.addDataSourceProperty("dataSource.prepStmtCacheSize", "250");
-//	    hikariConfig.addDataSourceProperty("dataSource.prepStmtCacheSqlLimit", "2048");
-//	    hikariConfig.addDataSourceProperty("dataSource.useServerPrepStmts", "true");
-//	    HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-//	    dataSource.setPoolName("ArcaContext Pool");
-	    return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
+		//	    HikariConfig hikariConfig = new HikariConfig();
+		//	    hikariConfig.setDriverClassName(env.getProperty("arca.context.db.driverClassName"));
+		//	    hikariConfig.setJdbcUrl(env.getProperty("arca.context.db.jdbcUrl"));
+		//	    hikariConfig.setUsername(env.getProperty("arca.context.db.username"));
+		//	    hikariConfig.setPassword(env.getProperty("arca.context.db.password"));
+		//	    hikariConfig.setMaximumPoolSize(new Integer(env.getProperty("arca.context.db.maxPoolSize")));
+		//	    hikariConfig.setConnectionTestQuery(env.getProperty("arca.context.db.validationQuery"));
+		//	    hikariConfig.setPoolName("springHikariCP");
+		//	    hikariConfig.setIdleTimeout(new Integer(env.getProperty("arca.context.db.maxIdleTime")));
+		//	    hikariConfig.addDataSourceProperty("dataSource.cachePrepStmts", "true");
+		//	    hikariConfig.addDataSourceProperty("dataSource.prepStmtCacheSize", "250");
+		//	    hikariConfig.addDataSourceProperty("dataSource.prepStmtCacheSqlLimit", "2048");
+		//	    hikariConfig.addDataSourceProperty("dataSource.useServerPrepStmts", "true");
+		//	    HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+		//	    dataSource.setPoolName("ArcaContext Pool");
+		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
 	}
 
 	@Bean
@@ -95,8 +97,14 @@ public class TestDbConfig
 	{
 		return new BCryptPasswordEncoder();
 	}
-	 @Bean(initMethod="start",destroyMethod="stop")
-	 public org.h2.tools.Server h2WebConsonleServer () throws SQLException {
-	   return org.h2.tools.Server.createWebServer("-web","-webAllowOthers","-webDaemon","-webPort", "8082");
-	 }	
+	@Bean(initMethod="start",destroyMethod="stop")
+	public org.h2.tools.Server h2WebConsonleServer () throws SQLException {
+		return org.h2.tools.Server.createWebServer("-web","-webAllowOthers","-webDaemon","-webPort", "8082");
+	}
+	@Bean("objectMapper")
+	public ObjectMapper objectMapper()
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper;
+	}
 }

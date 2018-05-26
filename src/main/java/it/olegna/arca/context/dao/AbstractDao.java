@@ -1,6 +1,5 @@
 package it.olegna.arca.context.dao;
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -17,18 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractDao<PK extends Serializable, T>
 {
-	private final Class<T> persistentClass;
-
-	@SuppressWarnings("unchecked")
+	protected abstract Class<T> getPersistentClass(); 
 	public AbstractDao()
 	{
-		this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+		//this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 	}
 	public List<T> findAll()
 	{
 		CriteriaBuilder cb = createCriteriaBuilder();
-		CriteriaQuery<T> rootQery = cb.createQuery(persistentClass);
-		Root<T> rootEntry = rootQery.from(persistentClass);
+		CriteriaQuery<T> rootQery = cb.createQuery(getPersistentClass());
+		Root<T> rootEntry = rootQery.from(getPersistentClass());
 		CriteriaQuery<T> all = rootQery.select(rootEntry);
 		TypedQuery<T> allQuery = getSession().createQuery(all);
 		return allQuery.getResultList();
@@ -37,7 +34,7 @@ public abstract class AbstractDao<PK extends Serializable, T>
 	{
 		CriteriaBuilder qb = createCriteriaBuilder();
 		CriteriaQuery<Long> cq = qb.createQuery(Long.class);
-		cq.select(qb.count(cq.from(persistentClass)));
+		cq.select(qb.count(cq.from(getPersistentClass())));
 		return getSession().createQuery(cq).getSingleResult();
 	}
 	@Autowired
@@ -71,7 +68,7 @@ public abstract class AbstractDao<PK extends Serializable, T>
 	 */
 	public T getByKey(PK key)
 	{
-		return (T) getSession().get(persistentClass, key);
+		return (T) getSession().get(getPersistentClass(), key);
 	}
 	/**
 	 * Il load non effettua la query su DB
@@ -80,7 +77,7 @@ public abstract class AbstractDao<PK extends Serializable, T>
 	 */
 	public T loadByKey(PK key)
 	{
-		return (T) getSession().load(persistentClass, key);
+		return (T) getSession().load(getPersistentClass(), key);
 	}
 	public void persist(T entity)
 	{

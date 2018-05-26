@@ -8,6 +8,9 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.ListUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
@@ -19,11 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.olegna.arca.context.dao.CampionatoDao;
 import it.olegna.arca.context.dao.FilialeDao;
+import it.olegna.arca.context.dao.GenericDao;
 import it.olegna.arca.context.exception.ArcaContextDbException;
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.CampionatoFiliale;
+import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.service.CampionatoSvc;
+import it.olegna.arca.context.transformers.CreazioneCampionatiFilialeTransformer;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 import it.olegna.arca.context.web.dto.UserPrincipal;
 @Service
@@ -34,6 +40,8 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	private CampionatoDao<Campionato> genericDao;
 	@Autowired
 	private FilialeDao filialeDao;
+	@Autowired
+	private GenericDao<CampionatoFiliale> campFilDao;
 	private char[] tipologieCampionato;
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true) 
@@ -107,34 +115,51 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 		try
 		{
 			long numeroSquadre = dto.getNumeroSquadre();
-			DetachedCriteria dc = DetachedCriteria.forClass(Filiale.class);
-			dc.createAlias("datiFiliale", "dt");
-			dc.addOrder(Order.desc("dt.totale"));
+			DetachedCriteria subQuery = DetachedCriteria.forClass(DatiFiliale.class);
+			subQuery.setProjection(Projections.max("dataDati"));
+			DetachedCriteria dc = DetachedCriteria.forClass(DatiFiliale.class);
+			dc.add(Property.forName("dataDati").eq(subQuery));
+			dc.createAlias("filiale", "filiale");
+			dc.addOrder(Order.desc("totale"));
+			ProjectionList pl = Projections.projectionList();
+			pl.add(Projections.property("filiale.id"),"idFiliale");
+			pl.add(Projections.property("filiale.nomeFiliale"),"nomeFiliale");
+			dc.setProjection(pl);
+			dc.setResultTransformer(new CreazioneCampionatiFilialeTransformer());
 			List<Filiale> filiali = filialeDao.findByCriteria(dc);
 			List<List<Filiale>> subLists = ListUtils.partition(filiali, (int)numeroSquadre);
 			DateTime today = (new DateTime()).withTimeAtStartOfDay();
 			DateTime start = (new DateTime(dto.getDataInizio())).withTimeAtStartOfDay();
 			DateTime fine = (new DateTime(dto.getDataFine())).withTimeAtStartOfDay();
 			boolean campionatoAttivo = new Interval(start, fine).contains(today);
-			UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String creatoDa = "test";
+			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null )
+			{
+			
+				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				creatoDa = user.getUsername();
+			}
 			int i = 0;
 			for (List<Filiale> list : subLists)
 			{
 				Campionato c = new Campionato();
 				c.setCampionatoAttivo(campionatoAttivo);
 				c.setCategoriaCampionato(String.valueOf(tipologieCampionato[i]));
-				c.setCreatoDa(user.getUsername());
+				c.setCreatoDa(creatoDa);
 				c.setDataCreazione(new Date());
 				c.setDataInizio(new Date(dto.getDataInizio()));
 				c.setDataFine(new Date(dto.getDataFine()));
 				c.setImportoProduzioneMinima(dto.getProduzioneMinima());
-				CampionatoFiliale cf = new CampionatoFiliale();
-				cf.setCreatoDa(user.getUsername());
-				cf.setDataCreazione(new Date());
-				cf.setCampionato(c);
-				cf.addFiliali(list);
-				c.getCampionati().add(cf);
 				genericDao.persist(c);
+				for (Filiale filiale : list)
+				{
+					CampionatoFiliale cf = new CampionatoFiliale();
+					cf.setCreatoDa(creatoDa);
+					cf.setDataCreazione(new Date());
+					cf.setCampionato(c);
+					cf.setFiliale(filiale);
+					campFilDao.persist(cf);
+				}
 				i++;
 			}
 		}
@@ -149,5 +174,6 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	public void initialize()
 	{
 		this.tipologieCampionato = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+		campFilDao.setPersistentClass(CampionatoFiliale.class);
 	}
 }
