@@ -48,7 +48,7 @@
 	<script type="text/x-handlebars-template" id="templateSceltaFiliale">
     	<div class="nowrap"> 
 			<div class="material-switch pull-left">
-        		<input id="someSwitchOptionPrimary{{id}}" data-id-filiale="{{id}}" name="someSwitchOption001{{id}}" type="checkbox" class="selezionaFiliale"/>
+        		<input id="someSwitchOptionPrimary{{id}}" data-id-filiale="{{id}}" name="someSwitchOption001{{id}}" type="checkbox" class="selezionaFiliale" {{#if selezionato}} checked {{/if}} />
             	<label for="someSwitchOptionPrimary{{id}}" class="label-primary"></label>
         	</div> 
 		</div>
@@ -86,7 +86,9 @@
 	<script type="text/x-handlebars-template" id="templateCreazioneCampionato">
     	<div class="alert alert-info">
 			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.title.msg" /> <br/>
-			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.info" arguments="${produzioneMinima}, ${numeroFilialiCampionato}" /> <br/>
+		</div>
+		<div class="alert alert-warning">
+			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.info" arguments="${produzioneMinima}, ${numeroFilialiCampionato}" />
 		</div>
 		<div class="container">
 			<div class="col-md-4">
@@ -145,7 +147,15 @@
 				<button class="dettaglio btn btn-default" id="chiudiCreazioneCampionatoBtn" type="button"> 
 					<spring:message code="arca.context.web.msgs.annulla.cancellazione.filiale.btn.msg" /> 
       			</button>
-			</div>		
+			</div>
+			<div class="nowrap"> 
+				<div class="alert alert-success" id="divCampionatoOk">
+					<spring:message	code="arca.context.web.msgs.campionato.ok"/>
+				</div>
+				<div class="alert alert-danger" id="divCampionatoKo">
+					<spring:message	code="arca.context.web.msgs.campionato.ko" />
+				</div>
+			</div>
 		</security:authorize>
 	</script>	
 		<script type="text/javascript" charset="UTF-8">
@@ -199,6 +209,10 @@
 								{
 									"render" : 	function(data, type, row) 
 												{
+													if( $.inArray(row.id, idFilialiSelezionati)>-1 )
+													{
+														row.selezionato = true;
+													}
 													return templateSceltaFiliale(row);
 												},
 									
@@ -467,6 +481,8 @@
 		            draggable: false,
 		            nl2br:false,
 		            onshown: function(dialogRef){
+		            	$("#divCampionatoOk").hide();
+		            	$("#divCampionatoKo").hide();
 		            	 $('#dataFrom').datetimepicker({
 		                     locale: 'it',
 		                     minDate: new Date(),
@@ -522,11 +538,21 @@
 				    	//Controllo se ci sono risultati
 				    	if( data.esitoOperazione === 200 && data.numeroOggettiRestituiti > 0 )
 				    	{
+				    		$("#creaCampionatoBtn").prop("disabled",true);
+				    		$("#divCampionatoOk").show();
+				    		$("#divCampionatoKo").hide();
+				    	}
+				    	else
+				    	{
 				    		$("#creaCampionatoBtn").prop("disabled",false);
+				    		$("#divCampionatoOk").hide();
+				    		$("#divCampionatoKo").show();
 				    	}
 				    },
 				    error : function(data) {
-				    	
+				    	$("#creaCampionatoBtn").prop("disabled",false);
+				    	$("#divCampionatoOk").hide();
+			    		$("#divCampionatoKo").show();
 				    }
 				});
 			}

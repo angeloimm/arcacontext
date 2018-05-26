@@ -1,0 +1,29 @@
+{
+  "filialiDaEscludere": [
+    "SCICLI AG. 2",
+    "RADDUSA",
+    "POZZALLO AGENZIA N.1"
+  ],
+  "filialiUnite": [
+    {
+      "nomeFilialePrincipale": "RAGUSA AG.1",
+      "nomeFilialeSecondaria": "RAGUSA AG.5",
+      "nomeFilialeUnita": "RAGUSA AG.1"
+    },
+    {
+      "nomeFilialePrincipale": "GRAMMICHELE",
+      "nomeFilialeSecondaria": "FILIALE DI VIZZINI",
+      "nomeFilialeUnita": "GRAMMICHELE"
+    },
+    {
+      "nomeFilialePrincipale": "CALTAGIRONE",
+      "nomeFilialeSecondaria": "SAN MICHELE DI GANZARIA",
+      "nomeFilialeUnita": "CALTAGIRONE"
+    },
+    {
+      "nomeFilialePrincipale": "CATANIA",
+      "nomeFilialeSecondaria": "CATANIA AG. 4",
+      "nomeFilialeUnita": "CATANIA"
+    }
+  ]
+}
