@@ -145,6 +145,8 @@ function estendiSessione()
 </head>
 <spring:url value="/pages/protected/adminHome" var="homePageUrl"/>
 <spring:url value="/pages/protected/elencoFiliali" var="elencoFilialiUrl"/>
+<spring:url value="/pages/protected/classifiche" var="classificheUrl"/>
+<spring:url value="/pages/protected/calendari" var="calendariUrl"/>
 <spring:url value="/resources/img/logo.png" var="logoUrl"/>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -186,8 +188,8 @@ function estendiSessione()
 			      <li id="liRiversamentoManualeProtocollo"><a href="${homePageUrl}"> <spring:message code="arca.context.web.msgs.carica.dati.filiale.page.name"/> </a></li>
 			    </security:authorize>
 		      <li id="liRegistroProtocollo"><a href="${elencoFilialiUrl}"><spring:message code="arca.context.web.msgs.elenco.filiali.page.name"/></a></li>
-		      <li id="liRegistroProtocollo"><a href="#"><spring:message code="arca.context.web.msgs.calendari.scontri.page.name"/></a></li>
-		      <li id="liRegistroProtocollo"><a href="#"><spring:message code="arca.context.web.msgs.classifiche.page.name"/></a></li>
+		      <li id="liRegistroProtocollo"><a href="${calendariUrl}"><spring:message code="arca.context.web.msgs.calendari.scontri.page.name"/></a></li>
+		      <li id="liRegistroProtocollo"><a href="${classificheUrl}"><spring:message code="arca.context.web.msgs.classifiche.page.name"/></a></li>
 		    </ul>
 		  </div>
 		</nav>

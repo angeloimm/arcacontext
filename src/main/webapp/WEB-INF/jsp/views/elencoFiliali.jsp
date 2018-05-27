@@ -19,7 +19,7 @@
 		.material-switch > input[type="checkbox"]:checked + label::after {background: inherit;left: 20px;}	
 	</style>
 		<spring:url value="/resources/img/busy.gif" var="urlBusyImg" />
-		<title>Elenco filiali</title>
+		<title><spring:message code="arca.context.web.msgs.elenco.filiali.page.title"/></title>
 		<!-- DataTables CSS -->
 		<link
 			href="<spring:url value="/adminWebTheme/vendor/datatables-plugins/dataTables.bootstrap.css" />"

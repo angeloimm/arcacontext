@@ -176,10 +176,11 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	{
 		try
 		{
-			int campionatiAttivati = this.genericDao.attivaCampionato();
+			int campionatiTerminati = this.genericDao.terminaCampionati();
+			int campionatiAttivati  = this.genericDao.attivaCampionati();
 			if( logger.isDebugEnabled() )
 			{
-				logger.debug("ATTIVATI [{}] CAMPIONATI", campionatiAttivati);
+				logger.debug("ATTIVATI [{}] CAMPIONATI; TERMINATI [{}]", campionatiAttivati, campionatiTerminati);
 			}
 		}
 		catch (Exception e)

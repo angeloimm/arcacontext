@@ -98,6 +98,55 @@ public class MainPagesController {
 			logger.error("Errore nel rendering della Home Page",e);
 			return "views/genericError";
 		}
+	}
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(method = { RequestMethod.GET }, value="/protected/classifiche")
+	public String classifice(Model model)
+	{
+		try
+		{
+			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
+			{
+				
+				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				model.addAttribute("utenteLoggato", user);
+			}
+			model.addAttribute("dimensioneFile", dimensioneFile);
+			model.addAttribute("dimensioneFileFormattata", FileUtils.byteCountToDisplaySize(dimensioneFile));
+			long durataSessioneSecondi = sessione.getMaxInactiveInterval(); 
+			model.addAttribute("durataSessione", durataSessioneSecondi);
+			model.addAttribute("classifiche", this.genericSvc.getClassificheCampionatoAttivo());
+			return "views/classifiche";
+		}
+		catch (Exception e) 
+		{
+			logger.error("Errore nel rendering della Home Page",e);
+			return "views/genericError";
+		}
+	}
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(method = { RequestMethod.GET }, value="/protected/calendari")
+	public String calendari(Model model)
+	{
+		try
+		{
+			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
+			{
+				
+				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				model.addAttribute("utenteLoggato", user);
+			}
+			model.addAttribute("dimensioneFile", dimensioneFile);
+			model.addAttribute("dimensioneFileFormattata", FileUtils.byteCountToDisplaySize(dimensioneFile));
+			long durataSessioneSecondi = sessione.getMaxInactiveInterval(); 
+			model.addAttribute("durataSessione", durataSessioneSecondi);
+			return "views/calendari";
+		}
+		catch (Exception e) 
+		{
+			logger.error("Errore nel rendering della Home Page",e);
+			return "views/genericError";
+		}
 	}	
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.GET }, value="/protected/registriProtocollo")
