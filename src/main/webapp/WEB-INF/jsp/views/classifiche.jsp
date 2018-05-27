@@ -52,9 +52,10 @@
             									</div>
             									<div id="collapse${status.index}" class="panel-collapse collapse ${cssMostra}">
                 									<div class="panel-body">
-										                <ul class="list-group">
+										                <ul class="list-group row">
 										                	<c:forEach var="filiale" items="${classifica.filaliCampionato}">
-										                		<li class="list-group-item">${filiale.nomeFiliale}<span class="badge">${filiale.puntiFiliale}</span></li>
+										                		<%-- <li class="list-group-item col-xs-6 col-sm-4 col-md-3">${filiale.nomeFiliale}<span class="badge">${filiale.puntiFiliale}</span></li> --%>
+										                		<li class="list-group-item col-xs-6">${filiale.nomeFiliale}<span class="badge">${filiale.puntiFiliale}</span></li>
 										                	</c:forEach>
 										                </ul>
                 									</div>
