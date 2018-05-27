@@ -170,6 +170,25 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 			throw new ArcaContextDbException(message, e);
 		}
 	}
+	@Override
+	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = false) 
+	public void attivaCampionato() throws ArcaContextDbException
+	{
+		try
+		{
+			int campionatiAttivati = this.genericDao.attivaCampionato();
+			if( logger.isDebugEnabled() )
+			{
+				logger.debug("ATTIVATI [{}] CAMPIONATI", campionatiAttivati);
+			}
+		}
+		catch (Exception e)
+		{
+			String message = "Errore nel controllo ed attivaione campionato; "+e.getMessage();
+			logger.error(message, e);
+			throw new ArcaContextDbException(message, e);
+		}		
+	}	
 	@PostConstruct
 	public void initialize()
 	{

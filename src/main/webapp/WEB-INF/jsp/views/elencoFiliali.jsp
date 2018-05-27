@@ -3,9 +3,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-	<spring:message code="arca.context.web.msgs.upload.add" var="msgAggiungi"/>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<spring:message code="arca.context.web.msgs.visualizza.andamenti.filiale.button" var="msgVediAndamenti"/>
+<spring:message code="arca.context.web.msgs.crea.campionato.button" var="msgCreazioneCampionatoBtn"/>
+<spring:message code="arca.context.web.msgs.upload.add" var="msgAggiungi"/>
+<spring:message code="arca.context.web.msgs.creazione.campionato.alert.title.msg" arguments="${dataCampionatoString}" var="creaCampionatoMsg"/>
 <tiles:insertDefinition name="defaultTemplate">
 	<tiles:putAttribute name="head">
 	<style>
@@ -85,7 +87,7 @@
 	</script>
 	<script type="text/x-handlebars-template" id="templateCreazioneCampionato">
     	<div class="alert alert-info">
-			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.title.msg" /> <br/>
+			 ${creaCampionatoMsg}
 		</div>
 		<div class="alert alert-warning">
 			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.info" arguments="${produzioneMinima}, ${numeroFilialiCampionato}" />
@@ -148,13 +150,11 @@
 					<spring:message code="arca.context.web.msgs.annulla.cancellazione.filiale.btn.msg" /> 
       			</button>
 			</div>
-			<div class="nowrap"> 
-				<div class="alert alert-success" id="divCampionatoOk">
-					<spring:message	code="arca.context.web.msgs.campionato.ok"/>
-				</div>
-				<div class="alert alert-danger" id="divCampionatoKo">
-					<spring:message	code="arca.context.web.msgs.campionato.ko" />
-				</div>
+			<div class="alert alert-success hide" id="divCampionatoOk">
+				<spring:message	code="arca.context.web.msgs.campionato.ok"/>
+			</div>
+			<div class="alert alert-danger hide" id="divCampionatoKo">
+				<spring:message	code="arca.context.web.msgs.campionato.ko" />
 			</div>
 		</security:authorize>
 	</script>	
@@ -169,8 +169,14 @@
 		var templateCancellazioneFiliale = Handlebars.compile($("#templateCancellazioneFiliale").html());
 		var templateCreazioneCampionato = Handlebars.compile($("#templateCreazioneCampionato").html());
 		var tabellaFiliali = null;
+		var campionatiAttivi = ${campionatiAttivi};
 		var creazioneCampionato = ${creazioneCampionato};
 			$(document).ready( function(){
+				
+				if( campionatiAttivi )
+				{
+					$("#creazioneCampionato").prop("disabled",true);
+				}
 				$("#sezioneGraficoAndamento").hide();
 				$("#visualizzaAndamenti").prop("disabled",true);
 				$("#creazioneCampionato").click( function(evt){
@@ -481,11 +487,10 @@
 		            draggable: false,
 		            nl2br:false,
 		            onshown: function(dialogRef){
-		            	$("#divCampionatoOk").hide();
-		            	$("#divCampionatoKo").hide();
 		            	 $('#dataFrom').datetimepicker({
 		                     locale: 'it',
-		                     minDate: new Date(),
+		                     date : new Date(${dataMinimaCampionato}),
+		                     minDate: new Date(${dataMinimaCampionato}),
 		                     keepInvalid: true,
 		                     format:'L'
 		                 });
@@ -566,8 +571,13 @@
 					<!-- /.panel-heading -->
 					<div class="panel-body">
 						<div class="alert alert-info">
-							<spring:message code="arca.context.web.msgs.elenco.filiali.info.msg"/>
-						</div>					
+							<spring:message code="arca.context.web.msgs.elenco.filiali.info.msg" arguments="${msgVediAndamenti},${msgCreazioneCampionatoBtn}"/>
+						</div>
+						<c:if test="${campionatiAttivi}">
+							<div class="alert alert-warning">
+								<spring:message code="arca.context.web.msgs.creazione.esiste.campionato.attivo.alert.title.msg"/>
+							</div>
+						</c:if>
 						<table	class="datatables-table table table-striped table-bordered table-hover" id="tabellaFiliali" cellspacing="0"  style="width: 100%;">
 							<thead>
 								<tr>
@@ -581,11 +591,11 @@
 						</table>
 						<div class="nowrap">
 							<button id="visualizzaAndamenti" class="btn btn-primary">
-								<strong><spring:message code="arca.context.web.msgs.visualizza.andamenti.filiale.button"/></strong>
+								<strong>${msgVediAndamenti}</strong>
 							</button>
 							<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')">
 								<button id="creazioneCampionato" class="btn btn-primary">
-									<strong><spring:message code="arca.context.web.msgs.crea.campionato.button"/></strong>
+									<strong>${msgCreazioneCampionatoBtn}</strong>
 								</button>
 							</security:authorize>
 						</div>

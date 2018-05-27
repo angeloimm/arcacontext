@@ -1,10 +1,8 @@
 package it.olegna.arca.context.models;
 
-import java.util.Iterator;
-import java.util.List;
-
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -30,6 +28,8 @@ public class CampionatoFiliale extends AbstractModel
 
 	private static final long serialVersionUID = -3277098625979665346L;
 	private CampionatoFilialeId pk = new CampionatoFilialeId();
+	private int puntiFiliale;
+	
 	@EmbeddedId
 	public CampionatoFilialeId getPk()
 	{
@@ -58,39 +58,14 @@ public class CampionatoFiliale extends AbstractModel
 	{
 		getPk().setCampionato(c);
 	}
-	public void addFiliali( List<Filiale> filiali )
+	@Column(name="PUNTI_FILIALE", nullable=false)
+	public int getPuntiFiliale()
 	{
-		for (Filiale filiale : filiali)
-		{
-			setFiliale(filiale);
-		}
-	}
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((pk == null) ? 0 : pk.hashCode());
-		return result;
+		return puntiFiliale;
 	}
 
-	@Override
-	public boolean equals(Object obj)
+	public void setPuntiFiliale(int puntiFiliale)
 	{
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CampionatoFiliale other = (CampionatoFiliale) obj;
-		if (pk == null)
-		{
-			if (other.pk != null)
-				return false;
-		}
-		else if (!pk.equals(other.pk))
-			return false;
-		return true;
+		this.puntiFiliale = puntiFiliale;
 	}
 }

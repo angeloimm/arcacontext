@@ -1,8 +1,9 @@
 .preHeader {background-color: #fff;color: #333;padding: 0 10px;border-top: 2px solid #337ab7;}
 .preHeader .navbar-top-links li a {padding: 7px;min-height: auto;margin-left: 10px;}
 .preHeader p {margin:0;vertical-align:middle;display:inline-block;line-height: 32px;}
-.dropZoneInfo {border: 2px dotted #337ab7;}
 
+.hide {display: none;}
+.dropZoneInfo {border: 2px dotted #337ab7;}
 #dropzone {background: #e9f1e9;text-align: center;font-weight: bold;}
 /* #dropzone.in {width: 600px;height: 200px;line-height: 200px;font-size: larger;} */
 #dropzone.in {border: 3px dotted #6581e8;font-size: larger;}

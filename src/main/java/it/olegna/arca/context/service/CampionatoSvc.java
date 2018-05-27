@@ -14,4 +14,5 @@ public interface CampionatoSvc<T>
 	void salvaEntity( T entity ) throws ArcaContextDbException;
 	void salvaEntities( List<T> entities ) throws ArcaContextDbException;
 	void creaCampionato( CreazioneCampionatoDto dto ) throws ArcaContextDbException;
+	void attivaCampionato() throws ArcaContextDbException;
 }

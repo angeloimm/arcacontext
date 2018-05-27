@@ -17,9 +17,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.olegna.arca.context.dto.UtenteDto;
+import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.User;
 import it.olegna.arca.context.models.UserProfile;
 import it.olegna.arca.context.models.UserProfileType;
+import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.IUserProfileSvc;
 import it.olegna.arca.context.service.IUserSvc;
 
@@ -32,6 +34,8 @@ public class SpringCtxListener
 	@Autowired
 	private IUserSvc usrSvc;
 	@Autowired
+	private CampionatoSvc<Campionato> campSvc;
+	@Autowired
 	@Qualifier("objectMapper")
 	private ObjectMapper om;
 	@EventListener
@@ -39,6 +43,7 @@ public class SpringCtxListener
 	{
 		try
 		{
+			campSvc.attivaCampionato();
 			Long ruoliUtente = usrProf.count();
 			if( ruoliUtente == null || ruoliUtente == 0 )
 			{

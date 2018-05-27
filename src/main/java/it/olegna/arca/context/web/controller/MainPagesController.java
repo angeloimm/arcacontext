@@ -1,10 +1,14 @@
 package it.olegna.arca.context.web.controller;
 
+
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import it.olegna.arca.context.service.DatiFilialeSvc;
+import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.web.dto.UserPrincipal;
+import static it.olegna.arca.context.util.TimeUtil.formatDateTime;
 
 @Controller
 @RequestMapping("/pages")
@@ -34,6 +40,8 @@ public class MainPagesController {
 	private long dimensioneFile;
 	@Value("${arca.context.produzione.minima}")
 	private long produzioneMinima;
+	@Autowired
+	private GenericSvc<Date> genericSvc;
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
 	@RequestMapping(method = { RequestMethod.GET }, value="/protected/adminHome")
 	public String homePage(Model model)
@@ -78,6 +86,11 @@ public class MainPagesController {
 			model.addAttribute("creazioneCampionato", creazioneCampionato);
 			model.addAttribute("produzioneMinima", produzioneMinima);
 			model.addAttribute("numeroFilialiCampionato", 22);
+			long dataCampionato = genericSvc.getDataProssimoCampionato();
+			model.addAttribute("dataMinimaCampionato", dataCampionato );
+			model.addAttribute("dataCampionatoString", formatDateTime(new DateTime(dataCampionato), "dd/MM/yyyy"));
+			boolean campionatiAttivi = genericSvc.esisteCampionatoAttivo();
+			model.addAttribute("campionatiAttivi", campionatiAttivi);
 			return "views/elencoFiliali";
 		}
 		catch (Exception e) 

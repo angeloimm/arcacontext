@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -26,6 +27,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "it.olegna.arca.context" })
 @Import(CacheConfiguration.class)
+@EnableScheduling
 public class DbConfig
 {
 	@Autowired
