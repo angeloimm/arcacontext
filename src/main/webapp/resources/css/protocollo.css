@@ -10,3 +10,4 @@
 /* #dropzone.hover {background: lawngreen;} */
 #dropzone.hover {border: 3px dotted #6581e8;font-size: larger;}
 #dropzone.fade {-webkit-transition: all 0.3s ease-out;-moz-transition: all 0.3s ease-out;-ms-transition: all 0.3s ease-out;-o-transition: all 0.3s ease-out;transition: all 0.3s ease-out;opacity: 1;}
+.margin_t_10{margin-top: 10px;}

@@ -150,10 +150,10 @@
 					<spring:message code="arca.context.web.msgs.annulla.cancellazione.filiale.btn.msg" /> 
       			</button>
 			</div>
-			<div class="alert alert-success hide" id="divCampionatoOk">
+			<div class="alert alert-success hide margin_t_10" id="divCampionatoOk">
 				<spring:message	code="arca.context.web.msgs.campionato.ok"/>
 			</div>
-			<div class="alert alert-danger hide" id="divCampionatoKo">
+			<div class="alert alert-danger hide margin_t_10" id="divCampionatoKo">
 				<spring:message	code="arca.context.web.msgs.campionato.ko" />
 			</div>
 		</security:authorize>
@@ -487,22 +487,24 @@
 		            draggable: false,
 		            nl2br:false,
 		            onshown: function(dialogRef){
-		            	 $('#dataFrom').datetimepicker({
+		            	 $('#dal').datetimepicker({
 		                     locale: 'it',
 		                     date : new Date(${dataMinimaCampionato}),
 		                     minDate: new Date(${dataMinimaCampionato}),
 		                     keepInvalid: true,
 		                     format:'L'
 		                 });
-		            	 $('#dataTo').datetimepicker({
+		            	 $('#al').datetimepicker({
 		                     locale: 'it',
 		                     useCurrent: false,
 		                     keepInvalid: true,
 		                     format:'L'
 		                 });
-		            	 $("#dataFrom").on("dp.change", function (e) {
+		            	 $('#al').data("DateTimePicker").disable();
+		            	 $("#dal").on("dp.change", function (e) {
 		            		 var data = e.date;
-		                     $('#dataTo').data("DateTimePicker").minDate(data);
+		                     $('#al').data("DateTimePicker").minDate(data);
+		                     $('#al').data("DateTimePicker").enable();
 		                 });
 		            	 $("#chiudiCreazioneCampionatoBtn").click(function(evt){
 		            		 evt.preventDefault();
@@ -537,27 +539,27 @@
 					    
 				    	$("#spinner").toggleClass("bootstrap-dialog-button-icon glyphicon glyphicon-asterisk icon-spin");
 				    	$("#spinner").toggleClass("bootstrap-dialog-button-icon glyphicon glyphicon-send");
-				    	$("#creaCampionatoBtn").prop("disabled",false);
+				    	/* $("#creaCampionatoBtn").prop("disabled",false); */
 				    },
 				    success : function(data) {
 				    	//Controllo se ci sono risultati
 				    	if( data.esitoOperazione === 200 && data.numeroOggettiRestituiti > 0 )
 				    	{
 				    		$("#creaCampionatoBtn").prop("disabled",true);
-				    		$("#divCampionatoOk").show();
-				    		$("#divCampionatoKo").hide();
+				    		$("#divCampionatoOk").removeClass("hide");
+				    		$("#divCampionatoKo").addClass("hide");
 				    	}
 				    	else
 				    	{
 				    		$("#creaCampionatoBtn").prop("disabled",false);
-				    		$("#divCampionatoOk").hide();
-				    		$("#divCampionatoKo").show();
+				    		$("#divCampionatoOk").addClass("hide");
+				    		$("#divCampionatoKo").removeClass("hide");
 				    	}
 				    },
 				    error : function(data) {
 				    	$("#creaCampionatoBtn").prop("disabled",false);
-				    	$("#divCampionatoOk").hide();
-			    		$("#divCampionatoKo").show();
+			    		$("#divCampionatoOk").addClass("hide");
+			    		$("#divCampionatoKo").removeClass("hide");
 				    }
 				});
 			}
