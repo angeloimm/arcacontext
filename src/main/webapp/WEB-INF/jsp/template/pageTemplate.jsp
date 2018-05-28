@@ -27,8 +27,7 @@
 	<link href='<spring:url value="/adminWebTheme/vendor/morrisjs/morris.css" />' rel="stylesheet" type="text/css">
 	<!-- Custom Fonts -->
 	<link href='<spring:url value="/adminWebTheme/vendor/font-awesome/css/font-awesome.min.css" />'	rel="stylesheet" type="text/css">
-	<!-- Custom CSS -->
-	<link href='<spring:url value="/resources/css/protocollo.css" />' rel="stylesheet" type="text/css">
+	
 	
 	<!-- Bootstrap datetime picker -->
 	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
@@ -38,6 +37,9 @@
 	<link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/bootstrap-switch/css/bootstrap-switch.min.css"/>'>
 	<!-- fullcalendar -->
 	<link rel="stylesheet" href='<spring:url value="/adminWebTheme/vendor/fullcalendar/css/fullcalendar.min.css"/>'>
+	
+	<!-- Custom CSS -->
+	<link href='<spring:url value="/resources/css/protocollo.css" />' rel="stylesheet" type="text/css">
 	<!-- jQuery -->
 	<script	src='<spring:url value="/adminWebTheme/vendor/jquery/jquery.min.js" />'></script>
 	<!-- jQuery BlockUI-->

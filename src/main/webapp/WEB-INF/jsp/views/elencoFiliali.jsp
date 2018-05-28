@@ -193,7 +193,7 @@
 						{
 							"processing" : true,
 							"serverSide" : true,
-							"searching" : false,
+							"searching" : true,
 							"responsive" : true,
 							"pagingType": "full_numbers",
 							"ordering":false,
@@ -487,25 +487,7 @@
 		            draggable: false,
 		            nl2br:false,
 		            onshown: function(dialogRef){
-		            	 $('#dal').datetimepicker({
-		                     locale: 'it',
-		                     date : new Date(${dataMinimaCampionato}),
-		                     minDate: new Date(${dataMinimaCampionato}),
-		                     keepInvalid: true,
-		                     format:'L'
-		                 });
-		            	 $('#al').datetimepicker({
-		                     locale: 'it',
-		                     useCurrent: false,
-		                     keepInvalid: true,
-		                     format:'L'
-		                 });
-		            	 $('#al').data("DateTimePicker").disable();
-		            	 $("#dal").on("dp.change", function (e) {
-		            		 var data = e.date;
-		                     $('#al').data("DateTimePicker").minDate(data);
-		                     $('#al').data("DateTimePicker").enable();
-		                 });
+		            	 creaDateTimePickers();
 		            	 $("#chiudiCreazioneCampionatoBtn").click(function(evt){
 		            		 evt.preventDefault();
 		            		 dialogRef.close();
@@ -517,6 +499,30 @@
 		            }
 				});
 			}
+			function creaDateTimePickers(){
+				
+				$('#dal').datetimepicker({
+                    locale: 'it',
+                    date : new Date(${dataMinimaCampionato}),
+                    minDate: new Date(${dataMinimaCampionato}),
+                    keepInvalid: true,
+                    format:'L'
+                });
+           	 	$('#al').datetimepicker({
+                    locale: 'it',
+                    useCurrent: false,
+                    keepInvalid: true,
+                    format:'L'
+                });
+           	 	$('#al').data("DateTimePicker").disable();
+           	 	$("#dal").on("dp.change", function (e) {
+           		 	var data = e.date;
+                    $('#al').data("DateTimePicker").minDate(data);
+                    $('#al').data("DateTimePicker").date(data);
+                    $('#al').data("DateTimePicker").enable();
+                });
+			}
+			
 			function creaNuovoCampionato()
 			{
 				var datiCampionato = new Object();

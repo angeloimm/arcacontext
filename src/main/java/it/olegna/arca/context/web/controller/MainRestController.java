@@ -79,11 +79,11 @@ public class MainRestController {
 		HttpStatus status = null;
 		try
 		{
-
+			String filtroRicerca = req.getParameter("search[value]");
 			Long draw = new Long(req.getParameter("draw"));
 			Integer offset = new Integer(req.getParameter("start"));
 			Integer length = new Integer(req.getParameter("length"));
-			result = this.filialeSvc.ricercaElencoFiliali(offset, length);
+			result = this.filialeSvc.ricercaElencoFiliali(filtroRicerca, offset, length);
 			if(result != null)
 			{
 				result.setNumeroOggettiRestituiti(length);

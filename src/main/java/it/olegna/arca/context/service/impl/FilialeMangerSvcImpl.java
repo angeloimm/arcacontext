@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -155,18 +156,26 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 	
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true) 
-	public DataTableResponse<FilialeDto> ricercaElencoFiliali(int start, int end) throws ArcaContextDbException
+	public DataTableResponse<FilialeDto> ricercaElencoFiliali(String filtroRicerca, int start, int end) throws ArcaContextDbException
 	{
 		
 		ProjectionList pl = Projections.projectionList();
 		pl.add(Projections.property("nomeFiliale"), "nomeFiliale");
 		pl.add(Projections.property("id"),"id");
 		DetachedCriteria dcCoun = DetachedCriteria.forClass(Filiale.class);
+		if( StringUtils.hasText(filtroRicerca) )
+		{
+			dcCoun.add(Property.forName("nomeFiliale").like(filtroRicerca, MatchMode.START).ignoreCase());
+		}
 		long oggettiTotali = (filialeDao.count(dcCoun)).longValue();
 		DetachedCriteria dc = DetachedCriteria.forClass(Filiale.class);
 		dc.setProjection(pl);
 		dc.addOrder(Order.desc("nomeFiliale"));
 		dc.setResultTransformer(Transformers.aliasToBean(FilialeDto.class));
+		if( StringUtils.hasText(filtroRicerca) )
+		{
+			dc.add(Property.forName("nomeFiliale").like(filtroRicerca, MatchMode.START).ignoreCase());
+		}
 		List<FilialeDto> filiali = filialeDao.findByDtoDetacheCriteria(dc, start, end);
 		if( filiali == null || filiali.isEmpty() )
 		{

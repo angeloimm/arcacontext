@@ -14,7 +14,7 @@ public interface FilialeManagerSvc
 {
 	void salvaAggiornaFiliale(Filiale filiale) throws ArcaContextDbException;
 	List<FilialeDto> ricercaFiliali(DetachedCriteria dc) throws ArcaContextDbException;
-	DataTableResponse<FilialeDto> ricercaElencoFiliali(int start, int end) throws ArcaContextDbException;
+	DataTableResponse<FilialeDto> ricercaElencoFiliali(String filtro, int start, int end) throws ArcaContextDbException;
 	Filiale ricercaFilialeByName(String name) throws ArcaContextDbException;
 	void salvaAggiornaFilialeAndDati( List<Filiale> filiali, Date dataDati ) throws ArcaContextDbException;
 	
