@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import it.olegna.arca.context.configuration.events.CaricamentoDatiEvent;
 import it.olegna.arca.context.dto.FileUploadResponseDto;
 import it.olegna.arca.context.dto.UploadedFileDto;
 import it.olegna.arca.context.service.DataReader;
@@ -29,6 +31,8 @@ public class UploadFileController {
 	private DataReader reader;
 	@Autowired
 	private FilialeManagerSvc filialeSvc;
+	@Autowired
+	private ApplicationEventPublisher publisher;
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.POST }, value = { "/protected/uploadedDatiFiliali" })
 	public ResponseEntity<FileUploadResponseDto> uploadRiversamentoManuale(	
@@ -45,6 +49,9 @@ public class UploadFileController {
 		try {
 			DatiFilialiContainer res = reader.dataReader(mpf.getInputStream());
 			filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), res.getDataRiferimento());
+			//Genero e propago l'evento
+			CaricamentoDatiEvent cde = new CaricamentoDatiEvent(this, res.getDataRiferimento());
+			publisher.publishEvent(cde);
 			UploadedFileDto ufd = new UploadedFileDto();
 			ufd.setId(UUID.randomUUID().toString());
 			ufd.setName(fileName);

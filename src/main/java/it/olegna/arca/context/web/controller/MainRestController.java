@@ -1,6 +1,7 @@
 package it.olegna.arca.context.web.controller;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.hibernate.criterion.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.olegna.arca.context.configuration.events.CreazioneCampionatoEvent;
 import it.olegna.arca.context.dto.BaseResponse;
 import it.olegna.arca.context.dto.DataTableResponse;
 import it.olegna.arca.context.dto.DatiFilialeDto;
@@ -47,6 +50,8 @@ public class MainRestController {
 	private CampionatoSvc<Campionato> campionatoService;
 	@Autowired
 	private HttpServletRequest req;
+	@Autowired
+	private ApplicationEventPublisher publisher;
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.GET}, value = { "/protected/estendiSessione" })
 	public ResponseEntity<BaseResponse<String>> estendiSessione()
@@ -133,6 +138,9 @@ public class MainRestController {
 			result.setNumeroOggettiRestituiti(1);
 			result.setNumeroOggettiTotali(1);
 			result.setPayload(Collections.singletonList("OK"));
+			//Genero e propago l'evento
+			CreazioneCampionatoEvent cce = new CreazioneCampionatoEvent(this, new Date(creaCampionatoRequest.getDataInizio()));
+			publisher.publishEvent(cce);
 		}
 		catch (Exception e)
 		{

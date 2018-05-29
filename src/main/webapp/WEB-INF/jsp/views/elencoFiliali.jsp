@@ -50,11 +50,14 @@
 	<script type="text/x-handlebars-template" id="templateSceltaFiliale">
     	<div class="nowrap"> 
 			<div class="material-switch pull-left">
-        		<input id="someSwitchOptionPrimary{{id}}" data-id-filiale="{{id}}" name="someSwitchOption001{{id}}" type="checkbox" class="selezionaFiliale" {{#if selezionato}} checked {{/if}} />
+        		<input id="someSwitchOptionPrimary{{id}}" data-id-filiale="{{id}}" data-nome-filiale="{{nomeFiliale}}" name="someSwitchOption001{{id}}" type="checkbox" class="selezionaFiliale" {{#if selezionato}} checked {{/if}} />
             	<label for="someSwitchOptionPrimary{{id}}" class="label-primary"></label>
         	</div> 
 		</div>
 	</script>
+	<script type="text/x-handlebars-template" id="templateFilialeSelezionata">
+			<span class="label label-info" id="label_{{idFiliale}}">{{nomeFiliale}}</span> 
+	</script>	
 	<script type="text/x-handlebars-template" id="templateDettagliFiliale">
     	<div class="alert alert-info">
 			Dati filiale <strong>{{nomeFiliale}}</strong>
@@ -163,6 +166,7 @@
 		var dataFineMs = 0;
 		var dataInizioMs = 0;
 		var idFilialiSelezionati = [];
+		var templateFilialeSelezionata = Handlebars.compile($("#templateFilialeSelezionata").html());
 		var templateAzioniFiliale = Handlebars.compile($("#templateAzioniFiliale").html());
 		var templateSceltaFiliale = Handlebars.compile($("#templateSceltaFiliale").html());
 		var templateDettagliFiliale = Handlebars.compile($("#templateDettagliFiliale").html());
@@ -172,7 +176,8 @@
 		var campionatiAttivi = ${campionatiAttivi};
 		var creazioneCampionato = ${creazioneCampionato};
 			$(document).ready( function(){
-				
+				$("#divFilialiSelezionate").hide();
+				$("#testoFilialiSelezionate").hide();
 				if( campionatiAttivi )
 				{
 					$("#creazioneCampionato").prop("disabled",true);
@@ -455,17 +460,29 @@
 				$('.material-switch :checkbox').change(function() {
 				    // this will contain a reference to the checkbox   
 				    if (this.checked) {
-				       console.log("Selezionato "+$(this).attr("data-id-filiale")); 
 				       idFilialiSelezionati.push($(this).attr("data-id-filiale"));
-				       console.log(idFilialiSelezionati);
+				       var dati = new Object();
+				       dati.nomeFiliale = $(this).attr("data-nome-filiale");
+				       dati.idFiliale = $(this).attr("data-id-filiale");
+				       $("#divFilialiSelezionate").append(templateFilialeSelezionata(dati));
+				       $("#divFilialiSelezionate").show();
+				       $("#testoFilialiSelezionate").show();
 				    } else {
-				    	console.log("Deselezionato "+$(this).attr("data-id-filiale"));
-				    	idFilialiSelezionati.splice($.inArray($(this).attr("data-id-filiale"), idFilialiSelezionati),1);
-				    	console.log(idFilialiSelezionati);
+				    	
+				    	var idFiliale = $(this).attr("data-id-filiale");
+				    	var indice = $.inArray(idFiliale, idFilialiSelezionati);
+				    	idFilialiSelezionati.splice(indice,1);
+				    	if( indice > -1 )
+				    	{
+				    		$("#label_"+idFiliale).remove();	
+				    	}
 				    }
 				    if( idFilialiSelezionati.length === 0 )
 				    {
 				    	$("#visualizzaAndamenti").prop("disabled",true);
+				    	$("#divFilialiSelezionate").empty();
+				    	$("#divFilialiSelezionate").hide();
+				    	$("#testoFilialiSelezionate").hide();
 				    }
 				    else if( idFilialiSelezionati.length > 0 )
 				    {
@@ -526,8 +543,8 @@
 			function creaNuovoCampionato()
 			{
 				var datiCampionato = new Object();
-				datiCampionato.dataInizio =  $('#dataFrom').data('DateTimePicker').date().valueOf();
-				datiCampionato.dataFine = $('#dataTo').data('DateTimePicker').date().valueOf();
+				datiCampionato.dataInizio =  $('#dal').data('DateTimePicker').date().valueOf();
+				datiCampionato.dataFine = $('#al').data('DateTimePicker').date().valueOf();
 				datiCampionato.produzioneMinima = $("#produzioneMinima").val();
 				datiCampionato.numeroSquadre = $("#numeroSquadre").val();
 				$.ajax({
@@ -597,6 +614,14 @@
 							<tbody>
 							</tbody>
 						</table>
+						<div class="nowrap margin_b_10">
+							<p id="testoFilialiSelezionate" class="text-info">
+								<strong><spring:message code="arca.context.web.msgs.filiali.selezionate" text="Filiali selezionate"/></strong>
+							</p>
+							<div id="divFilialiSelezionate">
+							
+							</div>
+						</div>
 						<div class="nowrap">
 							<button id="visualizzaAndamenti" class="btn btn-primary">
 								<strong>${msgVediAndamenti}</strong>

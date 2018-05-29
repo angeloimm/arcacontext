@@ -37,10 +37,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -81,13 +84,13 @@ public class WebMvcConfig implements WebMvcConfigurer
 	@Autowired
 	private Environment env;
 	@Bean(name="multipartResolver") 
-    public CommonsMultipartResolver getResolver() throws IOException
+	public CommonsMultipartResolver getResolver() throws IOException
 	{
-        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-        resolver.setMaxUploadSizePerFile(Long.parseLong(env.getProperty("arca.context.max.file.dimension")));
-        
-        return resolver;
-    }
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setMaxUploadSizePerFile(Long.parseLong(env.getProperty("arca.context.max.file.dimension")));
+
+		return resolver;
+	}
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry)
 	{
@@ -193,7 +196,7 @@ public class WebMvcConfig implements WebMvcConfigurer
 			Resource jsonRes = new ClassPathResource(keystores);
 			if (jsonRes.exists())
 			{
-				
+
 				List<KeyStoreInfo> ksInfo = objectMapper().readValue(jsonRes.getInputStream(), new TypeReference<List<KeyStoreInfo>>()
 				{
 				});
@@ -240,7 +243,7 @@ public class WebMvcConfig implements WebMvcConfigurer
 
 					};
 					sslCtx.init(keymanagers.toArray(new KeyManager[keymanagers.size()]), new TrustManager[]
-					{ tm }, null);
+							{ tm }, null);
 					SSLConnectionSocketFactory sslConnectionFactory = new SSLConnectionSocketFactory(sslCtx);
 					Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory> create().register("https", sslConnectionFactory).register("http", new PlainConnectionSocketFactory()).build();
 					pcm = new PoolingHttpClientConnectionManager(registry);
@@ -317,5 +320,12 @@ public class WebMvcConfig implements WebMvcConfigurer
 		ClientHttpRequestMessageSender clientHttpRequestMessageSender = new ClientHttpRequestMessageSender(requestFactory());
 
 		return clientHttpRequestMessageSender;
+	}
+	@Bean(name= {"applicationEventMulticaster"})
+	public ApplicationEventMulticaster simpleApplicationEvtsMulticaster()
+	{
+		SimpleApplicationEventMulticaster eventMulticaster = new SimpleApplicationEventMulticaster();
+		eventMulticaster.setTaskExecutor(new SimpleAsyncTaskExecutor());
+		return eventMulticaster;
 	}
 }

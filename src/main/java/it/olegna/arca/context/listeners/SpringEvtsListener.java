@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import it.olegna.arca.context.configuration.events.CaricamentoDatiEvent;
+import it.olegna.arca.context.configuration.events.CreazioneCampionatoEvent;
 import it.olegna.arca.context.dto.UtenteDto;
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.User;
@@ -26,9 +28,9 @@ import it.olegna.arca.context.service.IUserProfileSvc;
 import it.olegna.arca.context.service.IUserSvc;
 
 @Component
-public class SpringCtxListener
+public class SpringEvtsListener
 {
-	private static final Logger logger = LoggerFactory.getLogger(SpringCtxListener.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(SpringEvtsListener.class.getName());
 	@Autowired
 	private IUserProfileSvc usrProf;
 	@Autowired
@@ -101,6 +103,22 @@ public class SpringCtxListener
 		{
 			logger.error("Errore nello startup del contesto", e);
 			throw e;
+		}
+	}
+	@EventListener(classes= {CreazioneCampionatoEvent.class})
+	public void creazioneCampionatoEvtListener( CreazioneCampionatoEvent cce )
+	{
+		if( logger.isDebugEnabled() )
+		{
+			logger.debug("Ricevuto evento di tipo {}; data inizio campionato {}", cce.getClass(), cce.getDataInizioCampionato()); 
+		}
+	}
+	@EventListener(classes= {CaricamentoDatiEvent.class})
+	public void caricamentoDatiEvtListener( CaricamentoDatiEvent cde )
+	{
+		if( logger.isDebugEnabled() )
+		{
+			logger.debug("Ricevuto evento di tipo {}; data riferimento {}", cde.getClass(), cde.getDataDati()); 
 		}
 	}
 }
