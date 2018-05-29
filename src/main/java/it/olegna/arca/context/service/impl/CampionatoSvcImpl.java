@@ -1,5 +1,6 @@
 package it.olegna.arca.context.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import it.olegna.arca.context.dao.CampionatoDao;
 import it.olegna.arca.context.dao.FilialeDao;
 import it.olegna.arca.context.dao.GenericDao;
+import it.olegna.arca.context.dto.FilialeDto;
 import it.olegna.arca.context.exception.ArcaContextDbException;
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.CampionatoFiliale;
@@ -30,6 +32,7 @@ import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.transformers.CreazioneCampionatiFilialeTransformer;
+import it.olegna.arca.context.web.dto.CampionatoFilialiDto;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 import it.olegna.arca.context.web.dto.UserPrincipal;
 @Service
@@ -37,11 +40,11 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 {
 	private static final Logger logger = LoggerFactory.getLogger(CampionatoSvcImpl.class.getName());
 	@Autowired
-	private CampionatoDao<Campionato> genericDao;
+	private CampionatoDao<Campionato> campionatoDao;
 	@Autowired
 	private FilialeDao filialeDao;
 	@Autowired
-	private GenericDao<CampionatoFiliale> campFilDao;
+	private GenericDao<CampionatoFiliale> genericCampionatoFilialiDao;
 	private char[] tipologieCampionato;
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true) 
@@ -49,7 +52,7 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	{
 		try
 		{
-			return genericDao.findByDetacheCriteria(dc, start, end);
+			return campionatoDao.findByDetacheCriteria(dc, start, end);
 		}
 		catch (Exception e)
 		{
@@ -65,7 +68,7 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	{
 		try
 		{
-			return genericDao.count(dc).longValue();
+			return campionatoDao.count(dc).longValue();
 		}
 		catch (Exception e)
 		{
@@ -81,7 +84,7 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	{
 		try
 		{
-			genericDao.persist(entity);
+			campionatoDao.persist(entity);
 		}
 		catch (Exception e)
 		{
@@ -98,7 +101,7 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	{
 		try
 		{
-			genericDao.persist(entities);
+			campionatoDao.persist(entities);
 		}
 		catch (Exception e)
 		{
@@ -110,10 +113,11 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = false) 
-	public void creaCampionato(CreazioneCampionatoDto dto) throws ArcaContextDbException
+	public List<CampionatoFilialiDto> creaCampionato(CreazioneCampionatoDto dto) throws ArcaContextDbException
 	{
 		try
 		{
+			List<CampionatoFilialiDto> result = new ArrayList<CampionatoFilialiDto>();
 			long numeroSquadre = dto.getNumeroSquadre();
 			DetachedCriteria subQuery = DetachedCriteria.forClass(DatiFiliale.class);
 			subQuery.setProjection(Projections.max("dataDati"));
@@ -150,7 +154,11 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 				c.setDataInizio(new Date(dto.getDataInizio()));
 				c.setDataFine(new Date(dto.getDataFine()));
 				c.setImportoProduzioneMinima(dto.getProduzioneMinima());
-				genericDao.persist(c);
+				campionatoDao.persist(c);
+				CampionatoFilialiDto campFil = new CampionatoFilialiDto();
+				campFil.setIdCampionato(c.getId());
+				campFil.setDataInizioCampionato(c.getDataInizio());
+				List<FilialeDto> filialiCampionato = new ArrayList<FilialeDto>(list.size());
 				for (Filiale filiale : list)
 				{
 					CampionatoFiliale cf = new CampionatoFiliale();
@@ -158,10 +166,17 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 					cf.setDataCreazione(new Date());
 					cf.setCampionato(c);
 					cf.setFiliale(filiale);
-					campFilDao.persist(cf);
+					genericCampionatoFilialiDao.persist(cf);
+					FilialeDto fd = new FilialeDto();
+					fd.setId(filiale.getId());
+					fd.setNomeFiliale(filiale.getNomeFiliale());
+					filialiCampionato.add(fd);
 				}
+				campFil.setFilialiCampionato(filialiCampionato);
+				result.add(campFil);
 				i++;
 			}
+			return result;
 		}
 		catch (Exception e)
 		{
@@ -176,8 +191,8 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	{
 		try
 		{
-			int campionatiTerminati = this.genericDao.terminaCampionati();
-			int campionatiAttivati  = this.genericDao.attivaCampionati();
+			int campionatiTerminati = this.campionatoDao.terminaCampionati();
+			int campionatiAttivati  = this.campionatoDao.attivaCampionati();
 			if( logger.isDebugEnabled() )
 			{
 				logger.debug("ATTIVATI [{}] CAMPIONATI; TERMINATI [{}]", campionatiAttivati, campionatiTerminati);
@@ -194,6 +209,6 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 	public void initialize()
 	{
 		this.tipologieCampionato = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-		campFilDao.setPersistentClass(CampionatoFiliale.class);
+		genericCampionatoFilialiDao.setPersistentClass(CampionatoFiliale.class);
 	}
 }

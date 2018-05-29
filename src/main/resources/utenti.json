@@ -10,5 +10,15 @@
       "USER"
     ],
     "mail": "Salvatore.DiPalma@arcavita.it"
+  },
+    {
+    "nome": "Ospite",
+    "cognome": "Solo lettura",
+    "username": "ospite",
+    "password": "ospite",
+    "ruoli": [
+      "USER"
+    ],
+    "mail": "ospite@arcavita.it"
   }
 ]

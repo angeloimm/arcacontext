@@ -596,7 +596,11 @@
 					<!-- /.panel-heading -->
 					<div class="panel-body">
 						<div class="alert alert-info">
-							<spring:message code="arca.context.web.msgs.elenco.filiali.info.msg" arguments="${msgVediAndamenti},${msgCreazioneCampionatoBtn}"/>
+							<spring:message code="arca.context.web.msgs.elenco.filiali.info.msg" arguments="${msgVediAndamenti}"/>
+							<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')">
+								<br />
+								<spring:message code="arca.context.web.msgs.creazione.campionato.info.msg" arguments="${msgCreazioneCampionatoBtn}"/>
+							</security:authorize>
 						</div>
 						<c:if test="${campionatiAttivi}">
 							<div class="alert alert-warning">

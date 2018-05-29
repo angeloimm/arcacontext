@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 
 import it.olegna.arca.context.exception.ArcaContextDbException;
+import it.olegna.arca.context.web.dto.CampionatoFilialiDto;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 
 public interface CampionatoSvc<T>
@@ -13,6 +14,6 @@ public interface CampionatoSvc<T>
 	Long countByDc(DetachedCriteria dc) throws ArcaContextDbException;
 	void salvaEntity( T entity ) throws ArcaContextDbException;
 	void salvaEntities( List<T> entities ) throws ArcaContextDbException;
-	void creaCampionato( CreazioneCampionatoDto dto ) throws ArcaContextDbException;
+	List<CampionatoFilialiDto> creaCampionato( CreazioneCampionatoDto dto ) throws ArcaContextDbException;
 	void attivaCampionato() throws ArcaContextDbException;
 }

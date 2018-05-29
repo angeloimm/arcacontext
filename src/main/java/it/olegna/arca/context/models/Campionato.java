@@ -36,6 +36,7 @@ public class Campionato extends AbstractModel
 	private boolean campionatoAttivo = false;
 	private double importoProduzioneMinima = 0.0d;
 	private Set<CampionatoFiliale> campionati = new HashSet<CampionatoFiliale>();
+	private Set<Incontro> incontri = new HashSet<Incontro>();
 	@Column(name="CAMPIONATO_ATTIVO", nullable=false)
 	public boolean isCampionatoAttivo()
 	{
@@ -53,6 +54,15 @@ public class Campionato extends AbstractModel
 	public void setCategoriaCampionato(String categoriaCampionato)
 	{
 		this.categoriaCampionato = categoriaCampionato;
+	}
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "campionato", targetEntity=Incontro.class)
+	public Set<Incontro> getIncontri()
+	{
+		return incontri;
+	}
+	public void setIncontri(Set<Incontro> incontri)
+	{
+		this.incontri = incontri;
 	}
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.campionato", cascade=CascadeType.ALL)
 	public Set<CampionatoFiliale> getCampionati()

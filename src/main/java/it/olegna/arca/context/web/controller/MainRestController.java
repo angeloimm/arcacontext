@@ -31,11 +31,13 @@ import it.olegna.arca.context.dto.FilialeDto;
 import it.olegna.arca.context.dto.MorrisDataDto;
 import it.olegna.arca.context.dto.VisualizzaAndamentoRequestDto;
 import it.olegna.arca.context.models.Campionato;
+import it.olegna.arca.context.models.CampionatoFiliale;
 import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.FilialeManagerSvc;
 import it.olegna.arca.context.transformers.MorrisDataTransformer;
+import it.olegna.arca.context.web.dto.CampionatoFilialiDto;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 
 @RestController
@@ -130,7 +132,7 @@ public class MainRestController {
 			{
 				logger.debug("CREAZIONE CAMPIONATO PER RICHIESA [{}] ", creaCampionatoRequest);
 			}
-			this.campionatoService.creaCampionato(creaCampionatoRequest);
+			List<CampionatoFilialiDto> campionatoFiliali = this.campionatoService.creaCampionato(creaCampionatoRequest);
 			result = new BaseResponse<String>();
 			status = HttpStatus.OK;
 			result.setDescrizioneOperazione("Creazione campionato avvenuta con successo");
@@ -139,7 +141,7 @@ public class MainRestController {
 			result.setNumeroOggettiTotali(1);
 			result.setPayload(Collections.singletonList("OK"));
 			//Genero e propago l'evento
-			CreazioneCampionatoEvent cce = new CreazioneCampionatoEvent(this, new Date(creaCampionatoRequest.getDataInizio()));
+			CreazioneCampionatoEvent cce = new CreazioneCampionatoEvent(this, new Date(creaCampionatoRequest.getDataInizio()), campionatoFiliali);
 			publisher.publishEvent(cce);
 		}
 		catch (Exception e)

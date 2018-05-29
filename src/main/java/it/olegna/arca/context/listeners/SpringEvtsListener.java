@@ -26,6 +26,7 @@ import it.olegna.arca.context.models.UserProfileType;
 import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.IUserProfileSvc;
 import it.olegna.arca.context.service.IUserSvc;
+import it.olegna.arca.context.service.MatchScheduleBuilder;
 
 @Component
 public class SpringEvtsListener
@@ -40,6 +41,8 @@ public class SpringEvtsListener
 	@Autowired
 	@Qualifier("objectMapper")
 	private ObjectMapper om;
+	@Autowired
+	private MatchScheduleBuilder scheduleManager;
 	@EventListener
 	public void handleContextRefresh(ContextRefreshedEvent event) throws Exception 
 	{
@@ -111,6 +114,14 @@ public class SpringEvtsListener
 		if( logger.isDebugEnabled() )
 		{
 			logger.debug("Ricevuto evento di tipo {}; data inizio campionato {}", cce.getClass(), cce.getDataInizioCampionato()); 
+		}
+		try
+		{
+			this.scheduleManager.creaCalendarioMatch(cce.getCampionatoFiliali());
+		}
+		catch (Throwable t) {
+			logger.error("Errore nella gestione della creazione calendario", t);
+			throw new IllegalStateException(t);
 		}
 	}
 	@EventListener(classes= {CaricamentoDatiEvent.class})

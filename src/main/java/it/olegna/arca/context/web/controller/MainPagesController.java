@@ -1,6 +1,7 @@
 package it.olegna.arca.context.web.controller;
 
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +44,7 @@ public class MainPagesController {
 	private long produzioneMinima;
 	@Autowired
 	private GenericSvc<Date> genericSvc;
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN','ROLE_USER')")
 	@RequestMapping(method = { RequestMethod.GET }, value="/protected/adminHome")
 	public String homePage(Model model)
 	{
@@ -52,6 +54,15 @@ public class MainPagesController {
 			{
 				
 				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				Collection<GrantedAuthority> grAuth = user.getAuthorities();
+				if( grAuth.size() == 1 && grAuth.iterator().next().getAuthority().equals("ROLE_USER") )
+				{
+					if( logger.isDebugEnabled() )
+					{
+						logger.debug("UTENTE LOGGATO [{}] RUOLO [USER]; REDIRECT ALL'ELENCO FILIALI", user.getUsername());
+					}
+					return "redirect:/pages/protected/elencoFiliali";
+				}
 				model.addAttribute("utenteLoggato", user);
 			}
 			model.addAttribute("dimensioneFile", dimensioneFile);
