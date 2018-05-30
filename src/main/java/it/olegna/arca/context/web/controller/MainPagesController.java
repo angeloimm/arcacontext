@@ -1,6 +1,8 @@
 package it.olegna.arca.context.web.controller;
 
 
+import static it.olegna.arca.context.util.TimeUtil.formatDateTime;
+
 import java.util.Collection;
 import java.util.Date;
 
@@ -26,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.web.dto.UserPrincipal;
-import static it.olegna.arca.context.util.TimeUtil.formatDateTime;
 
 @Controller
 @RequestMapping("/pages")
@@ -159,30 +160,7 @@ public class MainPagesController {
 			return "views/genericError";
 		}
 	}	
-	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(method = { RequestMethod.GET }, value="/protected/registriProtocollo")
-	public String registriProtocollo(Model model)
-	{
-		try
-		{
-			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
-			{
-				
-				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-				model.addAttribute("utenteLoggato", user);
-			}
-			model.addAttribute("dimensioneFile", dimensioneFile);
-			model.addAttribute("dimensioneFileFormattata", FileUtils.byteCountToDisplaySize(dimensioneFile));
-			long durataSessioneSecondi = sessione.getMaxInactiveInterval(); 
-			model.addAttribute("durataSessione", durataSessioneSecondi);
-			return "views/registriProtocollo";
-		}
-		catch (Exception e) 
-		{
-			logger.error("Errore nel rendering della Home Page",e);
-			return "views/genericError";
-		}
-	}	
+	
 	@RequestMapping(method = { RequestMethod.GET }, value = {"/accessDenied"})
 	public String accessDenied()
 	{

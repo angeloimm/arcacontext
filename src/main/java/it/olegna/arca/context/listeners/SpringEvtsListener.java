@@ -11,6 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,6 +28,7 @@ import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.IUserProfileSvc;
 import it.olegna.arca.context.service.IUserSvc;
 import it.olegna.arca.context.service.MatchScheduleBuilder;
+import it.olegna.arca.context.web.dto.UserPrincipal;
 
 @Component
 public class SpringEvtsListener
@@ -117,7 +119,14 @@ public class SpringEvtsListener
 		}
 		try
 		{
-			this.scheduleManager.creaCalendarioMatch(cce.getCampionatoFiliali());
+			String creatoDa = "anonimo";
+			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null )
+			{
+			
+				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				creatoDa = user.getUsername();
+			}
+			this.scheduleManager.creaCalendarioMatch(cce.getCampionatoFiliali(), creatoDa);
 		}
 		catch (Throwable t) {
 			logger.error("Errore nella gestione della creazione calendario", t);

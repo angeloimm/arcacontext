@@ -1,5 +1,7 @@
 package it.olegna.arca.context.service.impl;
 
+import static it.olegna.arca.context.util.TimeUtil.formatDateTime;
+
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -20,11 +22,11 @@ import it.olegna.arca.context.dao.GenericDao;
 import it.olegna.arca.context.exception.ArcaContextDbException;
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.CampionatoFiliale;
+import it.olegna.arca.context.models.Incontro;
 import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.transformers.ClassificaCampionatoDtoTransformer;
 import it.olegna.arca.context.web.dto.ClassificaCampionatoDto;
-
-import static it.olegna.arca.context.util.TimeUtil.formatDateTime;
+import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
 
 @Service
 public class GenericSvcImpl<T> implements GenericSvc<T>
@@ -133,6 +135,51 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 				{
 					String tipoCampionato1 = o1.getTipoCampionato();
 					String tipoCampionato2 = o2.getTipoCampionato();
+					return tipoCampionato1.compareTo(tipoCampionato2);
+				}
+			});
+			return results;
+		}
+		catch (Exception e)
+		{
+			String msg = "Errore nel recupero della classifiche; "+e.getMessage();
+			if( logger.isErrorEnabled() )
+			{
+				logger.error(msg, e);
+			}
+			throw new ArcaContextDbException(msg, e);
+		}
+	}
+	@Override
+	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true) 
+	public List<IncontroCampionatoDto> getIncontri() throws ArcaContextDbException
+	{
+		List<IncontroCampionatoDto> results = null;
+		try
+		{
+			DetachedCriteria subQuery = DetachedCriteria.forClass(Incontro.class);
+			subQuery.createAlias("campionato", "campionato");
+			subQuery.add(Property.forName("campionato.campionatoAttivo").eq(Boolean.TRUE));
+			ProjectionList pl = Projections.projectionList();
+			pl.add(Projections.property("campionato"), "campionato");
+			pl.add(Projections.property("filialeCasa"), "filialeCasa");
+			pl.add(Projections.property("filialeFuoriCasa"), "filialeFuoriCasa");
+			
+			subQuery.setProjection(Projections.property("id"));
+			DetachedCriteria dc = DetachedCriteria.forClass(CampionatoFiliale.class);
+			dc.createAlias("pk.campionato", "campionato");
+			dc.add(Property.forName("pk.campionato").in(subQuery));
+			dc.addOrder(Order.asc("campionato.categoriaCampionato"));
+			dc.setResultTransformer(new ClassificaCampionatoDtoTransformer());
+			results = (List<IncontroCampionatoDto>) this.recuperoDataDao.findByCriteria(dc);
+			results.sort(new Comparator<IncontroCampionatoDto>()
+			{
+
+				@Override
+				public int compare(IncontroCampionatoDto o1, IncontroCampionatoDto o2)
+				{
+					String tipoCampionato1 = o1.getTipologiaCampionato();
+					String tipoCampionato2 = o2.getTipologiaCampionato();
 					return tipoCampionato1.compareTo(tipoCampionato2);
 				}
 			});

@@ -90,15 +90,43 @@ $(document).ajaxSend(function(e, xhr, options) {
 $(document).ready(function(){
 	
 	var pathname = window.location.pathname;
-	if( pathname.indexOf('elencoFiliali') > -1 )
+	/*
+	liHomePage
+liElencoFiliali
+liCalendari
+liClassifiche
+	*/
+
+	if( pathname.indexOf('adminHome') > -1 )
 	{
-		$("#liRiversamentoManualeProtocollo").removeClass("active");
-		$("#liRegistroProtocollo").addClass("active");
+		$("#liHomePage").addClass("active");
+		$("#liElencoFiliali").removeClass("active");
+		$("#liCalendari").removeClass("active");
+		$("#liCalendari").removeClass("active");
+		
 	}
-	else if( pathname.indexOf('adminHome') > -1 )
+	else if( pathname.indexOf('elencoFiliali') > -1 )
 	{
-		$("#liRegistroProtocollo").removeClass("active");
-		$("#liRiversamentoManualeProtocollo").addClass("active");
+		$("#liElencoFiliali").addClass("active");
+		$("#liHomePage").removeClass("active");
+		$("#liCalendari").removeClass("active");
+		$("#liClassifiche").removeClass("active");
+	}
+	else if( pathname.indexOf('calendari') > -1 )
+	{
+		$("#liCalendari").addClass("active");
+		$("#liElencoFiliali").removeClass("active");
+		$("#liHomePage").removeClass("active");
+		$("#liClassifiche").removeClass("active");
+		
+	}
+	else if( pathname.indexOf('classifiche') > -1 )
+	{
+		$("#liClassifiche").addClass("active");
+		$("#liElencoFiliali").removeClass("active");
+		$("#liCalendari").removeClass("active");
+		$("#liHomePage").removeClass("active");
+		
 	}
 	
 	IdleTimeoutPlus.start({
@@ -187,11 +215,11 @@ function estendiSessione()
 		  <div class="container-fluid">
 		    <ul class="nav navbar-nav">
 			    <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')">
-			      <li id="liRiversamentoManualeProtocollo"><a href="${homePageUrl}"> <spring:message code="arca.context.web.msgs.carica.dati.filiale.page.name"/> </a></li>
+			      <li id="liHomePage"><a href="${homePageUrl}"> <spring:message code="arca.context.web.msgs.carica.dati.filiale.page.name"/> </a></li>
 			    </security:authorize>
-		      <li id="liRegistroProtocollo"><a href="${elencoFilialiUrl}"><spring:message code="arca.context.web.msgs.elenco.filiali.page.name"/></a></li>
-		      <li id="liRegistroProtocollo"><a href="${calendariUrl}"><spring:message code="arca.context.web.msgs.calendari.scontri.page.name"/></a></li>
-		      <li id="liRegistroProtocollo"><a href="${classificheUrl}"><spring:message code="arca.context.web.msgs.classifiche.page.name"/></a></li>
+		      <li id="liElencoFiliali"><a href="${elencoFilialiUrl}"><spring:message code="arca.context.web.msgs.elenco.filiali.page.name"/></a></li>
+		      <li id="liCalendari"><a href="${calendariUrl}"><spring:message code="arca.context.web.msgs.calendari.scontri.page.name"/></a></li>
+		      <li id="liClassifiche"><a href="${classificheUrl}"><spring:message code="arca.context.web.msgs.classifiche.page.name"/></a></li>
 		    </ul>
 		  </div>
 		</nav>

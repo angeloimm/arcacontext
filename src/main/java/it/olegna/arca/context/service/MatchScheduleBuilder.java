@@ -7,5 +7,5 @@ import it.olegna.arca.context.web.dto.CampionatoFilialiDto;
 
 public interface MatchScheduleBuilder
 {
-	void creaCalendarioMatch( List<CampionatoFilialiDto> campionatoFiliali ) throws ArcaContextDbException;
+	void creaCalendarioMatch( List<CampionatoFilialiDto> campionatoFiliali, String creatoDa ) throws ArcaContextDbException;
 }

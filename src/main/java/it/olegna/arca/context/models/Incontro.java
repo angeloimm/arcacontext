@@ -69,4 +69,56 @@ public class Incontro extends AbstractModel
 	{
 		this.filialeFuoriCasa = filialeFuoriCasa;
 	}
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((campionato == null) ? 0 : campionato.hashCode());
+		result = prime * result + ((dataIncontro == null) ? 0 : dataIncontro.hashCode());
+		result = prime * result + ((filialeCasa == null) ? 0 : filialeCasa.hashCode());
+		result = prime * result + ((filialeFuoriCasa == null) ? 0 : filialeFuoriCasa.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Incontro other = (Incontro) obj;
+		if (campionato == null)
+		{
+			if (other.campionato != null)
+				return false;
+		}
+		else if (!campionato.equals(other.campionato))
+			return false;
+		if (dataIncontro == null)
+		{
+			if (other.dataIncontro != null)
+				return false;
+		}
+		else if (!dataIncontro.equals(other.dataIncontro))
+			return false;
+		if (filialeCasa == null)
+		{
+			if (other.filialeCasa != null)
+				return false;
+		}
+		else if (!filialeCasa.equals(other.filialeCasa))
+			return false;
+		if (filialeFuoriCasa == null)
+		{
+			if (other.filialeFuoriCasa != null)
+				return false;
+		}
+		else if (!filialeFuoriCasa.equals(other.filialeFuoriCasa))
+			return false;
+		return true;
+	}
+	
 }
