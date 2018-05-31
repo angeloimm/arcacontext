@@ -23,14 +23,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.olegna.arca.context.configuration.events.CreazioneCampionatoEvent;
 import it.olegna.arca.context.dto.UtenteDto;
 import it.olegna.arca.context.models.Campionato;
+import it.olegna.arca.context.models.Incontro;
 import it.olegna.arca.context.models.User;
 import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.DataReader;
 import it.olegna.arca.context.service.FilialeManagerSvc;
+import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.service.IUserSvc;
 import it.olegna.arca.context.web.dto.CampionatoFilialiDto;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 import it.olegna.arca.context.web.dto.DatiFilialiContainer;
+import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={TestDbConfig.class})
@@ -40,6 +43,8 @@ public class TestCampionati
 	private static final Logger logger = LoggerFactory.getLogger(TestCampionati.class.getName());
 	@Autowired
 	private CampionatoSvc<Campionato> campionatoService;
+	@Autowired
+	private GenericSvc<Incontro> incontroSvc;
 	@Autowired
 	private DataReader reader;
 	@Autowired
@@ -78,6 +83,26 @@ public class TestCampionati
 			CreazioneCampionatoEvent cce = new CreazioneCampionatoEvent(this, new Date(creaCampionatoRequest.getDataInizio()), campionatoFiliali);
 			publisher.publishEvent(cce);
 			logger.info("OK");
+			List<IncontroCampionatoDto> incontri = incontroSvc.getIncontri();
+			for (IncontroCampionatoDto icd : incontri)
+			{
+				logger.info(icd.toString());
+			}
+		}
+		catch (Exception e) {
+			logger.error("Errore", e);
+		}
+	}
+	@Test
+	public void testRecuperoIncontri()
+	{
+		try
+		{
+			List<IncontroCampionatoDto> incontri = incontroSvc.getIncontri();
+			for (IncontroCampionatoDto icd : incontri)
+			{
+				logger.info(icd.toString());
+			}
 		}
 		catch (Exception e) {
 			logger.error("Errore", e);

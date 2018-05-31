@@ -90,13 +90,6 @@ $(document).ajaxSend(function(e, xhr, options) {
 $(document).ready(function(){
 	
 	var pathname = window.location.pathname;
-	/*
-	liHomePage
-liElencoFiliali
-liCalendari
-liClassifiche
-	*/
-
 	if( pathname.indexOf('adminHome') > -1 )
 	{
 		$("#liHomePage").addClass("active");

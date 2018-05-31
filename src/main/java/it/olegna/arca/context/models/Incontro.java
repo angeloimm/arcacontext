@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -20,8 +21,10 @@ import org.hibernate.annotations.DynamicUpdate;
 @Cache( region = "it.olegna.arca.context.models.Incontro", 
 		usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
-@Table(name = "INCONTRO", indexes = { @Index(name = "DATA_INCONTRO_IDX", 
-											columnList = "DATA_INCONTRO") })
+@Table	(	name = "INCONTRO", 
+			indexes = { @Index(name = "DATA_INCONTRO_IDX", columnList = "DATA_INCONTRO") }/*,
+			uniqueConstraints= {@UniqueConstraint(columnNames= {"ID_CAMPIONATO","ID_FILIALE_CASA","ID_FILIALE_FUORI_CASA"})}*/
+		)
 public class Incontro extends AbstractModel
 {
 
@@ -31,6 +34,7 @@ public class Incontro extends AbstractModel
 	private Campionato campionato;
 	private Date dataIncontro;
 	@ManyToOne(fetch=FetchType.LAZY, targetEntity=Campionato.class)
+	@JoinColumn(name="ID_CAMPIONATO", nullable=false)
 	public Campionato getCampionato()
 	{
 		return campionato;

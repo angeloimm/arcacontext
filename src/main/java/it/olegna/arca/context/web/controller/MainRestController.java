@@ -1,5 +1,6 @@
 package it.olegna.arca.context.web.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -31,14 +32,15 @@ import it.olegna.arca.context.dto.FilialeDto;
 import it.olegna.arca.context.dto.MorrisDataDto;
 import it.olegna.arca.context.dto.VisualizzaAndamentoRequestDto;
 import it.olegna.arca.context.models.Campionato;
-import it.olegna.arca.context.models.CampionatoFiliale;
 import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.FilialeManagerSvc;
+import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.transformers.MorrisDataTransformer;
 import it.olegna.arca.context.web.dto.CampionatoFilialiDto;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
+import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
 
 @RestController
 @RequestMapping("/rest")
@@ -50,6 +52,8 @@ public class MainRestController {
 	private DatiFilialeSvc datiFilialeSvc;
 	@Autowired
 	private CampionatoSvc<Campionato> campionatoService;
+	@Autowired
+	private GenericSvc<IncontroCampionatoDto> incontriCampionatiSvc;
 	@Autowired
 	private HttpServletRequest req;
 	@Autowired
@@ -225,5 +229,37 @@ public class MainRestController {
 			result.setEsitoOperazione(status.value());
 		}
 		return new ResponseEntity<DataTableResponse<DatiFilialeDto>>(result, status);
+	}
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(method = { RequestMethod.GET}, value = { "/protected/recuperaIncontri" })
+	public ResponseEntity<BaseResponse<IncontroCampionatoDto>> getIncontri()
+	{
+		BaseResponse<IncontroCampionatoDto> result = new BaseResponse<IncontroCampionatoDto>();
+		HttpStatus status = null;
+		try
+		{
+
+			List<IncontroCampionatoDto> incontri = this.incontriCampionatiSvc.getIncontri();
+			if( incontri == null )
+			{
+				incontri = new ArrayList<IncontroCampionatoDto>(0);
+			}
+			status = HttpStatus.OK;
+			result.setDescrizioneOperazione("Recupero incontri OK");
+			result.setEsitoOperazione(status.value());
+			result.setNumeroOggettiRestituiti(incontri.size());
+			result.setNumeroOggettiTotali(incontri.size());
+			result.setPayload(incontri);
+		}
+		catch (Exception e)
+		{
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			String message = "Errore nella chiamata ajax per il recupero incontri; " + e.getMessage();
+			logger.error(message, e);
+			result.setDescrizioneOperazione(message);
+			result.setEsitoOperazione(status.value());
+		}
+		return new ResponseEntity<BaseResponse<IncontroCampionatoDto>>(result, status);
+
 	}	
 }

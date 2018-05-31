@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
@@ -25,6 +26,7 @@ import it.olegna.arca.context.models.CampionatoFiliale;
 import it.olegna.arca.context.models.Incontro;
 import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.transformers.ClassificaCampionatoDtoTransformer;
+import it.olegna.arca.context.transformers.IncontriCampionatoDtoTransformer;
 import it.olegna.arca.context.web.dto.ClassificaCampionatoDto;
 import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
 
@@ -150,6 +152,7 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 			throw new ArcaContextDbException(msg, e);
 		}
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true) 
 	public List<IncontroCampionatoDto> getIncontri() throws ArcaContextDbException
@@ -157,21 +160,18 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 		List<IncontroCampionatoDto> results = null;
 		try
 		{
-			DetachedCriteria subQuery = DetachedCriteria.forClass(Incontro.class);
-			subQuery.createAlias("campionato", "campionato");
-			subQuery.add(Property.forName("campionato.campionatoAttivo").eq(Boolean.TRUE));
+			DetachedCriteria mainQuery = DetachedCriteria.forClass(Incontro.class);
+			mainQuery.createAlias("campionato", "campionato");
+			mainQuery.addOrder(Order.asc("dataIncontro"));
+			mainQuery.add(Property.forName("campionato.campionatoAttivo").eq(Boolean.TRUE));
 			ProjectionList pl = Projections.projectionList();
 			pl.add(Projections.property("campionato"), "campionato");
 			pl.add(Projections.property("filialeCasa"), "filialeCasa");
 			pl.add(Projections.property("filialeFuoriCasa"), "filialeFuoriCasa");
-			
-			subQuery.setProjection(Projections.property("id"));
-			DetachedCriteria dc = DetachedCriteria.forClass(CampionatoFiliale.class);
-			dc.createAlias("pk.campionato", "campionato");
-			dc.add(Property.forName("pk.campionato").in(subQuery));
-			dc.addOrder(Order.asc("campionato.categoriaCampionato"));
-			dc.setResultTransformer(new ClassificaCampionatoDtoTransformer());
-			results = (List<IncontroCampionatoDto>) this.recuperoDataDao.findByCriteria(dc);
+			pl.add(Projections.property("dataIncontro"),"dataIncontro");
+			mainQuery.setProjection(pl);
+			mainQuery.setResultTransformer(new IncontriCampionatoDtoTransformer());
+			results = (List<IncontroCampionatoDto>) this.recuperoDataDao.findByCriteria(mainQuery);
 			results.sort(new Comparator<IncontroCampionatoDto>()
 			{
 

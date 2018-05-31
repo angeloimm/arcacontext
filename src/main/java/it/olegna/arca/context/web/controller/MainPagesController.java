@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.GenericSvc;
+import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
 import it.olegna.arca.context.web.dto.UserPrincipal;
 
 @Controller
@@ -37,6 +38,8 @@ public class MainPagesController {
 	private HttpServletRequest req;
 	@Autowired
 	private DatiFilialeSvc datiFilialeSvc;
+	@Autowired
+	private GenericSvc<IncontroCampionatoDto> incontriCampionatiSvc;
 	@Autowired
 	private HttpSession sessione;
 	@Value("${arca.context.max.file.dimension}")
@@ -152,6 +155,7 @@ public class MainPagesController {
 			model.addAttribute("dimensioneFileFormattata", FileUtils.byteCountToDisplaySize(dimensioneFile));
 			long durataSessioneSecondi = sessione.getMaxInactiveInterval(); 
 			model.addAttribute("durataSessione", durataSessioneSecondi);
+			//model.addAttribute("calendari", incontriCampionatiSvc.getIncontri());
 			return "views/calendari";
 		}
 		catch (Exception e) 

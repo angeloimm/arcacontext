@@ -10,6 +10,11 @@ public class IncontroDto implements Serializable
 	private static final long serialVersionUID = 6612497371271783997L;
 	private FilialeDto filialeCasa;
 	private FilialeDto filialeFuoriCasa;
+	private String dataIncontro;
+	public IncontroDto()
+	{
+		super();
+	}
 	public FilialeDto getFilialeCasa()
 	{
 		return filialeCasa;
@@ -26,10 +31,17 @@ public class IncontroDto implements Serializable
 	{
 		this.filialeFuoriCasa = filialeFuoriCasa;
 	}
+	public String getDataIncontro()
+	{
+		return dataIncontro;
+	}
+	public void setDataIncontro(String dataIncontro)
+	{
+		this.dataIncontro = dataIncontro;
+	}
 	@Override
 	public String toString()
 	{
-		return "IncontroDto [filialeCasa=" + filialeCasa + ", filialeFuoriCasa=" + filialeFuoriCasa + "]";
+		return "IncontroDto [filialeCasa=" + filialeCasa + ", filialeFuoriCasa=" + filialeFuoriCasa + ", dataIncontro=" + dataIncontro + "]";
 	}
-	
 }
