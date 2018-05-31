@@ -20,63 +20,95 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion" href="#collapse${status.index}"><spring:message code="arca.context.web.msgs.titolo.sezione.tipo.campionato" arguments="{{tipologiaCampionato}}"/> <i class="fa fa-angle-down rotate-icon"></i></a>
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{@index}}"><spring:message code="arca.context.web.msgs.titolo.sezione.tipo.campionato" arguments="{{tipologiaCampionato}}"/> <i class="fa fa-angle-down rotate-icon"></i></a>
 							</h4>
 						</div>						
-						<div id="collapse{{@index}}" class="panel-collapse collapse in">
+						<div id="collapse{{@index}}" class="panel-collapse collapse {{{mostraCollapseIn @index}}} ">
 							<div class="panel-body">
+<ul class="list-group">
 								{{#each incontiByData}}
+									
+										<li class="list-group-item col-xs-6">
 										<h4 class="h4_calendario"><i class="fa fa-calendar"></i>&nbsp;&nbsp;<strong>{{{formattaMillisencondi @key}}} </strong></h4>
 										<hr>
-										 <ul class="list-group row">
+										 <ul class="list-group ul_calendari" id="elencoCalendariUl">
 											{{#each this}}
-												<li class="list-group-item col-xs-6">
-													{{filialeCasa.nomeFiliale}} VS {{filialeFuoriCasa.nomeFiliale}}
+												<li class="list-group-item ">
+													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_left">{{filialeCasa.nomeFiliale}} <span class="badge">7</span> </button></span>
+													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_right">{{filialeFuoriCasa.nomeFiliale}} <span class="badge">5</span> </button></span>
+													<div class="clearfix"></div>
 												</li> 
 											{{/each}}
  										</ul>
+										</li>
+
 								{{/each}}
+									</ul>
 							</div>
 						</div>
 					</div>
 				{{/each}}
 			</div>
-		</script>		
+		</script>
 		<script type="text/javascript" charset="UTF-8">
-		var templateElencoIncontri = Handlebars.compile($("#templateElencoIncontri").html());
-		$(document).ready( function(){
-			caricaIncontri();
-		});
-		Handlebars.registerHelper('formattaMillisencondi', function(millis) {
+			var templateElencoIncontri = Handlebars.compile($("#templateElencoIncontri").html());
+			$(document).ready( function(){
+				caricaIncontri();
+			});
+			
+			Handlebars.registerHelper('btnType', function(indice) {
+				var isPari = (indice%2==0);
+				console.log("Indice "+indice+" pari? "+isPari);
+				if( isPari === true )
+				{
+					return "btn-primary";
+				}
+				else
+				{
+					return "btn-info";
+				}
+			});
+			Handlebars.registerHelper('formattaMillisencondi', function(millis) {
 			  return moment(parseInt(millis)).format("DD/MM/YYYY");
 			});
-		function caricaIncontri()
-		{
-			$.ajax({
-				url : '<spring:url value="/rest/protected/recuperaIncontri.json"/>',
-				dataType : 'json',
-				contentType : 'application/json; charset=UTF-8',
-				type : 'GET',
-			    beforeSend : function(){
-			    	$.blockUI({ message: '<spring:message code="arca.context.web.msgs.rest.wait.msg" arguments="${urlBusyImg}" />' });				    	 	
-			    },
-			    complete   : function(){
+			Handlebars.registerHelper('mostraCollapseIn', function(value) {
+				var result = (value == 0);
+				if( result === true )
+				{
+					return "in";
+				}
+				return "";
+			});			
+			function caricaIncontri()
+			{
+				$.ajax({
+					url : '<spring:url value="/rest/protected/recuperaIncontri.json"/>',
+					dataType : 'json',
+					contentType : 'application/json; charset=UTF-8',
+					type : 'GET',
+			   	 	beforeSend : function(){
+			    		$.blockUI({ message: '<spring:message code="arca.context.web.msgs.rest.wait.msg" arguments="${urlBusyImg}" />' });				    	 	
+			    	},
+			    	complete   : function(){
 				    
-			    	$.unblockUI();
-			    },
-			    success : function(data) {
-			    	//Controllo se ci sono risultati
-			    	if( data.esitoOperazione === 200 && data.numeroOggettiRestituiti > 0 )
-			    	{
-			    		var html = templateElencoIncontri(data.payload);
-			    		$("#elencoIncontri").html(html);
-			    	}
-			    },
-			    error : function(data) {
+			    		$.unblockUI();
+			   	 	},
+			    	success : function(data) {
+			    		//Controllo se ci sono risultati
+			    		if( data.esitoOperazione === 200 && data.numeroOggettiRestituiti > 0 )
+			    		{
+			    			var html = templateElencoIncontri(data.payload);
+			    			$("#elencoIncontri").html(html);
+			    			$(".nessunaAction").click(function(evt){
+			    				evt.preventDefault();
+			    			});
+			    		}
+			    	},
+			    	error : function(data) {
 			    	
-			    }
-			});
-		}
+			    	}
+				});
+			}
 		</script>
 	</tiles:putAttribute>
 	<tiles:putAttribute name="body">

@@ -13,4 +13,8 @@
 .margin_t_10{margin-top: 10px;}
 .margin_b_10{margin-bottom: 10px;}
 mark{background: #31708f !important; color: white !important; font-weight: bold !important;}
-.h4_calendario{color: #31708f;background-color: #bce8f1;padding-left: 17px;}
+.h4_calendario{padding: 10px;background-color: #00aeff;color: #fff;}
+.nessunaAction{cursor: default;}
+.ul_calendari{width: 100%;text-align: center;}
+.f_left{float: left;}
+.f_right{float: right;}
