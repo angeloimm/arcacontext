@@ -67,12 +67,14 @@
 							<strong><i class="fa fa-file" aria-hidden="true"></i></strong> <i>{{file.name}}</i> <spring:message code="arca.context.web.msgs.upload.success" />
 						</div>
   					</div>
+					{{!--
   					<div class="col-xs-5">
     					<button class="btn btn-danger delete" >
                     		<i class="glyphicon glyphicon-trash"></i>
                     		<span><spring:message code="arca.context.web.msgs.upload.delete" /></span>
                 		</button>
   					</div>
+					--}}
 				</div>
 			</div>
 		</script>

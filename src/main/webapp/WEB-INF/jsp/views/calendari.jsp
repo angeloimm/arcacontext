@@ -25,25 +25,24 @@
 						</div>						
 						<div id="collapse{{@index}}" class="panel-collapse collapse {{{mostraCollapseIn @index}}} ">
 							<div class="panel-body">
-<ul class="list-group">
-								{{#each incontiByData}}
-									
+								<ul class="list-group">
+									{{#each incontiByData}}
 										<li class="list-group-item col-xs-6">
 										<h4 class="h4_calendario"><i class="fa fa-calendar"></i>&nbsp;&nbsp;<strong>{{{formattaMillisencondi @key}}} </strong></h4>
 										<hr>
 										 <ul class="list-group ul_calendari" id="elencoCalendariUl">
 											{{#each this}}
 												<li class="list-group-item ">
-													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_left">{{filialeCasa.nomeFiliale}} <span class="badge">7</span> </button></span>
-													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_right">{{filialeFuoriCasa.nomeFiliale}} <span class="badge">5</span> </button></span>
+													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_left">{{filialeCasa.nomeFiliale}} <span class="badge">{{importoSettimanaleCasa}}</span> </button></span>
+													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_right">{{filialeFuoriCasa.nomeFiliale}} <span class="badge">{{importoSettimanaleFuoriCasa}}</span> </button></span>
 													<div class="clearfix"></div>
 												</li> 
 											{{/each}}
  										</ul>
 										</li>
 
-								{{/each}}
-									</ul>
+									{{/each}}
+								</ul>
 							</div>
 						</div>
 					</div>

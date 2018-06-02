@@ -1,5 +1,17 @@
 [
   {
+    "nome": "Arca",
+    "cognome": "Amministratore",
+    "username": "arca.admin",
+    "password": "arca.admin",
+    "ruoli": [
+      "ADMIN",
+      "SUPER_ADMIN",
+      "USER"
+    ],
+    "mail": "arca.admin@arcavita.it"
+  },
+  {
     "nome": "Salvatore",
     "cognome": "Di Palma",
     "username": "s.dipalma",

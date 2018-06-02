@@ -96,7 +96,7 @@
 			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.info" arguments="${produzioneMinima}, ${numeroFilialiCampionato}" />
 		</div>
 		<div class="container">
-			<div class="col-md-4">
+			<div class="col-md-8">
 				<div class="form-group"> 
 					<label for="dal"><spring:message code="arca.context.web.msgs.creazione.campionato.from" /></label>
         			<div class='input-group date' id='dataFrom'>
@@ -107,6 +107,7 @@
         			</div>
 				</div>
 			</div>
+			{{!--
 			<div class="col-md-4">
 				<div class="form-group"> 
         			<label for="al"><spring:message code="arca.context.web.msgs.creazione.campionato.to" /></label>
@@ -118,6 +119,7 @@
         			</div>
 				</div>
 			</div>
+			--}}
 		</div>	
 		<div class="container">
 			<div class="col-md-4">
@@ -525,26 +527,26 @@
                     keepInvalid: true,
                     format:'L'
                 });
-           	 	$('#al').datetimepicker({
+/*            	 	$('#al').datetimepicker({
                     locale: 'it',
                     useCurrent: false,
                     keepInvalid: true,
                     format:'L'
                 });
-           	 	$('#al').data("DateTimePicker").disable();
-           	 	$("#dal").on("dp.change", function (e) {
+           	 	$('#al').data("DateTimePicker").disable(); */
+/*            	 	$("#dal").on("dp.change", function (e) {
            		 	var data = e.date;
                     $('#al').data("DateTimePicker").minDate(data);
                     $('#al').data("DateTimePicker").date(data);
                     $('#al').data("DateTimePicker").enable();
-                });
+                }); */
 			}
 			
 			function creaNuovoCampionato()
 			{
 				var datiCampionato = new Object();
 				datiCampionato.dataInizio =  $('#dal').data('DateTimePicker').date().valueOf();
-				datiCampionato.dataFine = $('#al').data('DateTimePicker').date().valueOf();
+				/* datiCampionato.dataFine = $('#al').data('DateTimePicker').date().valueOf(); */
 				datiCampionato.produzioneMinima = $("#produzioneMinima").val();
 				datiCampionato.numeroSquadre = $("#numeroSquadre").val();
 				$.ajax({

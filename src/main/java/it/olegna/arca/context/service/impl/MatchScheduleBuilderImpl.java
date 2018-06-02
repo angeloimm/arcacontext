@@ -2,8 +2,12 @@ package it.olegna.arca.context.service.impl;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -52,6 +56,30 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 			if( incontri != null && !incontri.isEmpty() )
 			{
 				genericDao.persist(incontri);
+				//Aggiorno il campionato con la data di chiusura
+				List<Long> dateIncontri = new ArrayList<>();
+				List<String> idCampionati = new ArrayList<>();
+
+				for (Incontro i : incontri)
+				{
+					Long dataIncontro = i.getDataIncontro().getTime();
+					String idCamp = i.getCampionato().getId();
+					if( !dateIncontri.contains(dataIncontro) )
+					{
+						dateIncontri.add(dataIncontro);
+					}
+					if( !idCampionati.contains(idCamp) )
+					{
+						idCampionati.add(idCamp);
+					}
+				}
+				Long ultimoIncontro = Collections.max(dateIncontri);
+				Date dataFineCampionato = new Date(ultimoIncontro);
+				String hqlAggiornaCampionato = "UPDATE "+Campionato.class.getName()+" SET dataFine = :dataFineCampionato WHERE id in (:idCampionati)";
+				Map<String, Object> hqlParams = new HashMap<>();
+				hqlParams.put("dataFineCampionato", dataFineCampionato);
+				hqlParams.put("idCampionati", idCampionati);
+				genericDao.eseguiHqlStatement(hqlAggiornaCampionato, hqlParams);	
 			}
 		}
 		catch (Exception e)

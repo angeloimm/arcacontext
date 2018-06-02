@@ -1,10 +1,16 @@
 {
   "filialiDaEscludere": [
-    "SCICLI AG. 2",
     "RADDUSA",
-    "POZZALLO AGENZIA N.1"
+    "POZZALLO AGENZIA N.1",
+    "AGENZIA NR.2 DI AUGUSTA",
+    "SIRACUSA AG.2"
   ],
   "filialiUnite": [
+  	{
+  		"nomeFilialePrincipale":"AGENZIA DI SCICLI",
+  		"nomeFilialeSecondaria": "SCICLI AG. 2",
+      	"nomeFilialeUnita": "AGENZIA DI SCICLI"
+  	},
     {
       "nomeFilialePrincipale": "RAGUSA AG.1",
       "nomeFilialeSecondaria": "RAGUSA AG.5",

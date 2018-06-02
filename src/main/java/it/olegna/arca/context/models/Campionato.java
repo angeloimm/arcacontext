@@ -83,7 +83,7 @@ public class Campionato extends AbstractModel
 	{
 		this.dataInizio = dataInizio;
 	}
-	@Column(name="DATA_FINE", nullable=false)
+	@Column(name="DATA_FINE", nullable=true)
 	@Temporal(TemporalType.DATE)
 	public Date getDataFine()
 	{

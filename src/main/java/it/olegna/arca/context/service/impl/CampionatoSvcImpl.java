@@ -132,10 +132,12 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 			dc.setResultTransformer(new CreazioneCampionatiFilialeTransformer());
 			List<Filiale> filiali = filialeDao.findByCriteria(dc);
 			List<List<Filiale>> subLists = ListUtils.partition(filiali, (int)numeroSquadre);
-			DateTime today = (new DateTime()).withTimeAtStartOfDay();
-			DateTime start = (new DateTime(dto.getDataInizio())).withTimeAtStartOfDay();
-			DateTime fine = (new DateTime(dto.getDataFine())).withTimeAtStartOfDay();
-			boolean campionatoAttivo = new Interval(start, fine).contains(today);
+//			DateTime today = (new DateTime()).withTimeAtStartOfDay();
+//			DateTime start = (new DateTime(dto.getDataInizio())).withTimeAtStartOfDay();
+//			DateTime fine = (new DateTime(dto.getDataFine())).withTimeAtStartOfDay();
+//			boolean campionatoAttivo = new Interval(start, fine).contains(today);
+			//Creo i campionati già attivi....
+			boolean campionatoAttivo = true;
 			String creatoDa = "test";
 			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null )
 			{
@@ -147,12 +149,13 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 			for (List<Filiale> list : subLists)
 			{
 				Campionato c = new Campionato();
-				c.setCampionatoAttivo(campionatoAttivo);
 				c.setCategoriaCampionato(String.valueOf(tipologieCampionato[i]));
 				c.setCreatoDa(creatoDa);
 				c.setDataCreazione(new Date());
 				c.setDataInizio(new Date(dto.getDataInizio()));
-				c.setDataFine(new Date(dto.getDataFine()));
+//				c.setDataFine(new Date(dto.getDataFine()));
+				//Creo tutti i campionati gia' attivi
+				c.setCampionatoAttivo(campionatoAttivo);
 				c.setImportoProduzioneMinima(dto.getProduzioneMinima());
 				campionatoDao.persist(c);
 				CampionatoFilialiDto campFil = new CampionatoFilialiDto();

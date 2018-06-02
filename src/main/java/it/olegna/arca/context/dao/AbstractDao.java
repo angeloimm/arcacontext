@@ -1,7 +1,10 @@
 package it.olegna.arca.context.dao;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,6 +16,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 public abstract class AbstractDao<PK extends Serializable, T>
 {
@@ -29,6 +33,25 @@ public abstract class AbstractDao<PK extends Serializable, T>
 		CriteriaQuery<T> all = rootQery.select(rootEntry);
 		TypedQuery<T> allQuery = getSession().createQuery(all);
 		return allQuery.getResultList();
+	}
+	public int eseguiHqlStatement( String hql, Map<String, Object> hqlParams )
+	{
+		if( !StringUtils.hasText(hql) )
+		{
+			throw new IllegalArgumentException("Impossibile eseguire lo statement HQL; query nulla o vuota <"+hql+">");
+		}
+		Query q = getSession().createQuery(hql);
+		if( hqlParams != null && !hqlParams.isEmpty() )
+		{
+			Iterator<String> keys = hqlParams.keySet().iterator();
+			while (keys.hasNext())
+			{
+				String chiave = (String) keys.next();
+				q.setParameter(chiave, hqlParams.get(chiave));
+			}
+		}
+		int result = q.executeUpdate();
+		return result;
 	}
 	public Long count()
 	{
