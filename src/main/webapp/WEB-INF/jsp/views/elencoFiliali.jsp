@@ -515,7 +515,10 @@
 		            		 evt.preventDefault();
 		            		 creaNuovoCampionato();
 		            	 });
-		            }
+		            },
+		            onhidden:function(dialogRef){
+		            	location.reload();
+		            } 
 				});
 			}
 			function creaDateTimePickers(){

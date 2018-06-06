@@ -48,4 +48,44 @@ public class DatiMatchFilialeDto implements Serializable
 	{
 		return "DatiMatchFilialeDto [dataDati=" + dataDati + ", re=" + re + ", auto=" + auto + ", totale=" + totale + "]";
 	}
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(auto);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((dataDati == null) ? 0 : dataDati.hashCode());
+		temp = Double.doubleToLongBits(re);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(totale);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DatiMatchFilialeDto other = (DatiMatchFilialeDto) obj;
+		if (Double.doubleToLongBits(auto) != Double.doubleToLongBits(other.auto))
+			return false;
+		if (dataDati == null)
+		{
+			if (other.dataDati != null)
+				return false;
+		}
+		else if (!dataDati.equals(other.dataDati))
+			return false;
+		if (Double.doubleToLongBits(re) != Double.doubleToLongBits(other.re))
+			return false;
+		if (Double.doubleToLongBits(totale) != Double.doubleToLongBits(other.totale))
+			return false;
+		return true;
+	}
 }

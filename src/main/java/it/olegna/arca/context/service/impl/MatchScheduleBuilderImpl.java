@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +41,16 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 		try
 		{
 			List<Incontro> incontri = new ArrayList<Incontro>();
+			DateTime start = null;
 			for (CampionatoFilialiDto cfd : campionatoFiliali)
 			{
 				if( logger.isDebugEnabled() )
 				{
 					logger.debug("CREAZIONE CALENDARIO MATCH PER CAMPIONATO CON ID [{}] E DATA INIZIO [{}]", cfd.getIdCampionato(), cfd.getDataInizioCampionato());
+				}
+				if( start == null )
+				{
+					start = (new DateTime(cfd.getDataInizioCampionato().getTime())).withTimeAtStartOfDay();
 				}
 				List<Incontro> matches = this.createSchedule(cfd.getFilialiCampionato(), cfd.getIdCampionato(), cfd.getDataInizioCampionato(), creatoDa);
 				if( matches != null )
@@ -74,9 +80,13 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 				}
 				Long ultimoIncontro = Collections.max(dateIncontri);
 				Date dataFineCampionato = new Date(ultimoIncontro);
-				String hqlAggiornaCampionato = "UPDATE "+Campionato.class.getName()+" SET dataFine = :dataFineCampionato WHERE id in (:idCampionati)";
+				DateTime fine = (new DateTime(dataFineCampionato.getTime())).withTimeAtStartOfDay();
+				DateTime data = new DateTime();
+				boolean datiInCampionatoAttivo = new Interval(start, fine).contains(data);
+				String hqlAggiornaCampionato = "UPDATE "+Campionato.class.getName()+" SET dataFine = :dataFineCampionato, campionatoAttivo = :campAtt WHERE id in (:idCampionati)";
 				Map<String, Object> hqlParams = new HashMap<>();
 				hqlParams.put("dataFineCampionato", dataFineCampionato);
+				hqlParams.put("campAtt", datiInCampionatoAttivo);
 				hqlParams.put("idCampionati", idCampionati);
 				genericDao.eseguiHqlStatement(hqlAggiornaCampionato, hqlParams);	
 			}

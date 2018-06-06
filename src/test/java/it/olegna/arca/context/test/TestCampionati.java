@@ -17,19 +17,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import it.olegna.arca.context.configuration.events.CreazioneCampionatoEvent;
-import it.olegna.arca.context.dto.UtenteDto;
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.Incontro;
-import it.olegna.arca.context.models.User;
 import it.olegna.arca.context.service.CampionatoSvc;
 import it.olegna.arca.context.service.DataReader;
 import it.olegna.arca.context.service.FilialeManagerSvc;
 import it.olegna.arca.context.service.GenericSvc;
-import it.olegna.arca.context.service.IUserSvc;
 import it.olegna.arca.context.web.dto.CampionatoFilialiDto;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 import it.olegna.arca.context.web.dto.DatiFilialiContainer;
@@ -80,7 +74,7 @@ public class TestCampionati
 			creaCampionatoRequest.setProduzioneMinima(200);
 			List<CampionatoFilialiDto> campionatoFiliali = this.campionatoService.creaCampionato(creaCampionatoRequest);
 			//Genero e propago l'evento
-			CreazioneCampionatoEvent cce = new CreazioneCampionatoEvent(this, new Date(creaCampionatoRequest.getDataInizio()), campionatoFiliali);
+			CreazioneCampionatoEvent cce = new CreazioneCampionatoEvent(this, new Date(creaCampionatoRequest.getDataInizio()), campionatoFiliali, "anonimo_in_test");
 			publisher.publishEvent(cce);
 			logger.info("OK");
 			List<IncontroCampionatoDto> incontri = incontroSvc.getIncontri();

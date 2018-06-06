@@ -24,6 +24,7 @@ import it.olegna.arca.context.models.User;
 import it.olegna.arca.context.models.UserProfile;
 import it.olegna.arca.context.models.UserProfileType;
 import it.olegna.arca.context.service.CampionatoSvc;
+import it.olegna.arca.context.service.ClassicaCampionatoSvc;
 import it.olegna.arca.context.service.IUserProfileSvc;
 import it.olegna.arca.context.service.IUserSvc;
 import it.olegna.arca.context.service.MatchScheduleBuilder;
@@ -38,6 +39,8 @@ public class SpringEvtsListener
 	private IUserSvc usrSvc;
 	@Autowired
 	private CampionatoSvc<Campionato> campSvc;
+	@Autowired
+	private ClassicaCampionatoSvc classificaCampio;
 	@Autowired
 	@Qualifier("objectMapper")
 	private ObjectMapper om;
@@ -131,6 +134,15 @@ public class SpringEvtsListener
 		if( logger.isDebugEnabled() )
 		{
 			logger.debug("Ricevuto evento di tipo {}; data riferimento {}", cde.getClass(), cde.getDataDati()); 
+		}
+		try
+		{
+		
+			classificaCampio.calcolaPunteggiCampionati(cde.getDataDati());
+		}
+		catch (Throwable t) {
+			logger.error("Errore nel calcolo dei punti per le classifiche", t);
+			throw new IllegalStateException(t);
 		}
 	}
 }
