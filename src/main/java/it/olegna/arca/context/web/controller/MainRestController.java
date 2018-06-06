@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,7 @@ import it.olegna.arca.context.transformers.MorrisDataTransformer;
 import it.olegna.arca.context.web.dto.CampionatoFilialiDto;
 import it.olegna.arca.context.web.dto.CreazioneCampionatoDto;
 import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
+import it.olegna.arca.context.web.dto.UserPrincipal;
 
 @RestController
 @RequestMapping("/rest")
@@ -145,7 +147,14 @@ public class MainRestController {
 			result.setNumeroOggettiTotali(1);
 			result.setPayload(Collections.singletonList("OK"));
 			//Genero e propago l'evento
-			CreazioneCampionatoEvent cce = new CreazioneCampionatoEvent(this, new Date(creaCampionatoRequest.getDataInizio()), campionatoFiliali);
+			String creatoDa = "anonimo";
+			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null )
+			{
+			
+				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				creatoDa = user.getUsername();
+			}			
+			CreazioneCampionatoEvent cce = new CreazioneCampionatoEvent(this, new Date(creaCampionatoRequest.getDataInizio()), campionatoFiliali, creatoDa);
 			publisher.publishEvent(cce);
 		}
 		catch (Exception e)

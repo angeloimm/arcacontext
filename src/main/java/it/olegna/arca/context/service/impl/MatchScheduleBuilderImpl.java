@@ -3,7 +3,6 @@ package it.olegna.arca.context.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -122,7 +121,7 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 			int teamIdx = day % teamsSize;
 			FilialeDto filialeCasaDto = teams.get(teamIdx);
 			FilialeDto filialeFuoriCasaDto = filiali.get(0);
-			if( !filialeCasaDto.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !filialeFuoriCasaDto.equals(FAKE_FILIALE_NAME) )
+			if( !filialeCasaDto.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !filialeFuoriCasaDto.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !sameFiliale(filialeCasaDto, filialeFuoriCasaDto) )
 			{
 				Incontro match = new Incontro();
 				match.setCreatoDa(creatoDa);
@@ -137,7 +136,10 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 				Filiale filialeFuoriCasa = new Filiale();
 				filialeFuoriCasa.setId(filialeFuoriCasaDto.getId());
 				match.setFilialeFuoriCasa(filialeFuoriCasa);
-				incontri.add(match);
+				if( !incontri.contains(match) )
+				{
+					incontri.add(match);
+				}
 			}
 			for (int idx = 1; idx < halfSize; idx++)
 			{               
@@ -145,7 +147,7 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 				int secondTeam = (day  + teamsSize - idx) % teamsSize;
 				FilialeDto filialeCasaDto2 = teams.get(firstTeam);
 				FilialeDto filialeFuoriCasaDto2 = filiali.get(secondTeam);
-				if( !filialeCasaDto2.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !filialeFuoriCasaDto2.equals(FAKE_FILIALE_NAME) )
+				if( !filialeCasaDto2.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !filialeFuoriCasaDto2.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !sameFiliale(filialeCasaDto2, filialeFuoriCasaDto2) )
 				{
 					Incontro match2 = new Incontro();
 					Filiale filialeCasa2 = new Filiale();
@@ -158,8 +160,11 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 					match2.setCreatoDa(creatoDa);
 					match2.setDataCreazione(new Date());
 					match2.setDataIncontro(new Date(dataMatch.getMillis()));
-					match2.setCampionato(c);;
-					incontri.add(match2);
+					match2.setCampionato(c);
+					if( !incontri.contains(match2) )
+					{
+						incontri.add(match2);
+					}
 				}
 			}	
 		}
@@ -169,5 +174,9 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 	public void initialize()
 	{
 		genericDao.setPersistentClass(Incontro.class);
+	}
+	private boolean sameFiliale( FilialeDto casa, FilialeDto fuoriCasa )
+	{
+		return casa.equals(fuoriCasa);
 	}
 }

@@ -12,12 +12,17 @@ public class CreazioneCampionatoEvent extends ApplicationEvent
 
 	private static final long serialVersionUID = 5526660645761591076L;
 	private Date dataInizioCampionato;
+	private String creatoDa;
 	private List<CampionatoFilialiDto> campionatoFiliali;
-	public CreazioneCampionatoEvent(Object source, Date dataInizioCampionato, List<CampionatoFilialiDto> campionatoFiliali)
+	public CreazioneCampionatoEvent(	Object source, 
+										Date dataInizioCampionato, 
+										List<CampionatoFilialiDto> campionatoFiliali,
+										String creatoDa)
 	{
 		super(source);
 		this.dataInizioCampionato = dataInizioCampionato;
 		this.campionatoFiliali = campionatoFiliali;
+		setCreatoDa(creatoDa);
 	}
 	public Date getDataInizioCampionato()
 	{
@@ -35,4 +40,13 @@ public class CreazioneCampionatoEvent extends ApplicationEvent
 	{
 		this.campionatoFiliali = campionatoFiliali;
 	}
+	public String getCreatoDa()
+	{
+		return creatoDa;
+	}
+	public void setCreatoDa(String creatoDa)
+	{
+		this.creatoDa = creatoDa;
+	}
+	
 }

@@ -60,8 +60,8 @@ public class IncontriCampionatoDtoTransformer implements ResultTransformer
 		filialeCasaDto.setNomeFiliale(filialeCasa.getNomeFiliale());
 		incontro.setFilialeCasa(filialeCasaDto);
 		FilialeDto filialeFuoriCasaDto = new FilialeDto();
-		filialeFuoriCasaDto .setId(filialeFuoriCasa.getId());
-		filialeFuoriCasaDto .setNomeFiliale(filialeFuoriCasa.getNomeFiliale());
+		filialeFuoriCasaDto.setId(filialeFuoriCasa.getId());
+		filialeFuoriCasaDto.setNomeFiliale(filialeFuoriCasa.getNomeFiliale());
 		incontro.setFilialeFuoriCasa(filialeFuoriCasaDto);
 		incontri.add(incontro);
 		incontriByDate.put(timeMillis, incontri);

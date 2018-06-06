@@ -13,7 +13,6 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,11 +131,10 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 			dc.setResultTransformer(new CreazioneCampionatiFilialeTransformer());
 			List<Filiale> filiali = filialeDao.findByCriteria(dc);
 			List<List<Filiale>> subLists = ListUtils.partition(filiali, (int)numeroSquadre);
-//			DateTime today = (new DateTime()).withTimeAtStartOfDay();
-//			DateTime start = (new DateTime(dto.getDataInizio())).withTimeAtStartOfDay();
-//			DateTime fine = (new DateTime(dto.getDataFine())).withTimeAtStartOfDay();
-//			boolean campionatoAttivo = new Interval(start, fine).contains(today);
-			//Creo i campionati già attivi....
+			DateTime today = (new DateTime()).withTimeAtStartOfDay();
+			DateTime start = (new DateTime(dto.getDataInizio())).withTimeAtStartOfDay();
+			DateTime fine = today.plusDays(1);
+			//boolean campionatoAttivo = new Interval(start, fine).contains(today);
 			boolean campionatoAttivo = true;
 			String creatoDa = "test";
 			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null )

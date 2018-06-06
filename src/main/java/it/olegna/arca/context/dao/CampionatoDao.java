@@ -20,7 +20,7 @@ public class CampionatoDao<T> extends AbstractDao<String, Campionato>
 	public int terminaCampionati()
 	{
 		Date today = new Date();
-		String hql = "UPDATE "+Campionato.class.getName()+" SET campionatoAttivo = :campionatoAttivo where dataInizio > :oggi and dataFine > :oggi";
+		String hql = "UPDATE "+Campionato.class.getName()+" SET campionatoAttivo = :campionatoAttivo where dataFine <= :oggi";
 		Query q = getSession().createQuery(hql);
 		q.setParameter("campionatoAttivo", Boolean.FALSE);
 		q.setParameter("oggi", today);
@@ -30,7 +30,7 @@ public class CampionatoDao<T> extends AbstractDao<String, Campionato>
 	public int attivaCampionati()
 	{
 		Date today = new Date();
-		String hql = "UPDATE "+Campionato.class.getName()+" SET campionatoAttivo = :campionatoAttivo where dataInizio >= :oggi and dataFine <= :oggi";
+		String hql = "UPDATE "+Campionato.class.getName()+" SET campionatoAttivo = :campionatoAttivo where dataInizio <= :oggi and dataFine > :oggi";
 		Query q = getSession().createQuery(hql);
 		q.setParameter("campionatoAttivo", Boolean.TRUE);
 		q.setParameter("oggi", today);
