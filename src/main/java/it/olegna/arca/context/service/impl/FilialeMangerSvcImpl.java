@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.math3.analysis.function.Min;
 import org.apache.commons.math3.util.Precision;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -249,7 +248,6 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 						dcDatFil.setResultTransformer(mdrt);
 						this.mathcDao.findByCriteria(dcDatFil);
 						Map<String, MatchDbDto> results = mdrt.getResults();
-						Min minus = new Min();
 						for (Incontro incontro : incontri)
 						{
 							String idIncontro = incontro.getId();
@@ -260,12 +258,12 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 							List<DatiMatchFilialeDto> datiFilialiCasa = new ArrayList<>(matchDbDtoFilialeCasa.getDati().values());
 							DatiMatchFilialeDto  dmfCasaPrecedente = datiFilialiCasa.get(0);
 							DatiMatchFilialeDto  dmfCasaCorrente = datiFilialiCasa.get(1);
-							double differenzaTotaleCasa = Precision.round(minus.value(dmfCasaCorrente.getTotale(), dmfCasaPrecedente.getTotale()), 2);
+							double differenzaTotaleCasa = this.calcolaProduzioneSettimanale(dmfCasaCorrente.getTotale(), dmfCasaPrecedente.getTotale(), idFilialeCasa);
 							MatchDbDto matchDbDtoFilialeFuoriCasa = results.get(idFilialeFuoriCasa);
 							List<DatiMatchFilialeDto> datiFilialiFuoriCasa = new ArrayList<>(matchDbDtoFilialeFuoriCasa.getDati().values());
 							DatiMatchFilialeDto  dmfFuoriCasaPrecedente = datiFilialiFuoriCasa.get(0);
 							DatiMatchFilialeDto  dmfFuoriCasaCorrente = datiFilialiFuoriCasa.get(1);
-							double differenzaTotaleFuoriCasa = Precision.round(minus.value(dmfFuoriCasaCorrente.getTotale(), dmfFuoriCasaPrecedente.getTotale()), 2);
+							double differenzaTotaleFuoriCasa = this.calcolaProduzioneSettimanale(dmfFuoriCasaCorrente.getTotale(), dmfFuoriCasaPrecedente.getTotale(), idFilialeFuoriCasa);
 							double importoMinimoProduzione = c.getImportoProduzioneMinima();
 							if( differenzaTotaleCasa > differenzaTotaleFuoriCasa )
 							{
@@ -360,7 +358,15 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 			throw new ArcaContextDbException(message, e);
 		}
 	}
-
+	private double calcolaProduzioneSettimanale( double produzioneTotaleSettCorrente, double produzioneTotaleSettPrecedente, String idFiliale )
+	{
+		double result = Precision.round((produzioneTotaleSettCorrente - produzioneTotaleSettPrecedente), 2);
+		if( logger.isDebugEnabled() )
+		{
+			logger.debug("ID FILIALE [{}] PRODUZIONE TOTALE CORRENTE [{}] PRODUZIONE TOTALE SCORSA [{}] PRODUZIONE SETTIMANALE [{}]",idFiliale, produzioneTotaleSettCorrente, produzioneTotaleSettPrecedente, result);
+		}
+		return result;
+	}
 	private List<Incontro> getIncontriByDate(Date dataIncontro) throws Exception
 	{
 		DetachedCriteria dc = DetachedCriteria.forClass(Incontro.class);

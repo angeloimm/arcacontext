@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 
 import org.hibernate.transform.ResultTransformer;
@@ -14,6 +15,7 @@ import org.joda.time.DateTime;
 
 import it.olegna.arca.context.dto.FilialeDto;
 import it.olegna.arca.context.models.Campionato;
+import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
 import it.olegna.arca.context.web.dto.IncontroDto;
@@ -54,14 +56,17 @@ public class IncontriCampionatoDtoTransformer implements ResultTransformer
 			incontri = new ArrayList<IncontroDto>();
 		}
 		IncontroDto incontro = new IncontroDto();
+		
 		incontro.setDataIncontro(formatDateTime((new DateTime(timeMillis)), "dd/MM/yyyy"));
 		FilialeDto filialeCasaDto = new FilialeDto();
+		filialeCasaDto.setImportoSettimanaleFiliale(recuperaImporto(dataIncontro, filialeCasa));
 		filialeCasaDto.setId(filialeCasa.getId());
 		filialeCasaDto.setNomeFiliale(filialeCasa.getNomeFiliale());
 		incontro.setFilialeCasa(filialeCasaDto);
 		FilialeDto filialeFuoriCasaDto = new FilialeDto();
 		filialeFuoriCasaDto.setId(filialeFuoriCasa.getId());
 		filialeFuoriCasaDto.setNomeFiliale(filialeFuoriCasa.getNomeFiliale());
+		filialeFuoriCasaDto.setImportoSettimanaleFiliale(recuperaImporto(dataIncontro, filialeFuoriCasa));
 		incontro.setFilialeFuoriCasa(filialeFuoriCasaDto);
 		incontri.add(incontro);
 		incontriByDate.put(timeMillis, incontri);
@@ -69,7 +74,18 @@ public class IncontriCampionatoDtoTransformer implements ResultTransformer
 		results.put(tipoCampionato, incontroCampionato);
 		return null;
 	}
-
+	private double recuperaImporto( Date data, Filiale f )
+	{
+		Set<DatiFiliale> df = f.getDatiFiliale();
+		for (DatiFiliale datiFiliale : df)
+		{
+			if( datiFiliale.getDataDati().equals(data) )
+			{
+				return datiFiliale.getTotale();
+			}
+		}
+		return 0.0d;
+	}
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List transformList(List collection)

@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
@@ -113,6 +112,7 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 			throw new ArcaContextDbException(msg, e);
 		}
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true)
 	public List<ClassificaCampionatoDto> getClassificheCampionatoAttivo() throws ArcaContextDbException

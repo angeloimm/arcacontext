@@ -33,8 +33,8 @@
 										 <ul class="list-group ul_calendari" id="elencoCalendariUl">
 											{{#each this}}
 												<li class="list-group-item ">
-													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_left">{{filialeCasa.nomeFiliale}} <span class="badge">{{importoSettimanaleCasa}}</span> </button></span>
-													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_right">{{filialeFuoriCasa.nomeFiliale}} <span class="badge">{{importoSettimanaleFuoriCasa}}</span> </button></span>
+													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_left">{{filialeCasa.nomeFiliale}} <span class="badge">{{filialeCasa.importoSettimanaleFiliale}}</span> €</button></span>
+													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_right">{{filialeFuoriCasa.nomeFiliale}} <span class="badge">{{filialeFuoriCasa.importoSettimanaleFiliale}}</span> €</button></span>
 													<div class="clearfix"></div>
 												</li> 
 											{{/each}}
@@ -120,7 +120,9 @@
 						<div class="alert alert-info">
 							<spring:message code="arca.context.web.msgs.calendari.info.msg"/>
 						</div>
-
+						<div class="alert alert-warning">
+							<spring:message code="arca.context.web.msgs.calendari.warning.msg"/>
+						</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body" id="elencoIncontri">
 						</div>
