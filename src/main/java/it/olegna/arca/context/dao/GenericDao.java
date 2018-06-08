@@ -1,8 +1,10 @@
 package it.olegna.arca.context.dao;
 
+import java.io.Serializable;
+
 import org.springframework.stereotype.Repository;
 @Repository 
-public class GenericDao<T> extends AbstractDao<String, T>
+public class GenericDao<T> extends AbstractDao<Serializable, T>
 {
 	private Class<T> persistentClass;
 	@Override

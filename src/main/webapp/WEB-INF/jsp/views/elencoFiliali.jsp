@@ -526,7 +526,7 @@
 				$('#dal').datetimepicker({
                     locale: 'it',
                     date : new Date(${dataMinimaCampionato}),
-                    minDate: new Date(${dataMinimaCampionato}),
+                    /*minDate: new Date(${dataMinimaCampionato}),*/
                     keepInvalid: true,
                     format:'L'
                 });

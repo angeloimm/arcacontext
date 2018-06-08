@@ -127,6 +127,10 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 			dc.createAlias("pk.campionato", "campionato");
 			dc.add(Property.forName("pk.campionato").in(subQuery));
 			dc.addOrder(Order.asc("campionato.categoriaCampionato"));
+			ProjectionList pl = Projections.projectionList();
+			pl.add(Projections.property("pk"),"pk");
+			pl.add(Projections.property("puntiFiliale"),"puntiFiliale");
+			dc.setProjection(pl);
 			dc.setResultTransformer(new ClassificaCampionatoDtoTransformer());
 			results = (List<ClassificaCampionatoDto>) this.recuperoDataDao.findByCriteria(dc);
 			results.sort(new Comparator<ClassificaCampionatoDto>()

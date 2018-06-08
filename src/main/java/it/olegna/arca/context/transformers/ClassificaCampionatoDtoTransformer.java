@@ -9,6 +9,7 @@ import org.hibernate.transform.ResultTransformer;
 
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.CampionatoFiliale;
+import it.olegna.arca.context.models.CampionatoFilialeId;
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.web.dto.ClassificaCampionatoDto;
 import it.olegna.arca.context.web.dto.FilialeClassificaDto;
@@ -31,15 +32,11 @@ public class ClassificaCampionatoDtoTransformer implements ResultTransformer
 		{
 			return null;
 		}
-		/*
-		 * 0 --> campionato
-		 * 1 --> campionatoFiliale
-		 * */
 		ClassificaCampionatoDto result = null;
-		CampionatoFiliale cf = (CampionatoFiliale)tuple[1];
+		CampionatoFilialeId cf = (CampionatoFilialeId)tuple[0];
 		Campionato camp = cf.getCampionato();
 		Filiale f = cf.getFiliale();
-		int puntiFiliale = cf.getPuntiFiliale();
+		int puntiFiliale = (Integer)tuple[1];
 		if( this.results.containsKey(camp.getId()) )
 		{
 			result = results.get(camp.getId());

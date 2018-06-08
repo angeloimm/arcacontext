@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.math3.analysis.function.Min;
 import org.apache.commons.math3.util.Precision;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
@@ -28,7 +29,9 @@ import it.olegna.arca.context.dao.GenericDao;
 import it.olegna.arca.context.exception.ArcaContextDbException;
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.CampionatoFiliale;
+import it.olegna.arca.context.models.CampionatoFilialeId;
 import it.olegna.arca.context.models.DatiFiliale;
+import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.models.Incontro;
 import it.olegna.arca.context.service.ClassicaCampionatoSvc;
 import it.olegna.arca.context.transformers.MatchDbResultTransformers;
@@ -51,7 +54,10 @@ public class ClassificaCampionatoSvcImpl implements ClassicaCampionatoSvc
 	@Autowired
 	private GenericDao<MatchDbDto> mathcDao;
 	@Autowired
-	private GenericDao<Incontro> incontriDao;	
+	private GenericDao<Incontro> incontriDao;
+	@Autowired
+	private GenericDao<Date> dateIncontriDao;
+	
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = false) 
 	public void calcolaPunteggiCampionati(Date dataDati) throws ArcaContextDbException
@@ -87,7 +93,6 @@ public class ClassificaCampionatoSvcImpl implements ClassicaCampionatoSvc
 				{
 					logger.info("DATA DATI {}, DATA INIZIO CAMPIONATO {}, DATA FINE CAMPIONATO {}. DATI COMPRESI IN CAMPIONATO ATTIVO {}", formatDateTime(data, "dd/MM/yyyy"), formatDateTime(start , "dd/MM/yyyy"), formatDateTime(fine , "dd/MM/yyyy"), datiInCampionatoAttivo);
 				}
-				DateTime dataPrecedente = data.minusDays(7);
 				//Recupero gli incontri per la data di riferimento per del file caricato
 				List<Incontro> incontri = getIncontriByDate(dataDati);
 				//Non dovrebbe mai accadere che sia nullo ma gestiamolo
@@ -100,61 +105,126 @@ public class ClassificaCampionatoSvcImpl implements ClassicaCampionatoSvc
 				}
 				else
 				{
-					//Recupero i dati della data corrente e di quelli di 7 giorni prima
-					List<Date> date = new ArrayList<>();
-					date.add(dataDati);
-					date.add(new Date(dataPrecedente.getMillis()));
-					DetachedCriteria dcDatFil = DetachedCriteria.forClass(DatiFiliale.class);
-					dcDatFil.createAlias("filiale", "filiale");
-					dcDatFil.add(Property.forName("dataDati").in(date));
-					ProjectionList plDatFil = Projections.projectionList();
-					plDatFil.add(Projections.property("filiale.id"),"idFiliale");
-					plDatFil.add(Projections.property("filiale.nomeFiliale"),"nomeFiliale");
-					plDatFil.add(Projections.property("re"),"re");
-					plDatFil.add(Projections.property("auto"),"auto");
-					plDatFil.add(Projections.property("totale"),"totale");
-					plDatFil.add(Projections.property("dataDati"),"dataDati");
-					dcDatFil.setProjection(plDatFil);
-					MatchDbResultTransformers mdrt = new MatchDbResultTransformers();
-					dcDatFil.setResultTransformer(mdrt);
-					this.mathcDao.findByCriteria(dcDatFil);
-					Map<String, MatchDbDto> results = mdrt.getResults();
-					Min minus = new Min();
-					for (Incontro incontro : incontri)
+					DetachedCriteria subQuery = DetachedCriteria.forClass(DatiFiliale.class);
+					subQuery.setProjection(Projections.distinct(Projections.property("dataDati")));
+					subQuery.addOrder(Order.desc("dataDati"));
+					List<Date> date = this.dateIncontriDao.findByDetacheCriteria(subQuery, 0, 2);
+					if( date != null && !date.isEmpty() )
 					{
-						String idIncontro = incontro.getId();
-						String idFilialeCasa = incontro.getFilialeCasa().getId();
-						String idFilialeFuoriCasa = incontro.getFilialeFuoriCasa().getId();
-						MatchDbDto matchDbDtoFilialeCasa = results.get(idFilialeCasa);
-						List<DatiMatchFilialeDto> datiFilialiCasa = new ArrayList<>(matchDbDtoFilialeCasa.getDati().values());
-						DatiMatchFilialeDto  dmfCasaPrecedente = datiFilialiCasa.get(0);
-						DatiMatchFilialeDto  dmfCasaCorrente = datiFilialiCasa.get(1);
-						double differenzaTotaleCasa = Precision.round(minus.value(dmfCasaCorrente.getTotale(), dmfCasaPrecedente.getTotale()), 2);
-						MatchDbDto matchDbDtoFilialeFuoriCasa = results.get(idFilialeFuoriCasa);
-						List<DatiMatchFilialeDto> datiFilialiFuoriCasa = new ArrayList<>(matchDbDtoFilialeFuoriCasa.getDati().values());
-						DatiMatchFilialeDto  dmfFuoriCasaPrecedente = datiFilialiFuoriCasa.get(0);
-						DatiMatchFilialeDto  dmfFuoriCasaCorrente = datiFilialiFuoriCasa.get(1);
-						double differenzaTotaleFuoriCasa = Precision.round(minus.value(dmfFuoriCasaCorrente.getTotale(), dmfFuoriCasaPrecedente.getTotale()), 2);
-						if( differenzaTotaleCasa > differenzaTotaleFuoriCasa )
+						DetachedCriteria dcDatFil = DetachedCriteria.forClass(DatiFiliale.class);
+						dcDatFil.createAlias("filiale", "filiale");
+						dcDatFil.add(Property.forName("dataDati").in(date));
+						ProjectionList plDatFil = Projections.projectionList();
+						plDatFil.add(Projections.property("filiale.id"),"idFiliale");
+						plDatFil.add(Projections.property("filiale.nomeFiliale"),"nomeFiliale");
+						plDatFil.add(Projections.property("re"),"re");
+						plDatFil.add(Projections.property("auto"),"auto");
+						plDatFil.add(Projections.property("totale"),"totale");
+						plDatFil.add(Projections.property("dataDati"),"dataDati");
+						dcDatFil.setProjection(plDatFil);
+						MatchDbResultTransformers mdrt = new MatchDbResultTransformers();
+						dcDatFil.setResultTransformer(mdrt);
+						this.mathcDao.findByCriteria(dcDatFil);
+						Map<String, MatchDbDto> results = mdrt.getResults();
+						Min minus = new Min();
+						for (Incontro incontro : incontri)
 						{
-							if( logger.isInfoEnabled() )
+							String idIncontro = incontro.getId();
+							String idFilialeCasa = incontro.getFilialeCasa().getId();
+							String idFilialeFuoriCasa = incontro.getFilialeFuoriCasa().getId();
+							Campionato c = incontro.getCampionato();
+							MatchDbDto matchDbDtoFilialeCasa = results.get(idFilialeCasa);
+							List<DatiMatchFilialeDto> datiFilialiCasa = new ArrayList<>(matchDbDtoFilialeCasa.getDati().values());
+							DatiMatchFilialeDto  dmfCasaPrecedente = datiFilialiCasa.get(0);
+							DatiMatchFilialeDto  dmfCasaCorrente = datiFilialiCasa.get(1);
+							double differenzaTotaleCasa = Precision.round(minus.value(dmfCasaCorrente.getTotale(), dmfCasaPrecedente.getTotale()), 2);
+							MatchDbDto matchDbDtoFilialeFuoriCasa = results.get(idFilialeFuoriCasa);
+							List<DatiMatchFilialeDto> datiFilialiFuoriCasa = new ArrayList<>(matchDbDtoFilialeFuoriCasa.getDati().values());
+							DatiMatchFilialeDto  dmfFuoriCasaPrecedente = datiFilialiFuoriCasa.get(0);
+							DatiMatchFilialeDto  dmfFuoriCasaCorrente = datiFilialiFuoriCasa.get(1);
+							double differenzaTotaleFuoriCasa = Precision.round(minus.value(dmfFuoriCasaCorrente.getTotale(), dmfFuoriCasaPrecedente.getTotale()), 2);
+							double importoMinimoProduzione = c.getImportoProduzioneMinima();
+							if( differenzaTotaleCasa > differenzaTotaleFuoriCasa )
 							{
-								logger.info("INCONTRO CON ID {} VITTORIA IN CASA DELLA FILIALE CON ID {}. ANDAMENTO SETTIMANALE CASA {} ANDAMENTO SETTIMANALE FUORI CASA {} ", idIncontro, idFilialeCasa, differenzaTotaleCasa, differenzaTotaleFuoriCasa);
+								if( logger.isInfoEnabled() )
+								{
+									logger.info("INCONTRO CON ID {} VITTORIA IN CASA DELLA FILIALE CON ID {}. ANDAMENTO SETTIMANALE CASA {} ANDAMENTO SETTIMANALE FUORI CASA {} ", idIncontro, idFilialeCasa, differenzaTotaleCasa, differenzaTotaleFuoriCasa);
+								}
+								//Aggiorno i punti della filiale di casa che è vincente
+								Filiale winner = new Filiale();
+								winner.setId(idFilialeCasa);
+								aggiornaPuntiFiliale( c, winner, 3 );
+								if( differenzaTotaleFuoriCasa >= importoMinimoProduzione )
+								{
+									if( logger.isInfoEnabled() )
+									{
+										logger.info("IMPORTO PRODUZIONE MINIMA {} IMPORTO PRODUZIONE FILIALE PERDENTE {}", importoMinimoProduzione, differenzaTotaleFuoriCasa);
+									}
+									//Aggiorno i punti della filiale fuori casa che è perdente
+									Filiale loser = new Filiale();
+									loser.setId(idFilialeFuoriCasa);
+									aggiornaPuntiFiliale( c, loser, 1 );
+								}
+								else
+								{
+									if( logger.isInfoEnabled() )
+									{
+										logger.info("FILIALE PERDENTE PRODUZIONE MINORE DELLA PRODUZIONE MINIMA. NESSUN PUNTO AGGIUNTO");
+									}
+								}
+								
+								
 							}
+							else if( differenzaTotaleCasa < differenzaTotaleFuoriCasa )
+							{
+								if( logger.isInfoEnabled() )
+								{
+									logger.info("INCONTRO CON ID {} VITTORIA FUORI CASA DELLA FILIALE CON ID {}. ANDAMENTO SETTIMANALE CASA {} ANDAMENTO SETTIMANALE FUORI CASA {} ", idIncontro, idFilialeFuoriCasa, differenzaTotaleCasa, differenzaTotaleFuoriCasa);
+								}
+								//Aggiorno i punti della filiale fuori casa che è vincente
+								Filiale winner = new Filiale();
+								winner.setId(idFilialeFuoriCasa);
+								aggiornaPuntiFiliale( c, winner, 3 );
+								if( differenzaTotaleCasa >= importoMinimoProduzione )
+								{
+									if( logger.isInfoEnabled() )
+									{
+										logger.info("IMPORTO PRODUZIONE MINIMA {} IMPORTO PRODUZIONE FILIALE PERDENTE {}", importoMinimoProduzione, differenzaTotaleFuoriCasa);
+									}
+									//Aggiorno i punti della filiale fuori casa che è perdente
+									Filiale loser = new Filiale();
+									loser.setId(idFilialeCasa);
+									aggiornaPuntiFiliale( c, loser, 1 );
+								}
+								else
+								{
+									if( logger.isInfoEnabled() )
+									{
+										logger.info("FILIALE PERDENTE PRODUZIONE MINORE DELLA PRODUZIONE MINIMA. NESSUN PUNTO AGGIUNTO");
+									}
+								}
+							}
+							else
+							{
+								if( logger.isInfoEnabled() )
+								{
+									logger.info("INCONTRO CON ID {} PAREGGIO. ANDAMENTO SETTIMANALE CASA {} ANDAMENTO SETTIMANALE FUORI CASA {} ", idIncontro, differenzaTotaleCasa, differenzaTotaleFuoriCasa);
+								}
+							}
+							//Aggiorno i punti di tutte e due le filiali
+							Filiale filialeCasa = new Filiale();
+							filialeCasa.setId(idFilialeCasa);
+							aggiornaPuntiFiliale( c, filialeCasa, 1 );
+							Filiale filialeFuoriCasa = new Filiale();
+							filialeFuoriCasa.setId(idFilialeFuoriCasa);
+							aggiornaPuntiFiliale( c, filialeFuoriCasa, 1 );
 						}
-						else if( differenzaTotaleCasa < differenzaTotaleFuoriCasa )
+					}
+					else
+					{
+						if( logger.isWarnEnabled() )
 						{
-							if( logger.isInfoEnabled() )
-							{
-								logger.info("INCONTRO CON ID {} VITTORIA FUORI CASA DELLA FILIALE CON ID {}. ANDAMENTO SETTIMANALE CASA {} ANDAMENTO SETTIMANALE FUORI CASA {} ", idIncontro, idFilialeFuoriCasa, differenzaTotaleCasa, differenzaTotaleFuoriCasa);
-							}
-						}
-						else
-						{
-							if( logger.isInfoEnabled() )
-							{
-								logger.info("INCONTRO CON ID {} PAREGGIO. ANDAMENTO SETTIMANALE CASA {} ANDAMENTO SETTIMANALE FUORI CASA {} ", idIncontro, differenzaTotaleCasa, differenzaTotaleFuoriCasa);
-							}
+							logger.warn("Nessuna data filiale trovata");
 						}
 					}
 				}
@@ -166,6 +236,18 @@ public class ClassificaCampionatoSvcImpl implements ClassicaCampionatoSvc
 			logger.error(message, e);
 			throw new ArcaContextDbException(message, e);
 		}
+	}
+	private void aggiornaPuntiFiliale( Campionato c, Filiale f, int punti ) throws Exception
+	{
+
+		CampionatoFilialeId key = new CampionatoFilialeId();
+		key.setCampionato(c);
+		key.setFiliale(f);
+		CampionatoFiliale cf = campionatoFilialeDao.getByKey(key);
+		int puntiIniziali = cf.getPuntiFiliale();
+		int puntiFinali = puntiIniziali+punti;
+		cf.setPuntiFiliale(puntiFinali);
+		campionatoFilialeDao.update(cf);
 	}
 	private List<Incontro> getIncontriByDate(Date dataIncontro) throws Exception
 	{
@@ -182,5 +264,6 @@ public class ClassificaCampionatoSvcImpl implements ClassicaCampionatoSvc
 		this.datiFilialeDao.setPersistentClass(DatiFiliale.class);
 		mathcDao.setPersistentClass(MatchDbDto.class);
 		incontriDao.setPersistentClass(Incontro.class);
+		dateIncontriDao.setPersistentClass(Date.class);
 	}
 }

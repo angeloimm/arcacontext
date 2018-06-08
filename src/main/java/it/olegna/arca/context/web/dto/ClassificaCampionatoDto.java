@@ -1,6 +1,7 @@
 package it.olegna.arca.context.web.dto;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 public class ClassificaCampionatoDto implements Serializable
@@ -18,7 +19,32 @@ public class ClassificaCampionatoDto implements Serializable
 	}
 	public List<FilialeClassificaDto> getFilaliCampionato()
 	{
-		return filaliCampionato;
+		if(this.filaliCampionato == null)
+		{
+			return filaliCampionato;
+		}
+		else
+		{
+			filaliCampionato.sort(new Comparator<FilialeClassificaDto>()
+			{
+
+				@Override
+				public int compare(FilialeClassificaDto o1, FilialeClassificaDto o2)
+				{
+					Integer punti1 = o1.getPuntiFiliale();
+					Integer punti2 = o2.getPuntiFiliale();
+					int ordinePunti = punti2.compareTo(punti1);
+					if( ordinePunti != 0 )
+					{
+						return ordinePunti;
+					}
+					String nome1 = o1.getNomeFiliale();
+					String nome2 = o2.getNomeFiliale();
+					return nome1.compareTo(nome2);
+				}
+			});
+			return filaliCampionato;
+		}
 	}
 	public void setFilaliCampionato(List<FilialeClassificaDto> filaliCampionato)
 	{
