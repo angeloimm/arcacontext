@@ -199,4 +199,32 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 			throw new ArcaContextDbException(msg, e);
 		}
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true) 
+	public List<Date> getDateIncontri() throws ArcaContextDbException
+	{
+		List<Date> results = null;
+		try
+		{
+			DetachedCriteria mainQuery = DetachedCriteria.forClass(Incontro.class);
+			mainQuery.createAlias("campionato", "campionato");
+			mainQuery.addOrder(Order.desc("dataIncontro"));
+			mainQuery.add(Property.forName("campionato.campionatoAttivo").eq(Boolean.TRUE));
+			ProjectionList pl = Projections.projectionList();
+			pl.add(Projections.property("dataIncontro"),"dataIncontro");
+			mainQuery.setProjection(pl);
+			results = (List<Date>) this.recuperoDataDao.findByCriteria(mainQuery);
+			return results;
+		}
+		catch (Exception e)
+		{
+			String msg = "Errore nel recupero della date incontro; "+e.getMessage();
+			if( logger.isErrorEnabled() )
+			{
+				logger.error(msg, e);
+			}
+			throw new ArcaContextDbException(msg, e);
+		}
+	}
 }

@@ -36,7 +36,8 @@ public class UploadFileController {
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.POST }, value = { "/protected/uploadedDatiFiliali" })
 	public ResponseEntity<FileUploadResponseDto> uploadRiversamentoManuale(	
-																			@RequestParam(required = true, value = "uploadedDatiFiliali") MultipartFile mpf
+																			@RequestParam(required = true, value = "uploadedDatiFiliali") MultipartFile mpf,
+																			@RequestParam(required = false, value = "dataSelezionata") String dataSelezionata
 																		   )
 
 	{

@@ -7,6 +7,11 @@
   ],
   "filialiUnite": [
   	{
+  		"nomeFilialePrincipale":"AGENZIA DI TAORMINA",
+  		"nomeFilialeSecondaria": "PIEDIMONTE ETNEO",
+      	"nomeFilialeUnita": "AGENZIA DI TAORMINA"
+  	},
+  	{
   		"nomeFilialePrincipale":"AGENZIA DI SCICLI",
   		"nomeFilialeSecondaria": "SCICLI AG. 2",
       	"nomeFilialeUnita": "AGENZIA DI SCICLI"

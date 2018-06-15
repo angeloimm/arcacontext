@@ -171,7 +171,29 @@
 					
 	             		return true;	
 	              }); 
-										
+
+				$('#fileupload').on('fileuploadsubmit', function (e, data) { 
+					if( $('#dateIncontriSel').length && $('#dateIncontriSel').length > 0 )
+					{
+						var dataSelezionata = $("#dateIncontriSel").val();
+						if( dataSelezionata === "" )
+						{
+							var uploadErrors = [];
+							var errori = [];
+							errori.push('<spring:message code="arca.context.web.msgs.home.page.date.incontri.required" />');
+							var anError = new Object();
+							anError.errori = errori;
+                     		uploadErrors.push(anError);
+                     		$("#elencoErroriUploadFile").html(templateErroreUploadFile(uploadErrors));
+							return false;
+						}
+						var datiForm = {"dataSelezionata":dataSelezionata}; 
+						data.formData = datiForm;
+					}
+             		return true;	
+              }); 				
+				
+				
 	              $('#fileupload').on('fileuploadadd', function (e, data) {
 	            	$("#elencoErroriUploadFile").empty();
 	            	$("#infoDropZone").hide();
@@ -226,6 +248,20 @@
 							<div class="alert alert-warning">
 								<spring:message	code="arca.context.web.msgs.upload.info.warn" />
 							</div>
+							<c:if test="${not empty dateIncontri}">
+								<div class="form-group">
+									<label for="dateIncontriSel">
+										<spring:message code="arca.context.web.msgs.home.page.date.incontri"/> *
+									</label>
+									<select class="form-control" id="dateIncontriSel">
+										<option value=""> <spring:message code="arca.context.web.msgs.home.page.seleziona.data"/> </option>
+										<c:forEach items="${dateIncontri}" var="dataIncontro">
+											<fmt:formatDate value="${dataIncontro}" pattern="dd/MM/yyyy" var="dataFormattata"/>
+											<option value="${dataFormattata}">${dataFormattata}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</c:if>
 							<div class="row fileupload-buttonbar">
 								<div class="col-md-12">
 									<span class="btn btn-success fileinput-button"> 

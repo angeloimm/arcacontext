@@ -1,5 +1,6 @@
 package it.olegna.arca.context.service;
 
+import java.util.Date;
 import java.util.List;
 
 import it.olegna.arca.context.exception.ArcaContextDbException;
@@ -12,4 +13,5 @@ public interface GenericSvc<T>
 	boolean esisteCampionatoAttivo() throws ArcaContextDbException;
 	List<ClassificaCampionatoDto> getClassificheCampionatoAttivo() throws ArcaContextDbException;
 	List<IncontroCampionatoDto> getIncontri() throws ArcaContextDbException;
+	List<Date> getDateIncontri() throws ArcaContextDbException;
 }

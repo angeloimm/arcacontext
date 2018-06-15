@@ -5,6 +5,7 @@ import static it.olegna.arca.context.util.TimeUtil.formatDateTime;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,8 +40,6 @@ public class MainPagesController {
 	@Autowired
 	private DatiFilialeSvc datiFilialeSvc;
 	@Autowired
-	private GenericSvc<IncontroCampionatoDto> incontriCampionatiSvc;
-	@Autowired
 	private HttpSession sessione;
 	@Value("${arca.context.max.file.dimension}")
 	private long dimensioneFile;
@@ -71,6 +70,11 @@ public class MainPagesController {
 			}
 			model.addAttribute("dimensioneFile", dimensioneFile);
 			model.addAttribute("dimensioneFileFormattata", FileUtils.byteCountToDisplaySize(dimensioneFile));
+			List<Date> dateIncontri = genericSvc.getDateIncontri();
+			if( dateIncontri != null && !dateIncontri.isEmpty() )
+			{
+				model.addAttribute("dateIncontri", dateIncontri);
+			}
 			long durataSessioneSecondi = sessione.getMaxInactiveInterval(); 
 			model.addAttribute("durataSessione", durataSessioneSecondi);
 			return "views/homePage";
@@ -116,7 +120,7 @@ public class MainPagesController {
 	}
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.GET }, value="/protected/classifiche")
-	public String classifice(Model model)
+	public String classifiche(Model model)
 	{
 		try
 		{
