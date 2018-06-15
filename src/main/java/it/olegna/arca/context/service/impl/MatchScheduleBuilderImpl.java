@@ -131,7 +131,7 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 			int teamIdx = day % teamsSize;
 			FilialeDto filialeCasaDto = teams.get(teamIdx);
 			FilialeDto filialeFuoriCasaDto = filiali.get(0);
-			if( !filialeCasaDto.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !filialeFuoriCasaDto.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !sameFiliale(filialeCasaDto, filialeFuoriCasaDto) )
+			if( !filialeCasaDto.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !filialeFuoriCasaDto.getNomeFiliale().equals(FAKE_FILIALE_NAME) )
 			{
 				Incontro match = new Incontro();
 				match.setCreatoDa(creatoDa);
@@ -156,8 +156,8 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 				int firstTeam = (day + idx) % teamsSize;
 				int secondTeam = (day  + teamsSize - idx) % teamsSize;
 				FilialeDto filialeCasaDto2 = teams.get(firstTeam);
-				FilialeDto filialeFuoriCasaDto2 = filiali.get(secondTeam);
-				if( !filialeCasaDto2.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !filialeFuoriCasaDto2.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !sameFiliale(filialeCasaDto2, filialeFuoriCasaDto2) )
+				FilialeDto filialeFuoriCasaDto2 = teams.get(secondTeam);
+				if( !filialeCasaDto2.getNomeFiliale().equals(FAKE_FILIALE_NAME) && !filialeFuoriCasaDto2.getNomeFiliale().equals(FAKE_FILIALE_NAME) )
 				{
 					Incontro match2 = new Incontro();
 					Filiale filialeCasa2 = new Filiale();

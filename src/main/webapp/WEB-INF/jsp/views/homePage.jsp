@@ -114,6 +114,16 @@
 			var templateUploadFile = Handlebars.compile($('#templateUpload').html());
 			var templateErroreUploadFile = Handlebars.compile($('#templateErroreUploadFile').html()); 
 			$(document).ready( function(){
+				if( $('#dateIncontriSel').length && $('#dateIncontriSel').length > 0 )
+				{
+				 	$("#dateIncontriSel").change(function(){
+						 $("#divSelectData").removeClass("has-error has-danger");
+						 if($("button.start").is(":disabled"))
+						 {
+							 $("button.start").prop('disabled', false);
+						 }
+				 	});
+				}
 				 $('#fileupload').fileupload({ 
               		autoUpload:false,
 				        url: '<spring:url value="/rest/protected/uploadedDatiFiliali.json" />',
@@ -185,6 +195,7 @@
 							anError.errori = errori;
                      		uploadErrors.push(anError);
                      		$("#elencoErroriUploadFile").html(templateErroreUploadFile(uploadErrors));
+                     		$("#divSelectData").addClass("has-error has-danger");
 							return false;
 						}
 						var datiForm = {"dataSelezionata":dataSelezionata}; 
@@ -249,8 +260,8 @@
 								<spring:message	code="arca.context.web.msgs.upload.info.warn" />
 							</div>
 							<c:if test="${not empty dateIncontri}">
-								<div class="form-group">
-									<label for="dateIncontriSel">
+								<div class="form-group" id="divSelectData">
+									<label for="dateIncontriSel" class="control-label">
 										<spring:message code="arca.context.web.msgs.home.page.date.incontri"/> *
 									</label>
 									<select class="form-control" id="dateIncontriSel">

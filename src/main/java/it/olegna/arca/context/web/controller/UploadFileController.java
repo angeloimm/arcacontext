@@ -1,5 +1,6 @@
 package it.olegna.arca.context.web.controller;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +23,7 @@ import it.olegna.arca.context.dto.FileUploadResponseDto;
 import it.olegna.arca.context.dto.UploadedFileDto;
 import it.olegna.arca.context.service.DataReader;
 import it.olegna.arca.context.service.FilialeManagerSvc;
+import it.olegna.arca.context.util.TimeUtil;
 import it.olegna.arca.context.web.dto.DatiFilialiContainer;
 
 @RestController
@@ -49,7 +52,16 @@ public class UploadFileController {
 		}
 		try {
 			DatiFilialiContainer res = reader.dataReader(mpf.getInputStream());
-			filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), res.getDataRiferimento());
+			Date dataDati = res.getDataRiferimento();
+			if( StringUtils.hasText(dataSelezionata) )
+			{
+				if( logger.isInfoEnabled() )
+				{
+					logger.info("Salvataggio dati per la data inconto {}", dataSelezionata);
+				}
+				dataDati = TimeUtil.formatDate(dataSelezionata, "dd/MM/yyyy");
+			}
+			filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), dataDati);
 			//Genero e propago l'evento
 			CaricamentoDatiEvent cde = new CaricamentoDatiEvent(this, res.getDataRiferimento());
 			publisher.publishEvent(cde);

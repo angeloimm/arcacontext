@@ -212,7 +212,7 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 			mainQuery.addOrder(Order.desc("dataIncontro"));
 			mainQuery.add(Property.forName("campionato.campionatoAttivo").eq(Boolean.TRUE));
 			ProjectionList pl = Projections.projectionList();
-			pl.add(Projections.property("dataIncontro"),"dataIncontro");
+			pl.add(Projections.distinct(Projections.property("dataIncontro")));
 			mainQuery.setProjection(pl);
 			results = (List<Date>) this.recuperoDataDao.findByCriteria(mainQuery);
 			return results;

@@ -95,6 +95,6 @@ public class FilialeDto implements Serializable
 	@Override
 	public String toString()
 	{
-		return "FilialeDto [nomeFiliale=" + nomeFiliale + ", id=" + id + ", importoSettimanaleFiliale=" + importoSettimanaleFiliale + ", datiFiliale=" + datiFiliale + "]";
+		return "FilialeDto [nomeFiliale=" + nomeFiliale +"]";
 	}
 }

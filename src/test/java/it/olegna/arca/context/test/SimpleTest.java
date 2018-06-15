@@ -21,6 +21,11 @@ public class SimpleTest
 {
 	private static final Logger logger = LoggerFactory.getLogger(SimpleTest.class.getName());
 	@Test
+	public void testIncontri()
+	{
+
+	}
+	@Test
 	public void generaJsonFiliali() throws Exception
 	{
 		FilialiConfigurationDto cfg = new FilialiConfigurationDto();
@@ -35,20 +40,20 @@ public class SimpleTest
 		uno.setNomeFilialeSecondaria("RAGUSA AG.5");
 		uno.setNomeFilialeUnita(uno.getNomeFilialePrincipale());
 		unite.add(uno);
-		
+
 		FilialeUnitaDto due = new FilialeUnitaDto();
 		due.setNomeFilialePrincipale("GRAMMICHELE");
 		due.setNomeFilialeSecondaria("FILIALE DI VIZZINI");
 		due.setNomeFilialeUnita(due.getNomeFilialePrincipale());
 		unite.add(due);
-		
-		
+
+
 		FilialeUnitaDto tre = new FilialeUnitaDto();
 		tre.setNomeFilialePrincipale("CALTAGIRONE");
 		tre.setNomeFilialeSecondaria("SAN MICHELE DI GANZARIA");
 		tre.setNomeFilialeUnita(tre.getNomeFilialePrincipale());
 		unite.add(tre);
-		
+
 		FilialeUnitaDto quattro = new FilialeUnitaDto();
 		quattro.setNomeFilialePrincipale("CATANIA");
 		quattro.setNomeFilialeSecondaria("CATANIA AG. 4");
@@ -82,10 +87,10 @@ public class SimpleTest
 	@Test
 	public void divisione() throws Exception
 	{
-//		BigReal fil = new BigReal(87);
-//		fil.setRoundingMode(RoundingMode.HALF_UP);
-//		long numeroCampionati = fil.divide(new BigReal(22)).bigDecimalValue().longValue();
-//		logger.info(""+numeroCampionati);
+		//		BigReal fil = new BigReal(87);
+		//		fil.setRoundingMode(RoundingMode.HALF_UP);
+		//		long numeroCampionati = fil.divide(new BigReal(22)).bigDecimalValue().longValue();
+		//		logger.info(""+numeroCampionati);
 		long numeroFiliali = 87l;
 		long numeroSquadre = 22l;
 		Divide div = new Divide();
@@ -97,129 +102,158 @@ public class SimpleTest
 	public void testAlgoritmoMatch()
 	{
 		List<String> teams = new ArrayList<>();
-		teams.add("COMISO AG.1                                   ");               
-		teams.add("AGENZIA DI COMISO                             ");
-		teams.add("MINEO                                         ");
-		teams.add("FILIALE DI MELILLI                            ");
-		teams.add("RIPOSTO                                       ");
-		teams.add("AGENZIA NR.1 DI AUGUSTA                       ");
-		teams.add("ISPICA                                        ");
-		teams.add("FILIALE DI NICOLOSI                           ");
-		teams.add("CALTAGIRONE                                   ");
-		teams.add("FILIALE DI SCORDIA                            ");
-		teams.add("GRAMMICHELE                                   ");
-		teams.add("SANTA CROCE CAMERINA                          ");
-		teams.add("GIARRATANA                                    ");
-		teams.add("MISTERBIANCO                                  ");
-		teams.add("VITTORIA AG.1                                 ");
-		teams.add("SCICLI - AGENZIA UNO                          ");
-		teams.add("ROSOLINI                                      ");
-		teams.add("SIRACUSA AG 1                                 ");
-		teams.add("LICODIA EUBEA                                 ");
-		teams.add("ADRANO                                        ");
-		teams.add("VITTORIA AG.2                                 ");
-		teams.add("AGENZIA DI SCICLI                             ");
-		teams.add("AGENZIA DI CASSIBILE                          ");
-		teams.add("ACATE                                         ");
-		teams.add("CAPO D'ORLANDO                                ");
-		teams.add("AGENZIA DI FRIGINTINI                         ");
-		teams.add("DIPENDENZA DI MILANO                          ");
-		teams.add("AGENZIA DI CARLENTINI                         ");
-		teams.add("BRONTE                                        ");
-		teams.add("FILIALE DI MAZZARRONE                         ");
-		teams.add("CATANIA AG.3                                  ");
-		teams.add("SANTA VENERINA                                ");
-		teams.add("SANT'AGATA LI BATTIATI                        ");
-		teams.add("AGENZIA DI DONNALUCATA                        ");
-		teams.add("AGENZIA DI ZAFFERANA ETNEA                    ");
-		teams.add("MARINA DI RAGUSA                              ");
-		teams.add("CHIARAMONTE G.                                ");
-		teams.add("AGENZIA NR.2 DI AUGUSTA                       ");
-		teams.add("CATANIA AG.1                                  ");
-		teams.add("AGENZIA DI PEDALINO                           ");
-		teams.add("GIAMPILIERI                                   ");
-		teams.add("CATANIA AG.2                                  ");
-		teams.add("AGENZIA DI S.PIETRO CLARENZA                  ");
-		teams.add("ENNA                                          ");
-		teams.add("AG.SACRO CUORE                                ");
-		teams.add("MONTEROSSO ALMO                               ");
-		teams.add("LIPARI                                        ");
-		teams.add("ITALA                                         ");
-		teams.add("ISPICA AGENZIA 1                              ");
-		teams.add("ACIREALE                                      ");
-		teams.add("BELPASSO                                      ");
-		teams.add("AGENZIA_DI_PIAZZA_ARMERINA                    ");
-		teams.add("PALAZZOLO ACREIDE                             ");
-		teams.add("VITTORIA                                      ");
-		teams.add("AGENZIA DI LENTINI                            ");
-		teams.add("FRANCOFONTE                                   ");
-		teams.add("AGENZIA DI MODICA ALTA                        ");
-		teams.add("AGENZIA DI MASCALUCIA                         ");
-		teams.add("SIRACUSA AG.2                                 ");
-		teams.add("FIUMEDINISI                                   ");
-		teams.add("SEDE DI RAGUSA                                ");
-		teams.add("CATANIA                                       ");
-		teams.add("AGENZIA DI AVOLA                              ");
-		teams.add("AGENZIA DI VIAGRANDE                          ");
-		teams.add("AGENZIA DI SCOGLITTI                          ");
-		teams.add("PACHINO                                       ");
-		teams.add("AGENZIA DI PATERNO'                           ");
-		teams.add("FILIALE DI MODICA - AG. 3                     ");
-		teams.add("AGENZIA DI MILAZZO                            ");
-		teams.add("AGENZIA DI PRIOLO GARGALLO                    ");
-		teams.add("PIEDIMONTE ETNEO                              ");
-		teams.add("MILITELLO IN VAL DI CATANIA                   ");
-		teams.add("AGENZIA DI TAORMINA                           ");
-		teams.add("RAGUSA AG.1                                   ");
-		teams.add("AGENZIA DI MODICA                             ");
-		teams.add("SORTINO                                       ");
-		teams.add("MESSINA                                       ");
-		teams.add("MESSINA AG.4                                  ");
-		teams.add("MIRABELLA IMBACCARI                           ");
-		teams.add("AGENZIA DI SIRACUSA                           ");
-		teams.add("AGENZIA DI TREMESTIERI                        ");
-		teams.add("RAGUSA IBLA                                   ");
-		teams.add("SUCCURSALE DI AUGUSTA                         ");
-		teams.add("RAMACCA                                       ");
-		teams.add("RAGUSA AGENZIA 3                              ");
-		teams.add("POZZALLO                                      ");
-		teams.add("FLORIDIA                                      ");
-		teams.add("RAGUSA AGENZIA 2                              ");
-		teams.add("RAGUSA AGENZIA 4                              ");
-		teams.add("MESSINA AG.1                                  ");
+		teams.add("AGENZIA DI SIRACUSA                      ".trim());
+		teams.add("MISTERBIANCO                     ".trim());
+		teams.add("SUCCURSALE DI AUGUSTA            ".trim());
+		teams.add("AGENZIA DI PRIOLO GARGALLO       ".trim());
+		teams.add("MESSINA                          ".trim());
+		teams.add("ROSOLINI                         ".trim());
+		teams.add("AGENZIA DI S.PIETRO CLARENZA     ".trim());
+		teams.add("CATANIA AG.2                     ".trim());
+		teams.add("CATANIA                          ".trim());
+		teams.add("PACHINO                          ".trim());
+		teams.add("RAGUSA AGENZIA 2                 ".trim());
+		teams.add("AG.SACRO CUORE                   ".trim());
+		teams.add("AGENZIA NR.1 DI AUGUSTA          ".trim());
+		teams.add("AGENZIA DI AVOLA                 ".trim());
+		teams.add("FILIALE DI NICOLOSI              ".trim());
+		teams.add("AGENZIA DI SCICLI                ".trim());
+		teams.add("RAGUSA AG.1                      ".trim());
+		teams.add("AGENZIA DI CARLENTINI            ".trim());
+		teams.add("ISPICA                           ".trim());
+		teams.add("VITTORIA                         ".trim());
+		teams.add("LICODIA EUBEA                    ".trim());
+		teams.add("COMISO AG.1                                   ".trim());               
+		//		teams.add("AGENZIA DI COMISO                             ".trim());
+		//		teams.add("MINEO                                         ".trim());
+		//		teams.add("FILIALE DI MELILLI                            ".trim());
+		//		teams.add("RIPOSTO                                       ".trim());
+		//		teams.add("AGENZIA NR.1 DI AUGUSTA                       ".trim());
+		//		teams.add("ISPICA                                        ".trim());
+		//		teams.add("FILIALE DI NICOLOSI                           ".trim());
+		//		teams.add("CALTAGIRONE                                   ".trim());
+		//		teams.add("FILIALE DI SCORDIA                            ".trim());
+		//		teams.add("GRAMMICHELE                                   ".trim());
+		//		teams.add("SANTA CROCE CAMERINA                          ".trim());
+		//		teams.add("GIARRATANA                                    ".trim());
+		//		teams.add("MISTERBIANCO                                  ".trim());
+		//		teams.add("VITTORIA AG.1                                 ".trim());
+		//		teams.add("SCICLI - AGENZIA UNO                          ".trim());
+		//		teams.add("ROSOLINI                                      ".trim());
+		//		teams.add("SIRACUSA AG 1                                 ".trim());
+		//		teams.add("LICODIA EUBEA                                 ".trim());
+		//		teams.add("ADRANO                                        ".trim());
+		//		teams.add("VITTORIA AG.2                                 ".trim());
+		//		teams.add("AGENZIA DI SCICLI                             ".trim());
+		//		teams.add("AGENZIA DI CASSIBILE                          ".trim());
+		//		teams.add("ACATE                                         ".trim());
+		//		teams.add("CAPO D'ORLANDO                                ".trim());
+		//		teams.add("AGENZIA DI FRIGINTINI                         ".trim());
+		//		teams.add("DIPENDENZA DI MILANO                          ".trim());
+		//		teams.add("AGENZIA DI CARLENTINI                         ".trim());
+		//		teams.add("BRONTE                                        ".trim());
+		//		teams.add("FILIALE DI MAZZARRONE                         ".trim());
+		//		teams.add("CATANIA AG.3                                  ".trim());
+		//		teams.add("SANTA VENERINA                                ".trim());
+		//		teams.add("SANT'AGATA LI BATTIATI                        ".trim());
+		//		teams.add("AGENZIA DI DONNALUCATA                        ".trim());
+		//		teams.add("AGENZIA DI ZAFFERANA ETNEA                    ".trim());
+		//		teams.add("MARINA DI RAGUSA                              ".trim());
+		//		teams.add("CHIARAMONTE G.                                ".trim());
+		//		teams.add("AGENZIA NR.2 DI AUGUSTA                       ".trim());
+		//		teams.add("CATANIA AG.1                                  ".trim());
+		//		teams.add("AGENZIA DI PEDALINO                           ".trim());
+		//		teams.add("GIAMPILIERI                                   ".trim());
+		//		teams.add("CATANIA AG.2                                  ".trim());
+		//		teams.add("AGENZIA DI S.PIETRO CLARENZA                  ".trim());
+		//		teams.add("ENNA                                          ".trim());
+		//		teams.add("AG.SACRO CUORE                                ".trim());
+		//		teams.add("MONTEROSSO ALMO                               ".trim());
+		//		teams.add("LIPARI                                        ".trim());
+		//		teams.add("ITALA                                         ".trim());
+		//		teams.add("ISPICA AGENZIA 1                              ".trim());
+		//		teams.add("ACIREALE                                      ".trim());
+		//		teams.add("BELPASSO                                      ".trim());
+		//		teams.add("AGENZIA_DI_PIAZZA_ARMERINA                    ".trim());
+		//		teams.add("PALAZZOLO ACREIDE                             ".trim());
+		//		teams.add("VITTORIA                                      ".trim());
+		//		teams.add("AGENZIA DI LENTINI                            ".trim());
+		//		teams.add("FRANCOFONTE                                   ".trim());
+		//		teams.add("AGENZIA DI MODICA ALTA                        ".trim());
+		//		teams.add("AGENZIA DI MASCALUCIA                         ".trim());
+		//		teams.add("SIRACUSA AG.2                                 ".trim());
+		//		teams.add("FIUMEDINISI                                   ".trim());
+		//		teams.add("SEDE DI RAGUSA                                ".trim());
+		//		teams.add("CATANIA                                       ".trim());
+		//		teams.add("AGENZIA DI AVOLA                              ".trim());
+		//		teams.add("AGENZIA DI VIAGRANDE                          ".trim());
+		//		teams.add("AGENZIA DI SCOGLITTI                          ".trim());
+		//		teams.add("PACHINO                                       ".trim());
+		//		teams.add("AGENZIA DI PATERNO'                           ".trim());
+		//		teams.add("FILIALE DI MODICA - AG. 3                     ".trim());
+		//		teams.add("AGENZIA DI MILAZZO                            ".trim());
+		//		teams.add("AGENZIA DI PRIOLO GARGALLO                    ".trim());
+		//		teams.add("PIEDIMONTE ETNEO                              ".trim());
+		//		teams.add("MILITELLO IN VAL DI CATANIA                   ".trim());
+		//		teams.add("AGENZIA DI TAORMINA                           ".trim());
+		//		teams.add("RAGUSA AG.1                                   ".trim());
+		//		teams.add("AGENZIA DI MODICA                             ".trim());
+		//		teams.add("SORTINO                                       ".trim());
+		//		teams.add("MESSINA                                       ".trim());
+		//		teams.add("MESSINA AG.4                                  ".trim());
+		//		teams.add("MIRABELLA IMBACCARI                           ".trim());
+		//		teams.add("AGENZIA DI SIRACUSA                           ".trim());
+		//		teams.add("AGENZIA DI TREMESTIERI                        ".trim());
+		//		teams.add("RAGUSA IBLA                                   ".trim());
+		//		teams.add("SUCCURSALE DI AUGUSTA                         ".trim());
+		//		teams.add("RAMACCA                                       ".trim());
+		//		teams.add("RAGUSA AGENZIA 3                              ".trim());
+		//		teams.add("POZZALLO                                      ".trim());
+		//		teams.add("FLORIDIA                                      ".trim());
+		//		teams.add("RAGUSA AGENZIA 2                              ".trim());
+		//		teams.add("RAGUSA AGENZIA 4                              ".trim());
+		//		teams.add("MESSINA AG.1                                  ".trim());
 		ListMatches(teams);
 	}
 	static void ListMatches(List<String> ListTeam)
 	{
-	    if (ListTeam.size() % 2 != 0)
-	    {
-	        ListTeam.add("Bye"); // If odd number of teams add a dummy
-	    }
-	    int numTeams = ListTeam.size();
-	    int numDays = (numTeams - 1); // Days needed to complete tournament
-	    int halfSize = numTeams / 2;
+		if (ListTeam.size() % 2 != 0)
+		{
+			ListTeam.add("bye"); // If odd number of teams add a dummy
+		}
+		int numTeams = ListTeam.size();
+		int numDays = (numTeams - 1); // Days needed to complete tournament
+		int halfSize = numTeams / 2;
 
-	    List<String> teams = new ArrayList<String>();
+		List<String> teams = new ArrayList<String>();
 
-	    teams.addAll(ListTeam); // Add teams to List and remove the first team
-	    teams.remove(0);
+		teams.addAll(ListTeam); // Add teams to List and remove the first team
+		teams.remove(0);
 
-	    int teamsSize = teams.size();
+		int teamsSize = teams.size();
 
-	    for (int day = 0; day < numDays; day++)
-	    {
-	        System.out.println("Day "+(day + 1)+"");
+		for (int day = 0; day < numDays; day++)
+		{
+			int giorno = day+1;
+			if( giorno == 1 )
+			{
 
-	        int teamIdx = day % teamsSize;
-
-	        System.out.println(teams.get(teamIdx)+"  vs "+ListTeam.get(0));
-
-	        for (int idx = 1; idx < halfSize; idx++)
-	        {               
-	            int firstTeam = (day + idx) % teamsSize;
-	            int secondTeam = (day  + teamsSize - idx) % teamsSize;
-	            System.out.println(teams.get(firstTeam)+"  vs   "+teams.get(secondTeam));
-	        }
-	    }
+				System.out.println("Day "+giorno+"");
+			}
+			int teamIdx = day % teamsSize;
+			if( giorno == 1 && (!teams.get(teamIdx).equals("bye") && !ListTeam.get(0).equals("bye") ) )
+			{
+				System.out.println(teams.get(teamIdx)+"  vs "+ListTeam.get(0));
+			}
+			for (int idx = 1; idx < halfSize; idx++)
+			{               
+				int firstTeam = (day + idx) % teamsSize;
+				int secondTeam = (day  + teamsSize - idx) % teamsSize;
+				if( giorno == 1 && (!teams.get(firstTeam).equals("bye") && !teams.get(secondTeam).equals("bye") ) )
+				{
+					System.out.println(teams.get(firstTeam)+"  vs   "+teams.get(secondTeam));
+				}
+			}
+		}
 	}
 }

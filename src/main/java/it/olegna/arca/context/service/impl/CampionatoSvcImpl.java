@@ -131,10 +131,6 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 			dc.setResultTransformer(new CreazioneCampionatiFilialeTransformer());
 			List<Filiale> filiali = filialeDao.findByCriteria(dc);
 			List<List<Filiale>> subLists = ListUtils.partition(filiali, (int)numeroSquadre);
-			DateTime today = (new DateTime()).withTimeAtStartOfDay();
-			DateTime start = (new DateTime(dto.getDataInizio())).withTimeAtStartOfDay();
-			DateTime fine = today.plusDays(1);
-			//boolean campionatoAttivo = new Interval(start, fine).contains(today);
 			boolean campionatoAttivo = true;
 			String creatoDa = "test";
 			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null )
