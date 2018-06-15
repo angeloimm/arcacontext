@@ -1,7 +1,4 @@
 package it.olegna.arca.context.util;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -146,23 +143,5 @@ public class TimeUtil
 		}
 		return result;
 	}
-	public static Date formatDate(String dt, String pattern)
-	{
-		if( !StringUtils.hasText(pattern) )
-		{
-			pattern = "dd/MM/yyyy";
-		}
-		DateFormat formatter = new SimpleDateFormat("MM/dd/yy");
-		formatter.setLenient(false);
-		Date date = null;
-		try 
-		{
-			date = formatter.parse(dt);
-		}
-		catch (ParseException e)
-		{
-			e.printStackTrace();
-		}
-		return date;
-	}
+
 }

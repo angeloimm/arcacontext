@@ -35,7 +35,7 @@ public class FileReaderDbTests
 		try
 		{
 			Resource fileRes = new FileSystemResource(new File("esempioFile/DATI RE.xlsx"));
-			DatiFilialiContainer res = reader.dataReader(fileRes.getInputStream());
+			DatiFilialiContainer res = reader.dataReader(fileRes.getInputStream(), null);
 			List<Filiale> fil = res.getDatiFiliale();
 			for (Filiale filiale : fil)
 			{

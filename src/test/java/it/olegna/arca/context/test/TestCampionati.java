@@ -63,7 +63,7 @@ public class TestCampionati
 					logger.debug("FILE {}", aFile.getName());
 				}
 				Resource fileRes = new FileSystemResource(aFile);
-				DatiFilialiContainer res = reader.dataReader(fileRes.getInputStream());
+				DatiFilialiContainer res = reader.dataReader(fileRes.getInputStream(), null);
 				filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), res.getDataRiferimento());
 			}
 			

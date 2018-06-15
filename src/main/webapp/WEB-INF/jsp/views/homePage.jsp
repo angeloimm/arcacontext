@@ -178,11 +178,6 @@
 				});
 
 				$('#fileupload').on('fileuploadsubmit', function (e, data) { 
-					
-	             		return true;	
-	              }); 
-
-				$('#fileupload').on('fileuploadsubmit', function (e, data) { 
 					if( $('#dateIncontriSel').length && $('#dateIncontriSel').length > 0 )
 					{
 						var dataSelezionata = $("#dateIncontriSel").val();

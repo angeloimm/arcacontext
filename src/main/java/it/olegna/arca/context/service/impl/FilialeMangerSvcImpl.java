@@ -331,14 +331,14 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 								{
 									logger.info("INCONTRO CON ID {} PAREGGIO. ANDAMENTO SETTIMANALE CASA {} ANDAMENTO SETTIMANALE FUORI CASA {} ", idIncontro, differenzaTotaleCasa, differenzaTotaleFuoriCasa);
 								}
+								//Aggiorno i punti di tutte e due le filiali
+								Filiale filialeCasa = new Filiale();
+								filialeCasa.setId(idFilialeCasa);
+								campionatoFilialeDao.aggiornaPuntiFiliale( c, filialeCasa, 1 );
+								Filiale filialeFuoriCasa = new Filiale();
+								filialeFuoriCasa.setId(idFilialeFuoriCasa);
+								campionatoFilialeDao.aggiornaPuntiFiliale( c, filialeFuoriCasa, 1 );								
 							}
-							//Aggiorno i punti di tutte e due le filiali
-							Filiale filialeCasa = new Filiale();
-							filialeCasa.setId(idFilialeCasa);
-							campionatoFilialeDao.aggiornaPuntiFiliale( c, filialeCasa, 1 );
-							Filiale filialeFuoriCasa = new Filiale();
-							filialeFuoriCasa.setId(idFilialeFuoriCasa);
-							campionatoFilialeDao.aggiornaPuntiFiliale( c, filialeFuoriCasa, 1 );
 						}
 					}
 					else

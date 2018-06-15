@@ -22,6 +22,7 @@ import it.olegna.arca.context.dao.GenericDao;
 import it.olegna.arca.context.exception.ArcaContextDbException;
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.CampionatoFiliale;
+import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.models.Incontro;
 import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.transformers.ClassificaCampionatoDtoTransformer;
@@ -207,9 +208,14 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 		List<Date> results = null;
 		try
 		{
+			DetachedCriteria subQueryDate = DetachedCriteria.forClass(DatiFiliale.class);
+			ProjectionList plSubQuery = Projections.projectionList();
+			plSubQuery.add(Projections.distinct(Projections.property("dataDati")));
+			subQueryDate.setProjection(plSubQuery);
 			DetachedCriteria mainQuery = DetachedCriteria.forClass(Incontro.class);
 			mainQuery.createAlias("campionato", "campionato");
-			mainQuery.addOrder(Order.desc("dataIncontro"));
+			mainQuery.addOrder(Order.asc("dataIncontro"));
+			mainQuery.add(Property.forName("dataIncontro").notIn(subQueryDate));
 			mainQuery.add(Property.forName("campionato.campionatoAttivo").eq(Boolean.TRUE));
 			ProjectionList pl = Projections.projectionList();
 			pl.add(Projections.distinct(Projections.property("dataIncontro")));

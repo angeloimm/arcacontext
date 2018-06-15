@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.GenericSvc;
-import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
 import it.olegna.arca.context.web.dto.UserPrincipal;
 
 @Controller

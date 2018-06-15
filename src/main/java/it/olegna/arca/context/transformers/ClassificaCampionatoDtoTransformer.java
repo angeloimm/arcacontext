@@ -8,7 +8,6 @@ import java.util.Map;
 import org.hibernate.transform.ResultTransformer;
 
 import it.olegna.arca.context.models.Campionato;
-import it.olegna.arca.context.models.CampionatoFiliale;
 import it.olegna.arca.context.models.CampionatoFilialeId;
 import it.olegna.arca.context.models.Filiale;
 import it.olegna.arca.context.web.dto.ClassificaCampionatoDto;

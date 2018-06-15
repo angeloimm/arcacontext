@@ -49,7 +49,7 @@ public class DataReaderImpl implements DataReader
 	@Qualifier("objectMapper")
 	private ObjectMapper om;
 	@Override
-	public DatiFilialiContainer dataReader(InputStream is) throws ArcaContextDataReaderException
+	public DatiFilialiContainer dataReader(InputStream is, Date data) throws ArcaContextDataReaderException
 	{
 		DatiFilialiContainer result = new DatiFilialiContainer();
 		Workbook workbook = null;
@@ -66,7 +66,11 @@ public class DataReaderImpl implements DataReader
 			Sheet sheetRe = workbook.getSheetAt(1);
 			String rigaDataDati = sheetRe.getRow(3).getCell(0).getStringCellValue();
 			String dataData = (rigaDataDati.split(":")[1]).trim();
-			Date dataDati = TimeUtil.toDateTime(dataData, "dd/MM/yyyy").toDate();
+			Date dataDati = data;
+			if( dataDati == null )
+			{
+				dataDati =	TimeUtil.toDateTime(dataData, "dd/MM/yyyy").toDate();
+			}
 			result.setDataRiferimento(dataDati);
 			int inizio = 9;
 			int fine = 106;

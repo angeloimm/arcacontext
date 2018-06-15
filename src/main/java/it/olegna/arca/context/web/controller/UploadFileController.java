@@ -1,4 +1,6 @@
 package it.olegna.arca.context.web.controller;
+import static it.olegna.arca.context.util.TimeUtil.toDateTime;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +25,6 @@ import it.olegna.arca.context.dto.FileUploadResponseDto;
 import it.olegna.arca.context.dto.UploadedFileDto;
 import it.olegna.arca.context.service.DataReader;
 import it.olegna.arca.context.service.FilialeManagerSvc;
-import it.olegna.arca.context.util.TimeUtil;
 import it.olegna.arca.context.web.dto.DatiFilialiContainer;
 
 @RestController
@@ -51,16 +52,16 @@ public class UploadFileController {
 			logger.debug("Nome file uploadato: "+fileName);
 		}
 		try {
-			DatiFilialiContainer res = reader.dataReader(mpf.getInputStream());
-			Date dataDati = res.getDataRiferimento();
+			Date dataDati = null;
 			if( StringUtils.hasText(dataSelezionata) )
 			{
 				if( logger.isInfoEnabled() )
 				{
 					logger.info("Salvataggio dati per la data inconto {}", dataSelezionata);
 				}
-				dataDati = TimeUtil.formatDate(dataSelezionata, "dd/MM/yyyy");
+				dataDati = toDateTime(dataSelezionata, "dd/MM/yyyy").toDate();
 			}
+			DatiFilialiContainer res = reader.dataReader(mpf.getInputStream(), dataDati);
 			filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), dataDati);
 			//Genero e propago l'evento
 			CaricamentoDatiEvent cde = new CaricamentoDatiEvent(this, res.getDataRiferimento());
