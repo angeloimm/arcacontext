@@ -11,6 +11,8 @@ public class IncontroDto implements Serializable
 	private FilialeDto filialeCasa;
 	private FilialeDto filialeFuoriCasa;
 	private String dataIncontro;
+	private Long inizioSettimana;
+	private Long fineSettimana;
 	public IncontroDto()
 	{
 		super();
@@ -39,9 +41,25 @@ public class IncontroDto implements Serializable
 	{
 		this.dataIncontro = dataIncontro;
 	}
+	public Long getInizioSettimana()
+	{
+		return inizioSettimana;
+	}
+	public void setInizioSettimana(Long inizioSettimana)
+	{
+		this.inizioSettimana = inizioSettimana;
+	}
+	public Long getFineSettimana()
+	{
+		return fineSettimana;
+	}
+	public void setFineSettimana(Long fineSettimana)
+	{
+		this.fineSettimana = fineSettimana;
+	}
 	@Override
 	public String toString()
 	{
-		return "IncontroDto [filialeCasa=" + filialeCasa + ", filialeFuoriCasa=" + filialeFuoriCasa + ", dataIncontro=" + dataIncontro + "]";
+		return "IncontroDto [filialeCasa=" + filialeCasa + ", filialeFuoriCasa=" + filialeFuoriCasa + ", dataIncontro=" + dataIncontro + ", inizioSettimana=" + inizioSettimana + ", fineSettimana=" + fineSettimana + "]";
 	}
 }

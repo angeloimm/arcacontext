@@ -37,7 +37,7 @@
 									</div>
 									<div class="input-group input-sm">
 										<label class="input-group-addon" for="password"><i class="fa fa-lock"></i></label>
-										<input class="form-control" placeholder='<spring:message code="arca.context.web.msgs.login.password.placeholder" />'
+										<input class="form-control" autocomplete="off" placeholder='<spring:message code="arca.context.web.msgs.login.password.placeholder" />'
 											name="password" id="password" type="password" value="">
 									</div>
 									<!-- Change this to a button or input when using this as a form -->

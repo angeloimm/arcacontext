@@ -1,12 +1,15 @@
 package it.olegna.arca.context.util;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -16,6 +19,8 @@ import org.springframework.util.StringUtils;
 
 public class TimeUtil
 {
+	public static final String DATA_INIZIO_KEY = "dataInizio";
+	public static final String DATA_FINE_KEY = "dataFine";
 	private static final Logger logger = LoggerFactory.getLogger(TimeUtil.class.getName());
 	private static final DateTimeZone EUROPE_ROME_TIME_ZONE = DateTimeZone.forID("Europe/Rome");
 	public static String formatDateTime(DateTime dt, String pattern)
@@ -141,6 +146,20 @@ public class TimeUtil
 		{
 			logger.debug("XML GREGORIAN CALENDAR ["+xmlGC+"] PATTERN ["+pattern+"] RESULT ["+result+"] USED DATETIMEZONE ["+EUROPE_ROME_TIME_ZONE+"]");
 		}
+		return result;
+	}
+	public static Map<String, Long> recuperaSettimanaIncontro( String dataIncontro )
+	{
+		if( !StringUtils.hasText(dataIncontro) )
+		{
+			throw new IllegalArgumentException("Impossibile recuperare la settimana riferimento dell'incontro; passata una data nulla o vuota");
+		}
+		DateTime dt = TimeUtil.toDateTime(dataIncontro, "dd/MM/yyyy");
+		Long inizioSettimana = dt.withDayOfWeek(DateTimeConstants.MONDAY).getMillis();
+		Long fineSettimana = dt.withDayOfWeek(DateTimeConstants.FRIDAY).getMillis();
+		Map<String, Long> result = new HashMap<>();
+		result.put(DATA_INIZIO_KEY, inizioSettimana);
+		result.put(DATA_FINE_KEY, fineSettimana);
 		return result;
 	}
 

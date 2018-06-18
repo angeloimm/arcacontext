@@ -90,10 +90,10 @@
 	</script>
 	<script type="text/x-handlebars-template" id="templateCreazioneCampionato">
     	<div class="alert alert-info">
-			 ${creaCampionatoMsg}
+			 <i class="fa fa-info-circle"></i>&nbsp;${creaCampionatoMsg}
 		</div>
 		<div class="alert alert-warning">
-			<spring:message code="arca.context.web.msgs.creazione.campionato.alert.info" arguments="${produzioneMinima}, ${numeroFilialiCampionato}" />
+			<i class="fa fa-warning"></i>&nbsp;<spring:message code="arca.context.web.msgs.creazione.campionato.alert.info" arguments="${produzioneMinima}, ${numeroFilialiCampionato}" />
 		</div>
 		<div class="container">
 			<div class="col-md-8">
@@ -601,15 +601,15 @@
 					<!-- /.panel-heading -->
 					<div class="panel-body">
 						<div class="alert alert-info">
-							<spring:message code="arca.context.web.msgs.elenco.filiali.info.msg" arguments="${msgVediAndamenti}"/>
+						<i class="fa fa-info-circle"></i>&nbsp; <spring:message code="arca.context.web.msgs.elenco.filiali.info.msg" arguments="${msgVediAndamenti}"/>
 							<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')">
 								<br />
-								<spring:message code="arca.context.web.msgs.creazione.campionato.info.msg" arguments="${msgCreazioneCampionatoBtn}"/>
+								<i class="fa fa-info-circle"></i>&nbsp; <spring:message code="arca.context.web.msgs.creazione.campionato.info.msg" arguments="${msgCreazioneCampionatoBtn}"/>
 							</security:authorize>
 						</div>
 						<c:if test="${campionatiAttivi}">
 							<div class="alert alert-warning">
-								<spring:message code="arca.context.web.msgs.creazione.esiste.campionato.attivo.alert.title.msg"/>
+								<i class="fa fa-warning"></i>&nbsp;<spring:message code="arca.context.web.msgs.creazione.esiste.campionato.attivo.alert.title.msg"/>
 							</div>
 						</c:if>
 						<table	class="datatables-table table table-striped table-bordered table-hover" id="tabellaFiliali" cellspacing="0"  style="width: 100%;">

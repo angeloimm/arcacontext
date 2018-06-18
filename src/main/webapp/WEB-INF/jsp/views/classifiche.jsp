@@ -27,7 +27,7 @@
 					<!-- /.panel-heading -->
 					<div class="panel-body">
 						<div class="alert alert-info">
-							<spring:message code="arca.context.web.msgs.classifiche.info.msg"/>
+							<i class="fa fa-info-circle"></i>&nbsp;<spring:message code="arca.context.web.msgs.classifiche.info.msg"/>
 						</div>
 
                         <!-- /.panel-heading -->

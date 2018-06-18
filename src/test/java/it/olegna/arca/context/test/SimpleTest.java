@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.commons.math3.analysis.function.Divide;
 import org.apache.commons.math3.util.Precision;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.olegna.arca.context.dto.FilialeUnitaDto;
 import it.olegna.arca.context.dto.FilialiConfigurationDto;
 import it.olegna.arca.context.dto.UtenteDto;
+import it.olegna.arca.context.util.TimeUtil;
 
 public class SimpleTest
 {
@@ -97,6 +100,22 @@ public class SimpleTest
 		double result = div.value(new Double(numeroFiliali), new Double(numeroSquadre));
 		Double finalResult = Precision.round(result, 0, BigDecimal.ROUND_UP);
 		logger.info("RESULT {}, ARROTONDATO {}", result, finalResult.longValue());
+	}
+	@Test
+	public void testDate()
+	{
+		try
+		{
+			String data = "05/06/2018";
+			DateTime dt = TimeUtil.toDateTime(data, "dd/MM/yyyy");
+			DateTime inizioSettimana = dt.withDayOfWeek(DateTimeConstants.MONDAY);
+			DateTime fineSettimana = dt.withDayOfWeek(DateTimeConstants.FRIDAY);
+			logger.info("DT {} INIZIO {} FINE {}", data, TimeUtil.formatDateTime(inizioSettimana, "dd/MM/yyyy"), TimeUtil.formatDateTime(fineSettimana, "dd/MM/yyyy"));
+		}
+		catch (Exception e)
+		{
+			logger.error("Errore ", e);
+		}
 	}
 	@Test
 	public void testAlgoritmoMatch()

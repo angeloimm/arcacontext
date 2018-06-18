@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import it.olegna.arca.context.dto.DataIncontroDto;
 import it.olegna.arca.context.service.DatiFilialeSvc;
 import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.web.dto.UserPrincipal;
@@ -69,7 +70,7 @@ public class MainPagesController {
 			}
 			model.addAttribute("dimensioneFile", dimensioneFile);
 			model.addAttribute("dimensioneFileFormattata", FileUtils.byteCountToDisplaySize(dimensioneFile));
-			List<Date> dateIncontri = genericSvc.getDateIncontri();
+			List<DataIncontroDto> dateIncontri = genericSvc.getDateIncontriDto();
 			if( dateIncontri != null && !dateIncontri.isEmpty() )
 			{
 				model.addAttribute("dateIncontri", dateIncontri);

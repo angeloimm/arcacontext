@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.olegna.arca.context.dao.GenericDao;
+import it.olegna.arca.context.dto.DataIncontroDto;
 import it.olegna.arca.context.exception.ArcaContextDbException;
 import it.olegna.arca.context.models.Campionato;
 import it.olegna.arca.context.models.CampionatoFiliale;
@@ -26,6 +27,7 @@ import it.olegna.arca.context.models.DatiFiliale;
 import it.olegna.arca.context.models.Incontro;
 import it.olegna.arca.context.service.GenericSvc;
 import it.olegna.arca.context.transformers.ClassificaCampionatoDtoTransformer;
+import it.olegna.arca.context.transformers.DataIncontroDtoTransformer;
 import it.olegna.arca.context.transformers.IncontriCampionatoDtoTransformer;
 import it.olegna.arca.context.web.dto.ClassificaCampionatoDto;
 import it.olegna.arca.context.web.dto.IncontroCampionatoDto;
@@ -221,6 +223,40 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 			pl.add(Projections.distinct(Projections.property("dataIncontro")));
 			mainQuery.setProjection(pl);
 			results = (List<Date>) this.recuperoDataDao.findByCriteria(mainQuery);
+			return results;
+		}
+		catch (Exception e)
+		{
+			String msg = "Errore nel recupero della date incontro; "+e.getMessage();
+			if( logger.isErrorEnabled() )
+			{
+				logger.error(msg, e);
+			}
+			throw new ArcaContextDbException(msg, e);
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true) 
+	public List<DataIncontroDto> getDateIncontriDto() throws ArcaContextDbException
+	{
+		List<DataIncontroDto> results = null;
+		try
+		{
+			DetachedCriteria subQueryDate = DetachedCriteria.forClass(DatiFiliale.class);
+			ProjectionList plSubQuery = Projections.projectionList();
+			plSubQuery.add(Projections.distinct(Projections.property("dataDati")));
+			subQueryDate.setProjection(plSubQuery);
+			DetachedCriteria mainQuery = DetachedCriteria.forClass(Incontro.class);
+			mainQuery.createAlias("campionato", "campionato");
+			mainQuery.addOrder(Order.asc("dataIncontro"));
+			mainQuery.add(Property.forName("dataIncontro").notIn(subQueryDate));
+			mainQuery.add(Property.forName("campionato.campionatoAttivo").eq(Boolean.TRUE));
+			ProjectionList pl = Projections.projectionList();
+			pl.add(Projections.distinct(Projections.property("dataIncontro")));
+			mainQuery.setProjection(pl);
+			mainQuery.setResultTransformer(new DataIncontroDtoTransformer());
+			results = (List<DataIncontroDto>) this.recuperoDataDao.findByCriteria(mainQuery);
 			return results;
 		}
 		catch (Exception e)

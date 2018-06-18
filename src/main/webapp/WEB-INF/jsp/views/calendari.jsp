@@ -28,7 +28,7 @@
 								<ul class="list-group">
 									{{#each incontiByData}}
 										<li class="list-group-item col-xs-6">
-										<h4 class="h4_calendario"><i class="fa fa-calendar"></i>&nbsp;&nbsp;<strong>{{{formattaMillisencondi @key}}} </strong></h4>
+										<h4 class="h4_calendario"><i class="fa fa-calendar"></i>&nbsp;&nbsp;<strong>{{{recuperaSettimanaRiferimento @key this}}} </strong></h4>
 										<hr>
 										 <ul class="list-group ul_calendari" id="elencoCalendariUl">
 											{{#each this}}
@@ -70,6 +70,14 @@
 			Handlebars.registerHelper('formattaMillisencondi', function(millis) {
 			  return moment(parseInt(millis)).format("DD/MM/YYYY");
 			});
+			Handlebars.registerHelper('recuperaSettimanaRiferimento', function(millis, object) {
+				  var inizioSettimana = moment(object[0].inizioSettimana);
+				  var fineSettimana = moment(object[0].fineSettimana);
+				  var giornoInizioSettimana = inizioSettimana.date();
+				  var giornoFineSettimana = fineSettimana.date();
+				  var mese = inizioSettimana.format('MMMM');
+				  return giornoInizioSettimana+' - '+giornoFineSettimana+' '+mese;
+				});			
 			Handlebars.registerHelper('mostraCollapseIn', function(value) {
 				var result = (value == 0);
 				if( result === true )
@@ -118,7 +126,7 @@
 					<!-- /.panel-heading -->
 					<div class="panel-body">
 						<div class="alert alert-info">
-							<spring:message code="arca.context.web.msgs.calendari.info.msg"/>
+							<i class="fa fa-info-circle"></i>&nbsp; <spring:message code="arca.context.web.msgs.calendari.info.msg"/>
 						</div>
 						<div class="alert alert-warning">
 							<spring:message code="arca.context.web.msgs.calendari.warning.msg"/>

@@ -57,6 +57,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
@@ -74,6 +75,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.olegna.arca.context.configuration.util.KeyStoreInfo;
 import it.olegna.arca.context.configuration.util.ProxyRoutePlanner;
 import it.olegna.arca.context.configuration.util.WsKeepAliveStrategy;
+import it.olegna.arca.context.interceptor.LoggingInteceptor;
 
 @Configuration
 @EnableWebMvc
@@ -91,6 +93,14 @@ public class WebMvcConfig implements WebMvcConfigurer
 
 		return resolver;
 	}
+	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry)
+	{
+		
+		registry.addInterceptor(new LoggingInteceptor()).addPathPatterns("/pages/protected/*","/rest/*");
+	}
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry)
 	{

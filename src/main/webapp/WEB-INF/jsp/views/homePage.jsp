@@ -249,21 +249,25 @@
 					<div class="panel-body">
 						<form id="fileupload" role="form">
 							<div class="alert alert-info">
-								<spring:message	code="arca.context.web.msgs.upload.info" arguments="${msgAggiungi}, ${dimensioneFileFormattata}" />
+								<i class="fa fa-info-circle"></i>&nbsp;<spring:message	code="arca.context.web.msgs.upload.info" arguments="${msgAggiungi}, ${dimensioneFileFormattata}" />
 							</div>
-							<div class="alert alert-warning">
+<%-- 							<div class="alert alert-warning">
 								<spring:message	code="arca.context.web.msgs.upload.info.warn" />
-							</div>
+							</div> --%>
 							<c:if test="${not empty dateIncontri}">
-								<div class="form-group" id="divSelectData">
+								<div class="alert alert-info" id="divSelectData">
 									<label for="dateIncontriSel" class="control-label">
-										<spring:message code="arca.context.web.msgs.home.page.date.incontri"/> *
+										<i class="fa fa-info-circle"></i>&nbsp;<spring:message code="arca.context.web.msgs.home.page.date.incontri"/> *
 									</label>
 									<select class="form-control" id="dateIncontriSel">
 										<option value=""> <spring:message code="arca.context.web.msgs.home.page.seleziona.data"/> </option>
-										<c:forEach items="${dateIncontri}" var="dataIncontro">
-											<fmt:formatDate value="${dataIncontro}" pattern="dd/MM/yyyy" var="dataFormattata"/>
-											<option value="${dataFormattata}">${dataFormattata}</option>
+										<c:forEach items="${dateIncontri}" var="di">
+											<fmt:formatDate value="${di.dataIncontro}" pattern="dd/MM/yyyy" var="dataFormattata"/>
+											<fmt:formatDate value="${di.dataInizioSettimana}" pattern="dd/MM/yyyy" var="dataInizioSettimanaFormattata"/>
+											<fmt:formatDate value="${di.dataFineSettimana}" pattern="dd/MM/yyyy" var="dataFineSettimanaFormattata"/>
+											<option value="${dataFormattata}" > 
+												 ${dataInizioSettimanaFormattata} - ${dataFineSettimanaFormattata} (<spring:message code="arca.context.web.msgs.data.incontro.select" arguments="${dataFormattata}"/>)
+											</option>
 										</c:forEach>
 									</select>
 								</div>

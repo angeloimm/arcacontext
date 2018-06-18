@@ -1,6 +1,10 @@
 package it.olegna.arca.context.transformers;
 
+import static it.olegna.arca.context.util.TimeUtil.DATA_FINE_KEY;
+import static it.olegna.arca.context.util.TimeUtil.DATA_INIZIO_KEY;
 import static it.olegna.arca.context.util.TimeUtil.formatDateTime;
+import static it.olegna.arca.context.util.TimeUtil.toDateTime;
+import static it.olegna.arca.context.util.TimeUtil.recuperaSettimanaIncontro;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +50,7 @@ public class IncontriCampionatoDtoTransformer implements ResultTransformer
 		}
 		Long timeMillis = dataIncontro.getTime();
 		SortedMap<Long, List<IncontroDto>> incontriByDate = incontroCampionato.getIncontiByData();
+		
 		List<IncontroDto> incontri = null;
 		if( incontriByDate.containsKey(timeMillis) )
 		{
@@ -56,8 +61,10 @@ public class IncontriCampionatoDtoTransformer implements ResultTransformer
 			incontri = new ArrayList<IncontroDto>();
 		}
 		IncontroDto incontro = new IncontroDto();
-		
-		incontro.setDataIncontro(formatDateTime((new DateTime(timeMillis)), "dd/MM/yyyy"));
+		Map<String, Long> settimanaIncontro = recuperaSettimanaIncontro( formatDateTime((new DateTime(timeMillis)), "dd/MM/yyyy") );
+		incontro.setInizioSettimana(settimanaIncontro.get(DATA_INIZIO_KEY));
+		incontro.setFineSettimana(settimanaIncontro.get(DATA_FINE_KEY));
+		incontro.setDataIncontro(formatDateTime(toDateTime(timeMillis), "dd/MM/yyyy"));
 		FilialeDto filialeCasaDto = new FilialeDto();
 		filialeCasaDto.setImportoSettimanaleFiliale(recuperaImporto(dataIncontro, filialeCasa));
 		filialeCasaDto.setId(filialeCasa.getId());
