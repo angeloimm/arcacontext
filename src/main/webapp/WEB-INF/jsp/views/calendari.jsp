@@ -33,8 +33,8 @@
 										 <ul class="list-group ul_calendari" id="elencoCalendariUl">
 											{{#each this}}
 												<li class="list-group-item ">
-													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_left">{{filialeCasa.nomeFiliale}} <span class="badge">{{filialeCasa.importoSettimanaleFiliale}}</span> €</button></span>
-													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_right">{{filialeFuoriCasa.nomeFiliale}} <span class="badge">{{filialeFuoriCasa.importoSettimanaleFiliale}}</span> €</button></span>
+													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_left" style="font-size: small;">{{filialeCasa.nomeFiliale}} <span class="badge">{{filialeCasa.importoSettimanaleFiliale}}</span> €</button></span>
+													<span><button type="button" class="btn {{{btnType @index}}} nessunaAction f_right" style="font-size: small;">{{filialeFuoriCasa.nomeFiliale}} <span class="badge">{{filialeFuoriCasa.importoSettimanaleFiliale}}</span> €</button></span>
 													<div class="clearfix"></div>
 												</li> 
 											{{/each}}
