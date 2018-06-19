@@ -60,21 +60,30 @@
 		</script>
 		<script type="text/x-handlebars-template" id="templateDownload">
 			{{! Il class template-download serve ad abilitare il pulsante di elimina; il class fade a dare degli effetti nella comparsa della riga }}
-			<div class="template-download fade">
+			
+			<div id="tmplDownloadDiv" class="template-download fade">
 				<div class="row">
-  					<div class="col-xs-7">
-						<div class="alert alert-info">
-							<strong><i class="fa fa-file" aria-hidden="true"></i></strong> <i>{{file.name}}</i> <spring:message code="arca.context.web.msgs.upload.success" />
-						</div>
-  					</div>
-					{{!--
-  					<div class="col-xs-5">
-    					<button class="btn btn-danger delete" >
-                    		<i class="glyphicon glyphicon-trash"></i>
-                    		<span><spring:message code="arca.context.web.msgs.upload.delete" /></span>
-                		</button>
-  					</div>
-					--}}
+					{{#if error}}
+		  				<div class="col-xs-12">
+							<div class="alert alert-danger">
+								<strong><i class="fa fa-warning" aria-hidden="true"></i></strong> {{{error}}}
+							</div>
+  						</div>					
+					{{else}}
+	  					<div class="col-xs-12">
+							<div class="alert alert-info">
+								<strong><i class="fa fa-file" aria-hidden="true"></i></strong> <i>{{file.name}}</i> <spring:message code="arca.context.web.msgs.upload.success" />
+							</div>
+  						</div>
+						{{!--
+	  					<div class="col-xs-5">
+    						<button class="btn btn-danger delete" >
+        	            		<i class="glyphicon glyphicon-trash"></i>
+            	        		<span><spring:message code="arca.context.web.msgs.upload.delete" /></span>
+                			</button>
+  						</div>
+						--}}
+					{{/if}}
 				</div>
 			</div>
 		</script>
@@ -145,14 +154,12 @@
 		    			downloadTemplate: function(o) {
 		    				var rows = $();			    			
 							$.each(o.files, function(index, file) {
-		                        if( !file.error )
-			                    {
-		                			var data = {o: o, file: file, error:file.error};
-		                			var template = templateDownload(data);
-		                			var row = $(template);
-		                			rows = rows.add(row);
-		                			$('#elencoErroriUploadFile').html("");
-			                    }				               
+								
+	                			var data = {o: o, file: file, error:file.error};
+	                			var template = templateDownload(data);
+	                			var row = $(template);
+	                			rows = rows.add(row);
+	                			$('#elencoErroriUploadFile').html("");
 		            	  	});
 		            		return rows;
 		        		}
@@ -201,6 +208,7 @@
 				
 				
 	              $('#fileupload').on('fileuploadadd', function (e, data) {
+	            	$("#tmplDownloadDiv").remove();
 	            	$("#elencoErroriUploadFile").empty();
 	            	$("#infoDropZone").hide();
                  	var uploadErrors = [];

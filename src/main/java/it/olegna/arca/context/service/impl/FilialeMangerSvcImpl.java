@@ -133,7 +133,7 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 	}
 	@Override
 	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = false) 
-	public void salvaAggiornaFilialeAndDati(List<Filiale> filiali, Date dataDati) throws ArcaContextDbException
+	public void salvaAggiornaFilialeAndDati(List<Filiale> filiali, Date dataDati, String nomeFile) throws ArcaContextDbException
 	{
 		try
 		{
@@ -157,6 +157,7 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 					for (DatiFiliale df : datiFiliale)
 					{
 						df.setFiliale(f);
+						df.setNomeFile(nomeFile);
 						datiFilialeDao.persist(df);
 					}
 				}
@@ -168,6 +169,7 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 					for (DatiFiliale df : datiFiliale)
 					{
 						df.setFiliale(filiale);
+						df.setNomeFile(nomeFile);
 						datiFilialeDao.persist(df);
 					}
 				}

@@ -117,10 +117,11 @@ public class CampionatoSvcImpl implements CampionatoSvc<Campionato>
 		{
 			List<CampionatoFilialiDto> result = new ArrayList<CampionatoFilialiDto>();
 			long numeroSquadre = dto.getNumeroSquadre();
-			DetachedCriteria subQuery = DetachedCriteria.forClass(DatiFiliale.class);
-			subQuery.setProjection(Projections.max("dataDati"));
+//			DetachedCriteria subQuery = DetachedCriteria.forClass(DatiFiliale.class);
+//			subQuery.setProjection(Projections.max("dataDati"));
 			DetachedCriteria dc = DetachedCriteria.forClass(DatiFiliale.class);
-			dc.add(Property.forName("dataDati").eq(subQuery));
+//			dc.add(Property.forName("dataDati").eq(subQuery));
+			dc.add(Property.forName("dataDati").eq(new Date(dto.getDataCalcoloCreazioneCampionato())));
 			dc.createAlias("filiale", "filiale");
 			dc.addOrder(Order.desc("totale"));
 			ProjectionList pl = Projections.projectionList();

@@ -23,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -55,7 +56,7 @@ public class MainPagesController {
 		{
 			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
 			{
-				
+
 				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 				Collection<GrantedAuthority> grAuth = user.getAuthorities();
 				if( grAuth.size() == 1 && grAuth.iterator().next().getAuthority().equals("ROLE_USER") )
@@ -70,6 +71,7 @@ public class MainPagesController {
 			}
 			model.addAttribute("dimensioneFile", dimensioneFile);
 			model.addAttribute("dimensioneFileFormattata", FileUtils.byteCountToDisplaySize(dimensioneFile));
+
 			List<DataIncontroDto> dateIncontri = genericSvc.getDateIncontriDto();
 			if( dateIncontri != null && !dateIncontri.isEmpty() )
 			{
@@ -93,7 +95,7 @@ public class MainPagesController {
 		{
 			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
 			{
-				
+
 				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 				model.addAttribute("utenteLoggato", user);
 			}
@@ -110,6 +112,10 @@ public class MainPagesController {
 			model.addAttribute("dataCampionatoString", formatDateTime(new DateTime(dataCampionato), "dd/MM/yyyy"));
 			boolean campionatiAttivi = genericSvc.esisteCampionatoAttivo();
 			model.addAttribute("campionatiAttivi", campionatiAttivi);
+			List<Long> datePossibiliCreazioneCampionato = this.datiFilialeSvc.datePossibiliCreazioneCampionato();
+			Long dataMinima = datePossibiliCreazioneCampionato.get(0);
+			model.addAttribute("dataMinimaCreazioneCampionato", dataMinima);
+			model.addAttribute("elencoDate", datePossibiliCreazioneCampionato);
 			return "views/elencoFiliali";
 		}
 		catch (Exception e) 
@@ -126,7 +132,7 @@ public class MainPagesController {
 		{
 			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
 			{
-				
+
 				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 				model.addAttribute("utenteLoggato", user);
 			}
@@ -151,7 +157,7 @@ public class MainPagesController {
 		{
 			if( SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null )
 			{
-				
+
 				UserPrincipal user = (UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 				model.addAttribute("utenteLoggato", user);
 			}
@@ -168,7 +174,7 @@ public class MainPagesController {
 			return "views/genericError";
 		}
 	}	
-	
+
 	@RequestMapping(method = { RequestMethod.GET }, value = {"/accessDenied"})
 	public String accessDenied()
 	{

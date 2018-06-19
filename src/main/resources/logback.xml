@@ -34,12 +34,10 @@
 		<queueSize>262144</queueSize>
 		<appender-ref ref="FILE" />
 	</appender>	
-	<logger	name="it.olegna.arca" level="TRACE">
-	</logger>
-	<logger	name="org.springframework.security" level="INFO">
+	<logger	name="it.olegna.arca" level="${arca.context.filters.logging.olegna.level}">
 	</logger>			
 	<!-- Fine appender asincroni -->
-	<root level="INFO">
+	<root level="${arca.context.filters.logging.root.level}">
 		<appender-ref ref="ASYNC_consoleAppender" />
 		<appender-ref ref="ASYNC_FILE" />
 	</root>

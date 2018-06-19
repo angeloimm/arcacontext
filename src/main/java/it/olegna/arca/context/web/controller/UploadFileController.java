@@ -4,12 +4,14 @@ import static it.olegna.arca.context.util.TimeUtil.toDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +39,8 @@ public class UploadFileController {
 	private FilialeManagerSvc filialeSvc;
 	@Autowired
 	private ApplicationEventPublisher publisher;
+	@Autowired
+    private MessageSource messageSource;
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = { RequestMethod.POST }, value = { "/protected/uploadedDatiFiliali" })
 	public ResponseEntity<FileUploadResponseDto> uploadRiversamentoManuale(	
@@ -47,6 +51,7 @@ public class UploadFileController {
 	{
 		List<UploadedFileDto> uploadedFiles = null;
 		String fileName = mpf.getOriginalFilename();
+		HttpStatus status = HttpStatus.OK;
 		if( logger.isDebugEnabled() )
 		{
 			logger.debug("Nome file uploadato: "+fileName);
@@ -62,7 +67,7 @@ public class UploadFileController {
 				dataDati = toDateTime(dataSelezionata, "dd/MM/yyyy").toDate();
 			}
 			DatiFilialiContainer res = reader.dataReader(mpf.getInputStream(), dataDati);
-			filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), dataDati);
+			filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), dataDati, fileName);
 			//Genero e propago l'evento
 			CaricamentoDatiEvent cde = new CaricamentoDatiEvent(this, res.getDataRiferimento());
 			publisher.publishEvent(cde);
@@ -74,10 +79,13 @@ public class UploadFileController {
 		} catch (Exception e) {
 			String message = "Errore nell'upload del file "+fileName+"; "+e.getMessage();
 			logger.error(message, e);
-			uploadedFiles = Collections.singletonList(new UploadedFileDto("", mpf.getOriginalFilename(), mpf.getSize(), "", "", "", "", message));
+			String[] args = {fileName};
+			String errorMsg = messageSource.getMessage("arca.context.web.msgs.upload.error.msg",args, Locale.ITALIAN);
+			uploadedFiles = Collections.singletonList(new UploadedFileDto("", mpf.getOriginalFilename(), mpf.getSize(), "", "", "", "", errorMsg));
+			//status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		// Restituisco sempre un HTTP Status 200 ma con un array di files in cui
 		// eventualmente è contenuto il messaggio di errore
-		return new ResponseEntity<FileUploadResponseDto>(new FileUploadResponseDto(uploadedFiles), HttpStatus.OK);
+		return new ResponseEntity<FileUploadResponseDto>(new FileUploadResponseDto(uploadedFiles), status);
 	}
 }

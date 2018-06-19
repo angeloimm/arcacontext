@@ -8,11 +8,15 @@ import javax.persistence.Query;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.springframework.stereotype.Repository;
 
 import it.olegna.arca.context.dto.DatiFilialeDto;
 import it.olegna.arca.context.models.DatiFiliale;
+import it.olegna.arca.context.transformers.DataCreazioneCampiontoTransformer;
 @Repository 
 public class DatiFilialeDao<T> extends AbstractDao<String, DatiFiliale>
 {
@@ -27,6 +31,19 @@ public class DatiFilialeDao<T> extends AbstractDao<String, DatiFiliale>
 		dc.add(Property.forName("dataDati").eq(data));
 		boolean datiEsistenti = count(dc).longValue() > 0;
 		return datiEsistenti;
+	}
+	@SuppressWarnings("unchecked")
+	public List<Long> dataCreazioneCampionato()
+	{
+		DetachedCriteria dc = DetachedCriteria.forClass(DatiFiliale.class);
+		ProjectionList pl = Projections.projectionList();
+		pl.add(Projections.distinct(Projections.property("dataDati")));
+		dc.setProjection(pl);
+		dc.addOrder(Order.asc("dataDati"));
+		dc.setResultTransformer(new DataCreazioneCampiontoTransformer());
+		Session sessione = getSession();
+		Criteria crit = dc.getExecutableCriteria(sessione);
+		return crit.list();
 	}
 	public int deleteByDate(Date data)
 	{

@@ -64,7 +64,7 @@ public class TestCampionati
 				}
 				Resource fileRes = new FileSystemResource(aFile);
 				DatiFilialiContainer res = reader.dataReader(fileRes.getInputStream(), null);
-				filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), res.getDataRiferimento());
+				filialeSvc.salvaAggiornaFilialeAndDati(res.getDatiFiliale(), res.getDataRiferimento(), aFile.getName());
 			}
 			
 			CreazioneCampionatoDto creaCampionatoRequest = new CreazioneCampionatoDto();

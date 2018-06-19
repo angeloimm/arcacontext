@@ -29,6 +29,7 @@ public class DatiFiliale extends AbstractModel
 	private double totale;
 	private Date dataDati;
 	private Filiale filiale;
+	private String nomeFile;
 	
 	@ManyToOne(targetEntity=Filiale.class)
 	@JoinColumn(name="id_filiale", nullable=false)
@@ -77,6 +78,15 @@ public class DatiFiliale extends AbstractModel
 	{
 		this.dataDati = dataDati;
 	}
+	@Column(name="NOME_FILE_DATI", nullable=false)
+	public String getNomeFile()
+	{
+		return nomeFile;
+	}
+	public void setNomeFile(String nomeFile)
+	{
+		this.nomeFile = nomeFile;
+	}
 	@Override
 	public int hashCode()
 	{
@@ -86,7 +96,10 @@ public class DatiFiliale extends AbstractModel
 		temp = Double.doubleToLongBits(auto);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((dataDati == null) ? 0 : dataDati.hashCode());
+		result = prime * result + ((nomeFile == null) ? 0 : nomeFile.hashCode());
 		temp = Double.doubleToLongBits(re);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(totale);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
@@ -109,13 +122,22 @@ public class DatiFiliale extends AbstractModel
 		}
 		else if (!dataDati.equals(other.dataDati))
 			return false;
+		if (nomeFile == null)
+		{
+			if (other.nomeFile != null)
+				return false;
+		}
+		else if (!nomeFile.equals(other.nomeFile))
+			return false;
 		if (Double.doubleToLongBits(re) != Double.doubleToLongBits(other.re))
+			return false;
+		if (Double.doubleToLongBits(totale) != Double.doubleToLongBits(other.totale))
 			return false;
 		return true;
 	}
 	@Override
 	public String toString()
 	{
-		return "DatiFiliale [re=" + re + ", auto=" + auto + ", dataDati=" + dataDati + ", getId()=" + getId() + ", getCreatoDa()=" + getCreatoDa() + ", getModificatoDa()=" + getModificatoDa() + ", getDataCreazione()=" + getDataCreazione() + ", getDataModifica()=" + getDataModifica() + "]";
-	}	
+		return "DatiFiliale [re=" + re + ", auto=" + auto + ", totale=" + totale + ", dataDati=" + dataDati + ", nomeFile=" + nomeFile + "]";
+	}
 }

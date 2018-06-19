@@ -114,5 +114,20 @@ public class DatiFilialeSvcImpl implements DatiFilialeSvc
 			logger.error(message, e);
 			throw new ArcaContextDbException(message, e);
 		}
+	}
+	@Override
+	@Transactional(transactionManager = "hibTx", rollbackFor = ArcaContextDbException.class, readOnly = true)
+	public List<Long> datePossibiliCreazioneCampionato() throws ArcaContextDbException
+	{
+		try
+		{
+			return this.datiFilialeDao.dataCreazioneCampionato();
+		}
+		catch (Exception e)
+		{
+			String message = "Errore nel conteggio dati filiale";
+			logger.error(message, e);
+			throw new ArcaContextDbException(message, e);
+		}
 	}	
 }

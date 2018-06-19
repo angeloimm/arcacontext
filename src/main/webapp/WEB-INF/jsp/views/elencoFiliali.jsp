@@ -96,7 +96,7 @@
 			<i class="fa fa-warning"></i>&nbsp;<spring:message code="arca.context.web.msgs.creazione.campionato.alert.info" arguments="${produzioneMinima}, ${numeroFilialiCampionato}" />
 		</div>
 		<div class="container">
-			<div class="col-md-8">
+			<div class="col-md-4">
 				<div class="form-group"> 
 					<label for="dal"><spring:message code="arca.context.web.msgs.creazione.campionato.from" /></label>
         			<div class='input-group date' id='dataFrom'>
@@ -107,19 +107,17 @@
         			</div>
 				</div>
 			</div>
-			{{!--
 			<div class="col-md-4">
 				<div class="form-group"> 
-        			<label for="al"><spring:message code="arca.context.web.msgs.creazione.campionato.to" /></label>
+        			<label for="dataDatiCreazioneCampionati"><i class="fa fa-info-circle" data-toggle="tooltip" title='<spring:message code="arca.context.web.msgs.creazione.campionato.data.filiali.info"/>'></i>&nbsp;<spring:message code="arca.context.web.msgs.creazione.campionato.data.filiali" /></label>
 					<div class='input-group date' id='dataTo'>
-            			<input type='text' id="al" class="form-control" />
+            			<input type='text' id="dataDatiCreazioneCampionati" class="form-control" />
                 		<span class="input-group-addon">
                 			<span class="glyphicon glyphicon-calendar"></span>
                 		</span>
         			</div>
 				</div>
 			</div>
-			--}}
 		</div>	
 		<div class="container">
 			<div class="col-md-4">
@@ -167,7 +165,7 @@
 		var svuotaGrafico = false;
 		var dataFineMs = 0;
 		var dataInizioMs = 0;
-		var idFilialiSelezionati = [];
+		var idFilialiSelezionati = [];		
 		var templateFilialeSelezionata = Handlebars.compile($("#templateFilialeSelezionata").html());
 		var templateAzioniFiliale = Handlebars.compile($("#templateAzioniFiliale").html());
 		var templateSceltaFiliale = Handlebars.compile($("#templateSceltaFiliale").html());
@@ -507,6 +505,7 @@
 		            nl2br:false,
 		            onshown: function(dialogRef){
 		            	 creaDateTimePickers();
+		            	 $('[data-toggle="tooltip"]').tooltip(); 
 		            	 $("#chiudiCreazioneCampionatoBtn").click(function(evt){
 		            		 evt.preventDefault();
 		            		 dialogRef.close();
@@ -522,7 +521,11 @@
 				});
 			}
 			function creaDateTimePickers(){
-				
+				var datePossibili = [];
+				<c:forEach items="${elencoDate}" var="dataPossibile">
+					datePossibili.push(moment(${dataPossibile}));
+				</c:forEach>
+				console.log(datePossibili);
 				$('#dal').datetimepicker({
                     locale: 'it',
                     date : new Date(${dataMinimaCampionato}),
@@ -530,25 +533,21 @@
                     keepInvalid: true,
                     format:'L'
                 });
-/*            	 	$('#al').datetimepicker({
+            	 	$('#dataDatiCreazioneCampionati').datetimepicker({
                     locale: 'it',
                     useCurrent: false,
                     keepInvalid: true,
-                    format:'L'
+                    format:'L',
+                    date: new Date(${dataMinimaCreazioneCampionato}),
+                    enabledDates: datePossibili
                 });
-           	 	$('#al').data("DateTimePicker").disable(); */
-/*            	 	$("#dal").on("dp.change", function (e) {
-           		 	var data = e.date;
-                    $('#al').data("DateTimePicker").minDate(data);
-                    $('#al').data("DateTimePicker").date(data);
-                    $('#al').data("DateTimePicker").enable();
-                }); */
 			}
 			
 			function creaNuovoCampionato()
 			{
 				var datiCampionato = new Object();
 				datiCampionato.dataInizio =  $('#dal').data('DateTimePicker').date().valueOf();
+				datiCampionato.dataCalcoloCreazioneCampionato =  $('#dataDatiCreazioneCampionati').data('DateTimePicker').date().valueOf();
 				/* datiCampionato.dataFine = $('#al').data('DateTimePicker').date().valueOf(); */
 				datiCampionato.produzioneMinima = $("#produzioneMinima").val();
 				datiCampionato.numeroSquadre = $("#numeroSquadre").val();
