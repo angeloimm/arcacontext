@@ -1409,6 +1409,9 @@
 			<properties>
 				<build.profile.id>produzione</build.profile.id>
 			</properties>
+			<build>
+				<directory>artefatto_produzione</directory>
+			</build>			
 		</profile>
 	</profiles>	
 	<reporting>
