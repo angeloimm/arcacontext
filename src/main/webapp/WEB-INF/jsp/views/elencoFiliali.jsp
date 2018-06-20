@@ -65,10 +65,11 @@
 		<table	class="datatables-table table table-striped table-bordered table-hover" id="tabellaDatiFiliali" cellspacing="0"  style="width: 100%;">
 			<thead>
 				<tr>
-					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.data" /></th>
+					<th><i class="fa fa-info-circle" data-toggle="tooltip" title='<spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.data.toggle"/>'></i>&nbsp;<spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.data" /></th>
 					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.re" /></th>
 					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.auto" /></th>
 					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.totale" /></th>
+					<th><spring:message code="arca.context.web.msgs.visualizza.info.dati.filiale.table.th.nomeFile" /></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -391,7 +392,17 @@
 									"sortable" : false,
 									"name":"totaleReAuto",
 									"targets" : 3
-								}								
+								},
+								{
+									"render" : 	function(data, type, row) 
+												{
+								
+													return row.nomeFile;
+												},
+									"sortable" : false,
+									"name":"nomeFile",
+									"targets" : 4
+								}									
 							]
 						});
 			}

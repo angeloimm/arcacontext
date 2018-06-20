@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -23,7 +22,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -36,8 +34,7 @@ import it.olegna.arca.context.web.dto.UserPrincipal;
 @RequestMapping("/pages")
 public class MainPagesController {
 	private static final Logger logger = LoggerFactory.getLogger(MainPagesController.class.getName());
-	@Autowired
-	private HttpServletRequest req;
+
 	@Autowired
 	private DatiFilialeSvc datiFilialeSvc;
 	@Autowired

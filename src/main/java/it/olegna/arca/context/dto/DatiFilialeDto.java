@@ -13,6 +13,7 @@ public class DatiFilialeDto implements Serializable
 	private long dataDatiLong;
 	private String nomeFiliale;
 	private Date dataDati;
+	private String nomeFile;
 	
 	public double getRe()
 	{
@@ -63,9 +64,18 @@ public class DatiFilialeDto implements Serializable
 	{
 		this.nomeFiliale = nomeFiliale;
 	}
+	public String getNomeFile()
+	{
+		return nomeFile;
+	}
+	public void setNomeFile(String nomeFile)
+	{
+		this.nomeFile = nomeFile;
+	}
 	@Override
 	public String toString()
 	{
-		return "DatiFilialeDto [re=" + re + ", auto=" + auto + ", totaleReAuto=" + totaleReAuto + ", dataDatiLong=" + dataDatiLong + ", nomeFiliale=" + nomeFiliale + ", dataDati=" + dataDati + "]";
+		return "DatiFilialeDto [re=" + re + ", auto=" + auto + ", totaleReAuto=" + totaleReAuto + ", dataDatiLong=" + dataDatiLong + ", nomeFiliale=" + nomeFiliale + ", dataDati=" + dataDati + ", nomeFile=" + nomeFile + "]";
 	}
+
 }

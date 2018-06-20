@@ -15,11 +15,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 public abstract class AbstractDao<PK extends Serializable, T>
 {
+	private static final Logger logger = LoggerFactory.getLogger(AbstractDao.class.getName());
 	protected abstract Class<T> getPersistentClass(); 
 	public AbstractDao()
 	{
@@ -39,6 +42,10 @@ public abstract class AbstractDao<PK extends Serializable, T>
 		if( !StringUtils.hasText(hql) )
 		{
 			throw new IllegalArgumentException("Impossibile eseguire lo statement HQL; query nulla o vuota <"+hql+">");
+		}
+		if( logger.isDebugEnabled() )
+		{
+			logger.debug("ESECUZIONE HQL [{}] con PARAMETRI [{}]", hql, hqlParams);
 		}
 		Query q = getSession().createQuery(hql);
 		if( hqlParams != null && !hqlParams.isEmpty() )

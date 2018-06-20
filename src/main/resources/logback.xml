@@ -13,7 +13,7 @@
 		<file>${catalina.home}/logs/logArcaContext/arcaContext.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
       	<!-- rollover daily -->
-      		<fileNamePattern>${catalina.home}/logs/logRegistroProtocollo/esempio_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      		<fileNamePattern>${catalina.home}/logs/logArcaContext/arcaContext_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
        		<!-- Ogni file deve avere dimensione massima di 5MB; al massimo 60 file. In totale al massimo 20GB -->
        		<maxFileSize>5MB</maxFileSize>    
        		<maxHistory>60</maxHistory>

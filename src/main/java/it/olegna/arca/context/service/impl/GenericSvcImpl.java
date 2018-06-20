@@ -176,6 +176,8 @@ public class GenericSvcImpl<T> implements GenericSvc<T>
 			pl.add(Projections.property("filialeCasa"), "filialeCasa");
 			pl.add(Projections.property("filialeFuoriCasa"), "filialeFuoriCasa");
 			pl.add(Projections.property("dataIncontro"),"dataIncontro");
+			pl.add(Projections.property("risultatoCasa"),"risultatoCasa");
+			pl.add(Projections.property("risultatoFuoriCasa"),"risultatoFuoriCasa");
 			mainQuery.setProjection(pl);
 			mainQuery.setResultTransformer(new IncontriCampionatoDtoTransformer());
 			results = (List<IncontroCampionatoDto>) this.recuperoDataDao.findByCriteria(mainQuery);

@@ -13,6 +13,8 @@ public class IncontroDto implements Serializable
 	private String dataIncontro;
 	private Long inizioSettimana;
 	private Long fineSettimana;
+	private double risultatoCasa;
+	private double risultatoFuoriCasa;
 	public IncontroDto()
 	{
 		super();
@@ -57,9 +59,25 @@ public class IncontroDto implements Serializable
 	{
 		this.fineSettimana = fineSettimana;
 	}
+	public double getRisultatoCasa()
+	{
+		return risultatoCasa;
+	}
+	public void setRisultatoCasa(double risultatoCasa)
+	{
+		this.risultatoCasa = risultatoCasa;
+	}
+	public double getRisultatoFuoriCasa()
+	{
+		return risultatoFuoriCasa;
+	}
+	public void setRisultatoFuoriCasa(double risultatoFuoriCasa)
+	{
+		this.risultatoFuoriCasa = risultatoFuoriCasa;
+	}
 	@Override
 	public String toString()
 	{
-		return "IncontroDto [filialeCasa=" + filialeCasa + ", filialeFuoriCasa=" + filialeFuoriCasa + ", dataIncontro=" + dataIncontro + ", inizioSettimana=" + inizioSettimana + ", fineSettimana=" + fineSettimana + "]";
+		return "IncontroDto [filialeCasa=" + filialeCasa + ", filialeFuoriCasa=" + filialeFuoriCasa + ", dataIncontro=" + dataIncontro + ", inizioSettimana=" + inizioSettimana + ", fineSettimana=" + fineSettimana + ", risultatoCasa=" + risultatoCasa + ", risultatoFuoriCasa=" + risultatoFuoriCasa + "]";
 	}
 }

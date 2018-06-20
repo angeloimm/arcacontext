@@ -4,6 +4,7 @@ import static it.olegna.arca.context.util.TimeUtil.formatDateTime;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -250,6 +251,9 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 						dcDatFil.setResultTransformer(mdrt);
 						this.mathcDao.findByCriteria(dcDatFil);
 						Map<String, MatchDbDto> results = mdrt.getResults();
+						//Preparo la query per aggiornamento incontro
+						String hqlAggiornaCampionato = "UPDATE "+Incontro.class.getName()+" SET risultatoCasa = :risultatoCasa, risultatoFuoriCasa = :risultatoFuoriCasa WHERE id = :idIncontro";
+
 						for (Incontro incontro : incontri)
 						{
 							String idIncontro = incontro.getId();
@@ -340,6 +344,16 @@ public class FilialeMangerSvcImpl implements FilialeManagerSvc
 								Filiale filialeFuoriCasa = new Filiale();
 								filialeFuoriCasa.setId(idFilialeFuoriCasa);
 								campionatoFilialeDao.aggiornaPuntiFiliale( c, filialeFuoriCasa, 1 );								
+							}
+							//Aggiorno l'incontro
+							Map<String, Object> hqlParams = new HashMap<>();
+							hqlParams.put("risultatoCasa", differenzaTotaleCasa);
+							hqlParams.put("risultatoFuoriCasa", differenzaTotaleFuoriCasa);
+							hqlParams.put("idIncontro", idIncontro);
+							int recordAggiornati = this.campionatoDao.eseguiHqlStatement(hqlAggiornaCampionato, hqlParams);
+							if( logger.isDebugEnabled() )
+							{
+								logger.debug("AGGIORNATI {} INCONTRI", recordAggiornati);
 							}
 						}
 					}

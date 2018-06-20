@@ -185,8 +185,4 @@ public class MatchScheduleBuilderImpl implements MatchScheduleBuilder
 	{
 		genericDao.setPersistentClass(Incontro.class);
 	}
-	private boolean sameFiliale( FilialeDto casa, FilialeDto fuoriCasa )
-	{
-		return casa.equals(fuoriCasa);
-	}
 }

@@ -32,6 +32,8 @@ public class Incontro extends AbstractModel
 	private Filiale filialeFuoriCasa;
 	private Campionato campionato;
 	private Date dataIncontro;
+	private double risultatoCasa;
+	private double risultatoFuoriCasa;
 	@ManyToOne(fetch=FetchType.LAZY, targetEntity=Campionato.class)
 	@JoinColumn(name="ID_CAMPIONATO", nullable=false)
 	public Campionato getCampionato()
@@ -72,6 +74,24 @@ public class Incontro extends AbstractModel
 	{
 		this.filialeFuoriCasa = filialeFuoriCasa;
 	}
+	@Column(name="RISULTATO_FIL_CASA", nullable=false, columnDefinition="Decimal(10,2) default '0.00'")
+	public double getRisultatoCasa()
+	{
+		return risultatoCasa;
+	}
+	public void setRisultatoCasa(double risultatoCasa)
+	{
+		this.risultatoCasa = risultatoCasa;
+	}
+	@Column(name="RISULTATO_FIL_FUORI_CASA", nullable=false, columnDefinition="Decimal(10,2) default '0.00'")
+	public double getRisultatoFuoriCasa()
+	{
+		return risultatoFuoriCasa;
+	}
+	public void setRisultatoFuoriCasa(double risultatoFuoriCasa)
+	{
+		this.risultatoFuoriCasa = risultatoFuoriCasa;
+	}
 	@Override
 	public int hashCode()
 	{
@@ -81,6 +101,11 @@ public class Incontro extends AbstractModel
 		result = prime * result + ((dataIncontro == null) ? 0 : dataIncontro.hashCode());
 		result = prime * result + ((filialeCasa == null) ? 0 : filialeCasa.hashCode());
 		result = prime * result + ((filialeFuoriCasa == null) ? 0 : filialeFuoriCasa.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(risultatoCasa);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(risultatoFuoriCasa);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 	@Override
@@ -121,7 +146,10 @@ public class Incontro extends AbstractModel
 		}
 		else if (!filialeFuoriCasa.equals(other.filialeFuoriCasa))
 			return false;
+		if (Double.doubleToLongBits(risultatoCasa) != Double.doubleToLongBits(other.risultatoCasa))
+			return false;
+		if (Double.doubleToLongBits(risultatoFuoriCasa) != Double.doubleToLongBits(other.risultatoFuoriCasa))
+			return false;
 		return true;
 	}
-	
 }

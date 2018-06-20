@@ -74,6 +74,7 @@ public class DatiFilialeSvcImpl implements DatiFilialeSvc
 		pl.add(Projections.property("totale"), "totaleReAuto");
 		pl.add(Projections.property("filiale.nomeFiliale"), "nomeFiliale");
 		pl.add(Projections.property("dataDati"), "dataDati");
+		pl.add(Projections.property("nomeFile"), "nomeFile");
 		dc.setProjection(pl);
 		dc.setResultTransformer(Transformers.aliasToBean(DatiFilialeDto.class));
 		dc.addOrder(Order.desc("dataDati"));
