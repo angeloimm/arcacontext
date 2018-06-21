@@ -1,17 +1,18 @@
 package it.olegna.arca.context.configuration;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.persistence.Entity;
 
 import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.core.config.DefaultConfiguration;
-import org.ehcache.expiry.Expirations;
+import org.ehcache.expiry.ExpiryPolicy;
 import org.ehcache.jsr107.EhcacheCachingProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -41,16 +42,18 @@ public class CacheConfiguration extends CachingConfigurerSupport
 	{
 		long dimensioneCache = new Long(env.getProperty("arca.context.cache.size"));
 		long ttlMillisecondi = new Long(env.getProperty("arca.context.cache.ttl"));
+		ExpiryPolicy<Object, Object> ec = ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofMillis(ttlMillisecondi));
 		org.ehcache.config.CacheConfiguration<Object, Object> cacheConfiguration = CacheConfigurationBuilder.
 																								newCacheConfigurationBuilder(Object.class, Object.class, 
 																								ResourcePoolsBuilder.heap(dimensioneCache)
-																								).withExpiry(Expirations.timeToLiveExpiration(new org.ehcache.expiry.Duration(ttlMillisecondi, TimeUnit.MILLISECONDS))).build();
+																								).withExpiry(ec).build();
 		Map<String, org.ehcache.config.CacheConfiguration<?, ?>> caches = createCacheConfigurations(cacheConfiguration);
 		//Creo la cache di hibernate org.hibernate.cache.spi.UpdateTimestampsCache. 
 		//Dalla documentazione di hibernate https://docs.jboss.org/hibernate/orm/5.2/userguide/html_single/Hibernate_User_Guide.html#caching
 		//Questa cache non dovrebbe mai spirare
 		ResourcePoolsBuilder rpb = ResourcePoolsBuilder.heap(dimensioneCache*1000000);
-		org.ehcache.config.CacheConfiguration<Object, Object> eternalCacheConfiguration = CacheConfigurationBuilder.newCacheConfigurationBuilder(Object.class, Object.class, rpb).withExpiry(Expirations.noExpiration()).build();
+		ExpiryPolicy<Object, Object> infinite = ExpiryPolicyBuilder.noExpiration();
+		org.ehcache.config.CacheConfiguration<Object, Object> eternalCacheConfiguration = CacheConfigurationBuilder.newCacheConfigurationBuilder(Object.class, Object.class, rpb).withExpiry(infinite).build();
 		caches.put("org.hibernate.cache.spi.UpdateTimestampsCache", eternalCacheConfiguration);
 		//Aggiungo la cache per i codici domanda
 		EhcacheCachingProvider provider = getCachingProvider();
