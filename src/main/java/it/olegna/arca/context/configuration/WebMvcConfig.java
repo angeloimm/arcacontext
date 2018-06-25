@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.KeyManager;
@@ -76,6 +77,8 @@ import it.olegna.arca.context.configuration.util.KeyStoreInfo;
 import it.olegna.arca.context.configuration.util.ProxyRoutePlanner;
 import it.olegna.arca.context.configuration.util.WsKeepAliveStrategy;
 import it.olegna.arca.context.interceptor.LoggingInteceptor;
+import ro.isdc.wro.http.ConfigurableWroFilter;
+import ro.isdc.wro.http.WroFilter;
 
 @Configuration
 @EnableWebMvc
@@ -337,5 +340,25 @@ public class WebMvcConfig implements WebMvcConfigurer
 		SimpleApplicationEventMulticaster eventMulticaster = new SimpleApplicationEventMulticaster();
 		eventMulticaster.setTaskExecutor(new SimpleAsyncTaskExecutor());
 		return eventMulticaster;
+	}
+	@Bean("wroFilter")
+	public WroFilter createWroFilter()
+	{
+		ConfigurableWroFilter cwr = new ConfigurableWroFilter();
+		cwr.setProperties(this.createWroProperties());
+		return cwr;
+	}
+	private Properties createWroProperties()
+	{
+		Properties props = new Properties();
+		props.put("debug", env.getProperty("debug"));
+		props.put("gzipEnabled", env.getProperty("gzipEnabled"));
+		props.put("jmxEnabled", env.getProperty("jmxEnabled"));
+		props.put("mbeanName", env.getProperty("mbeanName"));
+		props.put("cacheUpdatePeriod", env.getProperty("cacheUpdatePeriod"));
+		props.put("modelUpdatePeriod", env.getProperty("modelUpdatePeriod"));
+		props.put("disableCache", env.getProperty("disableCache"));
+		props.put("encoding", env.getProperty("encoding"));
+		return props;
 	}
 }

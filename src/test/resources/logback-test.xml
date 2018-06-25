@@ -39,7 +39,7 @@
 	<logger	name="org.springframework.security" level="TRACE">
 	</logger>			
 	<!-- Fine appender asincroni -->
-	<root level="INFO">
+	<root level="TRACE">
 		<appender-ref ref="ASYNC_consoleAppender" />
 		<appender-ref ref="ASYNC_FILE" />
 	</root>
